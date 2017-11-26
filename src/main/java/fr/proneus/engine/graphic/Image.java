@@ -126,12 +126,10 @@ public class Image {
         if (color != null)
             glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
 
-        // Transformation
-        float x = sprite.x * 1920f;
-        float y = sprite.y * 1080f;
+        // Sprite position & image region
+        float x = sprite.x * (float) graphic.getGame().getWidth();
+        float y = sprite.y * (float) graphic.getGame().getHeight();
         glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, 0);
-        //System.out.println("2: "+(x+regionX + regionWidth / 2));
-        //System.out.println("3: "+(y + regionY + regionHeight / 2));
 
         // Rotation
         if (sprite.angle != 0)

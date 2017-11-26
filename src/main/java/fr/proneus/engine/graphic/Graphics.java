@@ -6,12 +6,13 @@ import fr.proneus.engine.graphic.shape.Shape;
 
 public class Graphics {
 
+	private Game game;
 	private Font font;
 
 	private double globalScale, scaleX, scaleY;
 
 	public Graphics(Game game) {
-
+		this.game = game;
 		this.font = new Font("res/neuropol.ttf", 32);
 		this.globalScale = 1f;
 		this.scaleX = 1f;
@@ -75,4 +76,7 @@ public class Graphics {
 		return scaleX;
 	}
 
+	public Game getGame() {
+		return game;
+	}
 }
