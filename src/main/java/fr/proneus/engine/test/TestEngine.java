@@ -10,18 +10,14 @@ public class TestEngine {
 	public static void main(String[] args) {
 		Application app = new Application("NexusFight", 1280, 720, new TestShooter());
 
-		app.setCloseCallBack(new CloseCallBack() {
+		app.setCloseCallBack(game -> {
 
-			@Override
-			public void onClose(Game game) {
-
-			}
-		});
+        });
 		app.setFpsLimit(60);
 		app.setTPS(60);
 		//app.setBorderless();
 		app.setScale(true);
-		app.setIcon("res/test2.png");
+		app.setIcon("/test2.png");
 		// app.enableDiscordRPC("381903221783789568");
 		app.start();
 	}

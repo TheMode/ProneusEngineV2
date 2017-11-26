@@ -12,21 +12,23 @@ import fr.proneus.engine.graphic.Color;
 
 public abstract class Shape {
 
+	private boolean filled;
 	public float x, y, width, height;
 	private int red, green, blue;
 	private float alpha;
 	private double angle;
 
-	public Shape(float x, float y, float width, float height, Color color) {
+	public Shape(float x, float y, float width, float height, Color color, boolean filled) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		setColor(color);
+		this.filled = filled;
 	}
 
 	public Shape(float x, float y, float width, float height) {
-		this(x, y, width, height, Color.WHITE);
+		this(x, y, width, height, Color.WHITE, true);
 	}
 
 	public void setColor(Color color) {
@@ -60,7 +62,11 @@ public abstract class Shape {
 		glPopMatrix();
 	}
 
-	protected abstract void render();
+    public boolean isFilled() {
+        return filled;
+    }
+
+    protected abstract void render();
 
 	public abstract boolean interact(float x, float y);
 

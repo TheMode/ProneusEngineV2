@@ -2,6 +2,7 @@ package fr.proneus.engine.camera;
 
 import fr.proneus.engine.Game;
 import fr.proneus.engine.Game.WindowType;
+import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Sprite;
 import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.graphic.shape.Shape;
@@ -34,22 +35,27 @@ public class Camera {
 	}
 	
 	public Rectangle getCameraRectangle(){
+		// TODO faire marcher  les methodes "visible" =(
 		//float cameraWidth = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualWidth() : game.getWidth();
 		//float cameraHeight = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualHeight() : game.getHeight();
 		float cameraWidth = game.getVirtualWidth();
 		float cameraHeight = game.getVirtualHeight();
-		return new Rectangle(-this.x, -this.y, cameraWidth, cameraHeight);
+		return new Rectangle(-this.x, -this.y, cameraWidth, cameraHeight, Color.WHITE, false);
 	}
 
 	public boolean isPartiallyVisible(float x, float y, float width, float height) {
 		Rectangle camera = getCameraRectangle();
+		System.out.println((camera.interact(x, y))+" "+
+				(camera.interact(x + width, y))+" "+
+				(camera.interact(x, y + height))+" "+
+						(camera.interact(x + width, y + height)));
 		return camera.interact(x, y) || camera.interact(x + width, y) || camera.interact(x, y + height)
 				|| camera.interact(x + width, y + height);
 	}
 
 	public boolean isPartiallyVisible(Sprite sprite) {
-		return isPartiallyVisible((float) sprite.x, (float) sprite.y, sprite.getImage().regionWidth,
-				sprite.getImage().regionHeight);
+		return isPartiallyVisible(sprite.x*game.getVirtualWidth(), sprite.y*game.getVirtualHeight(), sprite.getImage().getRegionPixelWidth(),
+				sprite.getImage().getRegionPixelHeight());
 	}
 
 	public boolean isPartiallyVisible(Shape shape) {
@@ -63,8 +69,8 @@ public class Camera {
 	}
 
 	public boolean isFullyVisible(Sprite sprite) {
-		return isFullyVisible((float) sprite.x, (float) sprite.y, sprite.getImage().regionWidth,
-				sprite.getImage().regionHeight);
+		return isFullyVisible(sprite.x, sprite.y, sprite.getImage().getImagePixelWidth(),
+				sprite.getImage().getImagePixelHeight());
 	}
 
 	public boolean isFullyVisible(Shape shape) {

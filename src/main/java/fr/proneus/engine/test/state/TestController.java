@@ -31,7 +31,7 @@ public class TestController extends State {
 
 	@Override
 	public void render(Game game, Graphics graphic) {
-		graphic.drawShape(new Rectangle(0, 0, game.getVirtualWidth(), game.getVirtualHeight(), Color.AQUA));
+		graphic.drawShape(new Rectangle(0, 0, game.getVirtualWidth(), game.getVirtualHeight(), Color.AQUA, true));
 
 		Controller controller = game.getInput().getController(0);
 

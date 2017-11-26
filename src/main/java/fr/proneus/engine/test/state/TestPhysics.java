@@ -24,7 +24,7 @@ public class TestPhysics extends State {
 
 	@Override
 	public void create(Game game) {
-		this.rectangle = new Rectangle(200, 200, 100, 100, Color.RED);
+		this.rectangle = new Rectangle(200, 200, 100, 100, Color.RED, true);
 
 		BodyDef boxDef = new BodyDef();
         boxDef.position.set(320 / 30 / 2f, 240 / 30 / 2f);

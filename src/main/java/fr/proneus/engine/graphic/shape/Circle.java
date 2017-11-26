@@ -11,13 +11,13 @@ public class Circle extends Shape {
 
 	private double radius;
 
-	public Circle(float x, float y, Color color, double radius) {
-		super(x, y, 0, 0, color);
+	public Circle(float x, float y, Color color, double radius, boolean filled) {
+		super(x, y, 0, 0, color, filled);
 		this.radius = radius;
 	}
 
 	public Circle(float x, float y, double radius) {
-		this(x, y, Color.WHITE, radius);
+		this(x, y, Color.WHITE, radius, true);
 	}
 
 	@Override

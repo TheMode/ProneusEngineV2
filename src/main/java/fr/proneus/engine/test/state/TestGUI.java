@@ -48,7 +48,7 @@ public class TestGUI extends State {
 
 	@Override
 	public void render(Game game, Graphics graphic) {
-		graphic.drawShape(new Rectangle(0, 0, game.getVirtualWidth(), game.getVirtualHeight(), Color.RED));
+		graphic.drawShape(new Rectangle(0, 0, game.getVirtualWidth(), game.getVirtualHeight(), Color.RED, true));
 		graphic.drawString("Username: ", game.getVirtualWidth() / 2 - 100, 300 + 35, FontStyle.LEFT, Color.WHITE);
 		graphic.drawString("Password: ", game.getVirtualWidth() / 2 - 100, 400 + 35, FontStyle.LEFT, Color.WHITE);
 

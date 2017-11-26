@@ -2,6 +2,6 @@ package fr.proneus.engine;
 
 public interface CloseCallBack {
 
-	public void onClose(Game game);
+	void onClose(Game game);
 
 }

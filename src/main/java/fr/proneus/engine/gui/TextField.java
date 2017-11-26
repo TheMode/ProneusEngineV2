@@ -43,7 +43,7 @@ public class TextField extends Component {
 		this.drawText = "";
 		this.separator = 0;
 
-		this.textField = new Rectangle(x, y, width, height, Color.DARK_GRAY);
+		this.textField = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
 		this.font = font;
 
 		this.acceptedString = acceptedString;

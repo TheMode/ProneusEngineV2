@@ -248,8 +248,8 @@ public class Game {
 
 		if (icon != null) {
 			Image image = new Image(icon);
-			Buffer buff = GLFWImage.malloc(1).width(image.getImageWidth()).height(image.getImageHeight())
-					.pixels(ByteBufferUtils.convertImage(new Image(icon).getBufferedImage()));
+            Buffer buff = GLFWImage.malloc(1).width(image.getImagePixelWidth()).height(image.getImagePixelHeight())
+					.pixels(ByteBufferUtils.convertImage(image.getBufferedImage()));
 			glfwSetWindowIcon(window, buff);
 		}
 
@@ -366,7 +366,9 @@ public class Game {
 
 				glPushMatrix();
 
-				glTranslatef(camera.getX(), camera.getY(), 0);
+				// Camera translate
+				glTranslatef(camera.getX()*1920f, camera.getY()*1080f, 0);
+
 				state.render(this, graphic);
 				// Change if issue
 				state.getLightManager().render(this);

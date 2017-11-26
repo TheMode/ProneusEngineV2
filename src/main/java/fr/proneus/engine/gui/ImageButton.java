@@ -20,7 +20,7 @@ public abstract class ImageButton extends Component {
 	public ImageButton(String text, float x, float y, Image image, Image hoverImage) {
 		this.sprite = new Sprite(image, x, y);
 		this.hoverSprite = new Sprite(hoverImage, x, y);
-		this.rect = new Rectangle(x, y, image.regionWidth, image.regionHeight);
+		this.rect = new Rectangle(x, y, image.getRegionWidth(), image.getRegionHeight());
 		this.text = text;
 
 	}

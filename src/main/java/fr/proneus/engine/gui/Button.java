@@ -16,8 +16,8 @@ public abstract class Button extends Component {
 	private boolean hover;
 	
 	public Button(String text, float x, float y, float width, float height) {
-		this.rect = new Rectangle(x, y, width, height, Color.GRAY);
-		this.border = new Rectangle(x, y-2, width+2, height+2, Color.DARK_GRAY);
+		this.rect = new Rectangle(x, y, width, height, Color.GRAY, true);
+		this.border = new Rectangle(x, y-2, width+2, height+2, Color.DARK_GRAY, true);
 		this.text = text;
 	}
 

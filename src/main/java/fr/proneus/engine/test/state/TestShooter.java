@@ -40,8 +40,8 @@ public class TestShooter extends State {
 
 	@Override
 	public void create(Game game) {
-		this.player = new Sprite(new Image("res/ship.png"), 0.5f, 0.5f);
-		this.laserImage = new Image("res/shoot.png");
+        this.player = new Sprite(new Image("/ship.png"), 0.5f, 0.5f);
+		this.laserImage = new Image("/shoot.png");
 
 		this.controller = game.getInput().getController(0);
 
@@ -102,7 +102,8 @@ public class TestShooter extends State {
 
 		for (Sprite laser : laserList) {
 			if (!game.getCamera().isPartiallyVisible(laser)) {
-				lasertoRemove.add(laser);
+                System.out.println("lol "+laser.x+" "+laser.y);
+                lasertoRemove.add(laser);
 				continue;
 			}
 
@@ -119,6 +120,7 @@ public class TestShooter extends State {
 
 	@Override
 	public void render(Game game, Graphics graphic) {
+	    graphic.drawShape(game.getCamera().getCameraRectangle());
 		player.draw(graphic);
 		for (Sprite laser : laserList) {
 			laser.draw(graphic);

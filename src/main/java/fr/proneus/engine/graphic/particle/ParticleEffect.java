@@ -1,24 +1,13 @@
 package fr.proneus.engine.graphic.particle;
 
-import static org.lwjgl.opengl.GL11.GL_POINTS;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glPointSize;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Image;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public abstract class ParticleEffect {
 
@@ -65,22 +54,22 @@ public abstract class ParticleEffect {
 					particle.color.a);
 			if (isImage) {
 				glTranslated(particle.x + defaultX, particle.y + defaultY, 1);
-				float dcx = image.regionX / image.getImageWidth();
-				float dcy = image.regionY / image.getImageHeight();
+				float dcx = image.getRegionPixelX() / image.getImagePixelWidth();
+				float dcy = image.getRegionPixelY() / image.getImagePixelHeight();
 
-				float dcw = (image.regionX + image.regionWidth) / image.getImageWidth();
-				float dch = (image.regionY + image.regionHeight) / image.getImageHeight();
+				float dcw = (image.getRegionPixelX() + image.getImagePixelWidth()) / image.getImagePixelWidth();
+				float dch = (image.getRegionPixelY() + image.getImagePixelHeight()) / image.getImagePixelHeight();
 
 				glBegin(GL_QUADS);
+
 				glTexCoord2f(dcx, dcy);
-				glVertex2d((image.regionX) + particle.x, (image.regionY) + particle.y);
+				glVertex2f((image.getRegionPixelX()) + particle.x, (image.getRegionPixelY()) + particle.y);
 				glTexCoord2f(dcw, dcy);
-				glVertex2d((image.regionX + image.regionWidth) + particle.x, (image.regionY) + particle.y);
+				glVertex2f((image.getRegionPixelX() + image.getImagePixelWidth()) + particle.x, (image.getRegionPixelY()) + particle.y);
 				glTexCoord2f(dcw, dch);
-				glVertex2d((image.regionX + image.regionWidth) + particle.x,
-						(image.regionY + image.regionHeight) + particle.y);
+				glVertex2f((image.getRegionPixelX() + image.getImagePixelWidth()) + particle.x, (image.getRegionPixelY() + image.getImagePixelHeight()) + particle.y);
 				glTexCoord2f(dcx, dch);
-				glVertex2d((image.regionX) + particle.x, (image.regionY + image.regionHeight) + particle.y);
+				glVertex2f((image.getRegionPixelX()) + particle.x, (image.getRegionPixelY() + image.getImagePixelHeight()) + particle.y);
 
 				glEnd();
 			} else {
@@ -108,7 +97,7 @@ public abstract class ParticleEffect {
 	}
 
 	public class Particle {
-		public double x, y;
+		public float x, y;
 		public int size = 1;
 		public Color color = Color.WHITE;
 

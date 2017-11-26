@@ -31,10 +31,10 @@ public class Slider extends Component {
 
 	@Override
 	public void update(Game game) {
-		this.valueRect = new Rectangle(x, y, (float) width * ((float) value / (float) max), height, Color.WHITE);
-		this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY);
+		this.valueRect = new Rectangle(x, y, (float) width * ((float) value / (float) max), height, Color.WHITE, true);
+		this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
 		this.circle = new Circle(x + (float) width * ((float) value / (float) max), y + height / 2,
-				this.focus ? new Color(200, 200, 200) : Color.GRAY, height * 1.75);
+				this.focus ? new Color(200, 200, 200) : Color.GRAY, height * 1.75, true);
 	}
 
 	@Override

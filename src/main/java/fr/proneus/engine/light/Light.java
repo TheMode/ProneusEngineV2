@@ -12,11 +12,9 @@ import static org.lwjgl.opengl.GL20.glLinkProgram;
 import static org.lwjgl.opengl.GL20.glShaderSource;
 import static org.lwjgl.opengl.GL20.glValidateProgram;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
+import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 
 public class Light {
@@ -55,7 +53,7 @@ public class Light {
 
 		try {
 			String line;
-			BufferedReader reader = new BufferedReader(new FileReader("res/shader/light.frag"));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(Game.class.getResourceAsStream("/shader/light.frag")));
 			while ((line = reader.readLine()) != null) {
 				fragmentShaderSource.append(line).append("\n");
 			}
