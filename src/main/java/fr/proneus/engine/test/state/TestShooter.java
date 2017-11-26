@@ -110,9 +110,7 @@ public class TestShooter extends State {
             laser.moveFromAngle(0.002f, 0.002f);
         }
 
-        for (Sprite laserRemove : lasertoRemove) {
-            laserList.remove(laserRemove);
-        }
+        laserList.removeAll(lasertoRemove);
 
         lasertoRemove.clear();
 

@@ -3,6 +3,7 @@ package fr.proneus.engine.graphic.particle;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Image;
 
@@ -11,96 +12,116 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public abstract class ParticleEffect {
 
-	private ParticleType type;
+    private ParticleType type;
 
-	private Image image;
-	private List<Particle> particles;
+    private Game game;
 
-	public int step;
-	public float defaultX, defaultY;
-	public int maxStep;
+    private Image image;
+    private List<Particle> particles;
 
-	public ParticleEffect(ParticleType type, float defaultX, float defaultY, int maxStep) {
-		this.type = type;
-		this.defaultX = defaultX;
-		this.defaultY = defaultY;
-		this.maxStep = maxStep;
+    public int step;
+    public float defaultX, defaultY;
+    public int maxStep;
 
-		this.particles = new ArrayList<>();
-	}
+    public ParticleEffect(ParticleType type, float defaultX, float defaultY, int maxStep) {
+        this.type = type;
+        this.defaultX = defaultX;
+        this.defaultY = defaultY;
+        this.maxStep = maxStep;
 
-	public ParticleEffect(Image image, float defaultX, float defaultY, int maxStep) {
-		this(ParticleType.IMAGE, defaultX, defaultY, maxStep);
-		this.image = image;
-	}
+        this.particles = new ArrayList<>();
+    }
 
-	public abstract void updateParticles();
+    public ParticleEffect(Game game, Image image, float defaultX, float defaultY, int maxStep) {
+        this(ParticleType.IMAGE, defaultX, defaultY, maxStep);
+        this.game = game;
+        this.image = image;
+    }
 
-	public void draw() {
-		if (step > maxStep) {
-			return;
-		}
+    public abstract void updateParticles();
 
-		boolean isImage = type.equals(ParticleType.IMAGE);
+    public void draw() {
+        if (step > maxStep) {
+            return;
+        }
 
-		updateParticles();
-		glPushMatrix();
-		for (Particle particle : particles) {
-			if (isImage) {
-				glBindTexture(GL_TEXTURE_2D, image.getTextureID());
-			}
+        boolean isImage = type.equals(ParticleType.IMAGE);
 
-			glColor4f((float) particle.color.r / 255, (float) particle.color.g / 255, (float) particle.color.g / 255,
-					particle.color.a);
-			if (isImage) {
-				glTranslated(particle.x + defaultX, particle.y + defaultY, 1);
-				float dcx = image.getRegionPixelX() / image.getImagePixelWidth();
-				float dcy = image.getRegionPixelY() / image.getImagePixelHeight();
+        updateParticles();
+        glPushMatrix();
+        for (Particle particle : particles) {
+            if (isImage) {
+                glBindTexture(GL_TEXTURE_2D, image.getTextureID());
+            }
 
-				float dcw = (image.getRegionPixelX() + image.getImagePixelWidth()) / image.getImagePixelWidth();
-				float dch = (image.getRegionPixelY() + image.getImagePixelHeight()) / image.getImagePixelHeight();
+            glColor4f((float) particle.color.r / 255, (float) particle.color.g / 255, (float) particle.color.g / 255,
+                    particle.color.a);
+            if (isImage) {
 
-				glBegin(GL_QUADS);
+                float regionX = image.getRegionPixelX();
+                float regionY = image.getRegionPixelY();
 
-				glTexCoord2f(dcx, dcy);
-				glVertex2f((image.getRegionPixelX()) + particle.x, (image.getRegionPixelY()) + particle.y);
-				glTexCoord2f(dcw, dcy);
-				glVertex2f((image.getRegionPixelX() + image.getImagePixelWidth()) + particle.x, (image.getRegionPixelY()) + particle.y);
-				glTexCoord2f(dcw, dch);
-				glVertex2f((image.getRegionPixelX() + image.getImagePixelWidth()) + particle.x, (image.getRegionPixelY() + image.getImagePixelHeight()) + particle.y);
-				glTexCoord2f(dcx, dch);
-				glVertex2f((image.getRegionPixelX()) + particle.x, (image.getRegionPixelY() + image.getImagePixelHeight()) + particle.y);
+                float regionWidth = image.getRegionPixelWidth();
+                float regionHeight = image.getRegionPixelHeight();
 
-				glEnd();
-			} else {
-				glPointSize(particle.size);
-				glBegin(GL_POINTS);
-				glVertex2d(particle.x + defaultX, particle.y + defaultY);
-				glEnd();
-			}
-		}
-		glPopMatrix();
-		particles.clear();
-		step++;
-	}
+                float imageWidth = image.getImagePixelWidth();
+                float imageHeight = image.getImagePixelHeight();
 
-	public void addParticle(Particle particle) {
-		this.particles.add(particle);
-	}
+                float x = particle.x * (float) game.getWidth();
+                float y = particle.y * (float) game.getHeight();
 
-	public List<Particle> getParticles() {
-		return particles;
-	}
+                glTranslated(particle.x + defaultX, particle.y + defaultY, 1);
+                float dcx = regionX / imageWidth;
+                float dcy = regionY / imageHeight;
 
-	public enum ParticleType {
-		POINT, IMAGE;
-	}
+                float dcw = (regionX + regionWidth) / imageWidth;
+                float dch = (regionY + regionHeight) / imageHeight;
 
-	public class Particle {
-		public float x, y;
-		public int size = 1;
-		public Color color = Color.WHITE;
+                glBegin(GL_QUADS);
 
-	}
+                glTexCoord2f(dcx, dcy);
+                glVertex2f((regionX) + x, (regionY) + y);
+                glTexCoord2f(dcw, dcy);
+                glVertex2f((regionX + regionWidth) + x, (regionY) + y);
+                glTexCoord2f(dcw, dch);
+                glVertex2f((regionX + regionWidth) + x, (regionY + regionHeight) + y);
+                glTexCoord2f(dcx, dch);
+                glVertex2f((regionX) + x, (regionY + regionHeight) + y);
+
+                glEnd();
+
+                glPopMatrix();
+
+                glEnd();
+            } else {
+                glPointSize(particle.size);
+                glBegin(GL_POINTS);
+                glVertex2d(particle.x + defaultX, particle.y + defaultY);
+                glEnd();
+            }
+        }
+        glPopMatrix();
+        particles.clear();
+        step++;
+    }
+
+    public void addParticle(Particle particle) {
+        this.particles.add(particle);
+    }
+
+    public List<Particle> getParticles() {
+        return particles;
+    }
+
+    public enum ParticleType {
+        POINT, IMAGE;
+    }
+
+    public class Particle {
+        public float x, y;
+        public int size = 1;
+        public Color color = Color.WHITE;
+
+    }
 
 }

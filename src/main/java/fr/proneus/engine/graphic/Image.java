@@ -168,7 +168,7 @@ public class Image {
         glPopMatrix();
     }
 
-    protected int loadTexture(BufferedImage image) {
+    private int loadTexture(BufferedImage image) {
         int[] pixels = new int[image.getWidth() * image.getHeight()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
@@ -295,7 +295,7 @@ public class Image {
     }
 
     public enum DrawType {
-        CENTERED, TOP_LEFT, TOP_RIGHT, DOWN_LEFT, DOWN_RIGHT;
+        CENTERED, TOP_LEFT, TOP_RIGHT, DOWN_LEFT, DOWN_RIGHT
     }
 
 }
