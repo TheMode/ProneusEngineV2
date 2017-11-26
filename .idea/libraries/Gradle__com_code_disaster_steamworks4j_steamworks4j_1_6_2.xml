@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.code-disaster.steamworks4j:steamworks4j:1.6.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.code-disaster.steamworks4j/steamworks4j/1.6.2/4efe54bab7795d1791a8b5e5738e57944da1a4e9/steamworks4j-1.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.code-disaster.steamworks4j/steamworks4j/1.6.2/b153bdb030ab8da2faf7dc0484e5845eb0de3080/steamworks4j-1.6.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
