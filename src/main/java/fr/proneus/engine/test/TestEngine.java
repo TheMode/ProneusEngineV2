@@ -13,7 +13,7 @@ public class TestEngine {
 		app.setCloseCallBack(game -> {
 
         });
-		app.setFpsLimit(60);
+		//app.setFpsLimit(60);
 		app.setTPS(60);
 		//app.setBorderless();
 		app.setScale(true);

@@ -116,8 +116,8 @@ public class TestPhysics extends State {
 	}
 
 	@Override
-	public void onMouseMove(Game game, int x, int y) {
-		if (game.getInput().isMouseDown(0)) {
+    public void onMouseMove(Game game, float x, float y) {
+        if (game.getInput().isMouseDown(0)) {
 			Vec2 mousePosition = new Vec2(x, y).mul(0.5f).mul(1 / 30f);
 			Vec2 bodyPosition = body.getPosition();
 			Vec2 force = mousePosition.sub(bodyPosition);

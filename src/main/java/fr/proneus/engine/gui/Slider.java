@@ -34,8 +34,8 @@ public class Slider extends Component {
 		this.valueRect = new Rectangle(x, y, (float) width * ((float) value / (float) max), height, Color.WHITE, true);
 		this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
 		this.circle = new Circle(x + (float) width * ((float) value / (float) max), y + height / 2,
-				this.focus ? new Color(200, 200, 200) : Color.GRAY, height * 1.75, true);
-	}
+                this.focus ? new Color(200, 200, 200) : Color.GRAY, height * 1.75f, true);
+    }
 
 	@Override
 	public void render(Game game, Graphics graphic) {
@@ -47,8 +47,8 @@ public class Slider extends Component {
 	@Override
 	public void onMouseDown(Game game, int key) {
 		if (key == 0) {
-			MousePosition mouse = game.getInput().getVirtualMousePosition().toCameraPosition();
-			this.focus = circle.interact(mouse.getX(), mouse.getY());
+            MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
+            this.focus = circle.interact(mouse.getX(), mouse.getY());
 		}
 	}
 
@@ -59,11 +59,11 @@ public class Slider extends Component {
 	}
 
 	@Override
-	public void onMouseMove(Game game, int x, int y) {
-		if (this.focus) {
-			MousePosition mouse = game.getInput().getVirtualMousePosition().toCameraPosition();
-			int mouseX = mouse.getX() - (int) this.x;
-			this.value = (int) ((float) mouseX / (float) width * (float) max);
+    public void onMouseMove(Game game, float x, float y) {
+        if (this.focus) {
+            MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
+            float mouseX = mouse.getX() - (int) this.x;
+            this.value = (int) ((float) mouseX / (float) width * (float) max);
 
 			value = value < 0 ? 0 : value > max ? max : value;
 		}

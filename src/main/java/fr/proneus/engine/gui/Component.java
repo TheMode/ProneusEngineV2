@@ -20,8 +20,8 @@ public abstract class Component {
 	public void onKeyRepeat(Game game, int key, int scancode) {
 	}
 
-	public void onMouseMove(Game game, int x, int y) {
-	}
+    public void onMouseMove(Game game, float x, float y) {
+    }
 
 	public void onMouseDown(Game game, int key) {
 	}
@@ -38,12 +38,12 @@ public abstract class Component {
 	public void onControllerDisconnect(int joy){
 	}
 	
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-	
 	public boolean isVisible() {
 		return visible;
 	}
-	
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
 }

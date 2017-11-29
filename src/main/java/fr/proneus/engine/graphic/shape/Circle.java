@@ -1,42 +1,62 @@
 package fr.proneus.engine.graphic.shape;
 
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2d;
-
 import fr.proneus.engine.graphic.Color;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public class Circle extends Shape {
 
-	private double radius;
+    private float radius;
 
-	public Circle(float x, float y, Color color, double radius, boolean filled) {
-		super(x, y, 0, 0, color, filled);
-		this.radius = radius;
-	}
+    public Circle(float x, float y, Color color, float radius, boolean filled) {
+        super(x, y, 0, 0, color, filled);
+        this.radius = radius;
+    }
 
-	public Circle(float x, float y, double radius) {
-		this(x, y, Color.WHITE, radius, true);
-	}
+    public Circle(float x, float y, float radius) {
+        this(x, y, Color.WHITE, radius, true);
+    }
 
-	@Override
-	protected void render() {
-		double precision = Math.PI / 128;
+    @Override
+    protected void render() {
 
-		glBegin(GL_POLYGON);
+        if (isFilled()) {
 
-		for (double angle = 0; angle < 2 * Math.PI; angle += precision)
-			glVertex2d(radius * Math.cos(angle), radius * Math.sin(angle));
+            glShadeModel(GL_SMOOTH);
+            glBegin(GL_TRIANGLE_FAN);
+            float y1 = y;
+            float x1 = x;
 
-		glEnd();
+            for (int i = 0; i <= 360; i++) {
+                float degInRad = (float) Math.toRadians(i);
+                float x2 = x + ((float) Math.cos(degInRad) * radius);
+                float y2 = y + ((float) Math.sin(degInRad) * radius);
+                glVertex2f(x, y);
+                glVertex2f(x1, y1);
+                glVertex2f(x2, y2);
+                y1 = y2;
+                x1 = x2;
+            }
+            glEnd();
 
-	}
+        } else {
+            glBegin(GL_LINE_LOOP);
 
-	@Override
-	public boolean interact(float x, float y) {
-		double distance = Math.sqrt(Math.pow((this.x - x), 2) + Math.pow(this.y - y, 2));
-		return Math.abs(distance) < radius;
-	}
+            for (int i = 0; i <= 360; i++) {
+                float degInRad = (float) Math.toRadians(i);
+                glVertex2f(x + ((float) Math.cos(degInRad) * radius), y + ((float) Math.sin(degInRad) * radius));
+            }
+
+            glEnd();
+        }
+
+    }
+
+    @Override
+    public boolean interact(float x, float y) {
+        double distance = Math.sqrt(Math.pow((this.x - x), 2) + Math.pow(this.y - y, 2));
+        return Math.abs(distance) < radius;
+    }
 
 }

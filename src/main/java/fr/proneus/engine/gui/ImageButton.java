@@ -27,7 +27,7 @@ public abstract class ImageButton extends Component {
 
 	@Override
 	public void update(Game game) {
-		MousePosition mouse = game.getInput().getVirtualMousePosition().toCameraPosition();
+        MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
 
 		this.hover = this.rect.interact(mouse.getX(), mouse.getY());
 	}

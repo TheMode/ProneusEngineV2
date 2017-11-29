@@ -38,8 +38,8 @@ public class TestParticle extends State {
 
 	@Override
 	public void onMouseDown(Game game, int key) {
-		MousePosition mouse = game.getInput().getVirtualMousePosition();
-		particles.add(new ParticleCircle(mouse.getX(), mouse.getY()));
+        MousePosition mouse = game.getInput().getMousePosition();
+        particles.add(new ParticleCircle(mouse.getX(), mouse.getY()));
 	}
 
 }

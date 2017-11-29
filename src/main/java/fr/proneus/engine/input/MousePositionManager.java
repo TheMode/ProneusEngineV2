@@ -8,11 +8,9 @@ import fr.proneus.engine.state.State;
 
 public class MousePositionManager extends GLFWCursorPosCallback {
 
-	private Game game;
-
+    protected float x, y;
+    private Game game;
 	private State state;
-
-	protected int x, y;
 
 	public MousePositionManager(Game game) {
 		this.game = game;
@@ -23,7 +21,7 @@ public class MousePositionManager extends GLFWCursorPosCallback {
 		this.x = (int) x;
 		this.y = (int) y;
 
-		MousePosition mouse = game.getInput().getVirtualMousePosition();
+        MousePosition mouse = game.getInput().getMousePosition();
 
 		state.onMouseMove(game, mouse.getX(), mouse.getY());
 		for (Component comp : state.getComponents()) {

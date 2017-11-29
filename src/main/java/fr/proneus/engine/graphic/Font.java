@@ -70,8 +70,11 @@ public class Font {
 			glPushMatrix();
 			glBindTexture(GL_TEXTURE_2D, texID);
 
-			glTranslatef(x, y, 0f);
-			glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
+            float newX = x * 1920f;
+            float newY = y * 1080f;
+
+            glTranslatef(newX, newY, 0f);
+            glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
 			glBegin(GL_QUADS);
 			for (int i = 0; i < text.length(); i++) {
 				char c = text.charAt(i);
@@ -149,8 +152,8 @@ public class Font {
 			length = q.x1();
 		}
 
-		return length;
-	}
+        return length / 1920f;
+    }
 	
 	public float getHeight(String text) {
 		if (text == null || text.equals(""))
@@ -181,9 +184,9 @@ public class Font {
 		}
 
 		length = length > 0 ? length*2 : -length;
-		
-		return length;
-	}
+
+        return length / 1080f;
+    }
 
 	private boolean isLoaded() {
 		return texID != 0;

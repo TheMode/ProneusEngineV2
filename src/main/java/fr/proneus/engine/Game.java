@@ -65,15 +65,13 @@ import fr.proneus.engine.utils.ByteBufferUtils;
 
 public class Game {
 
-	private long window;
-	private WindowType windowType;
-
-	private String title;
 	protected int width;
 	protected int height;
 	protected int virtualWidth, virtualHeight;
-
-	private boolean scale;
+    private long window;
+    private WindowType windowType;
+    private String title;
+    private boolean scale;
 
 	private State state;
 	private Graphics graphic;
@@ -354,7 +352,8 @@ public class Game {
 
 				glfwPollEvents();
 				state.update(this);
-				state.componentsUpdate(this);
+                state.spritesUpdate(this);
+                state.componentsUpdate(this);
 			}
 			// Update end
 
@@ -468,26 +467,6 @@ public class Game {
 		return state;
 	}
 
-	public int getFps() {
-		return fps;
-	}
-
-	public int getTps() {
-		return tps;
-	}
-
-	public double getDelta() {
-		return delta;
-	}
-
-	public long getWindowID() {
-		return window;
-	}
-
-	public Camera getCamera() {
-		return camera;
-	}
-
 	public void setState(State state) {
 		this.state.exit(this);
 		this.timerManager.reset();
@@ -500,16 +479,32 @@ public class Game {
 		this.state.create(this);
 	}
 
+    public int getFps() {
+        return fps;
+    }
+
+    public int getTps() {
+        return tps;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public long getWindowID() {
+        return window;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
 	public WindowType getWindowType() {
 		return windowType;
 	}
 	
 	public void changeWindow(WindowType windowType) {
 		initWindow(windowType);
-	}
-
-	public enum WindowType {
-		NORMAL, BORDERLESS, FULLSCREEN;
 	}
 
 	public void exit() {
@@ -567,5 +562,9 @@ public class Game {
 	public DataManager getDataManager() {
 		return dataManager;
 	}
+
+    public enum WindowType {
+        NORMAL, BORDERLESS, FULLSCREEN;
+    }
 
 }

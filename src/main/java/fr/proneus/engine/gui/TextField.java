@@ -181,8 +181,8 @@ public class TextField extends Component {
 	@Override
 	public void onMouseDown(Game game, int key) {
 		if (key == 0) {
-			MousePosition mouse = game.getInput().getVirtualMousePosition().toCameraPosition();
-			this.focus = textField.interact(mouse.getX(), mouse.getY());
+            MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
+            this.focus = textField.interact(mouse.getX(), mouse.getY());
 		}
 	}
 
@@ -201,13 +201,13 @@ public class TextField extends Component {
 		this.focus = focus;
 	}
 
-	public void setLength(int length) {
-		this.length = length;
-	}
-
 	public int getLength() {
 		return length;
 	}
+
+    public void setLength(int length) {
+        this.length = length;
+    }
 
 	public String getText() {
 		return text;

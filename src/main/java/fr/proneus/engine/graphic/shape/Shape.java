@@ -12,18 +12,18 @@ import fr.proneus.engine.graphic.Color;
 
 public abstract class Shape {
 
-	private boolean filled;
 	public float x, y, width, height;
-	private int red, green, blue;
+    private boolean filled;
+    private int red, green, blue;
 	private float alpha;
 	private double angle;
 
 	public Shape(float x, float y, float width, float height, Color color, boolean filled) {
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		setColor(color);
+        this.x = x * 1920f;
+        this.y = y * 1080f;
+        this.width = width * 1920f;
+        this.height = height * 1080f;
+        setColor(color);
 		this.filled = filled;
 	}
 
@@ -45,9 +45,8 @@ public abstract class Shape {
 	public void draw() {
 		glPushMatrix();
 		glBindTexture(GL_TEXTURE_2D, 0);
-		float x = this.x * 1920f;
-		float y = this.y * 1080f;
-		glTranslatef(x, y, 1);
+
+        glTranslatef(x, y, 1);
 
 		// Rotation
 		if (angle != 0)

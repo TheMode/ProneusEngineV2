@@ -3,6 +3,8 @@ package fr.proneus.engine.test.state;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.proneus.engine.graphic.shape.RoundedRectangle;
+import fr.proneus.engine.utils.Vector;
 import org.lwjgl.glfw.GLFW;
 
 import fr.proneus.engine.Game;
@@ -41,6 +43,7 @@ public class TestShooter extends State {
     @Override
     public void create(Game game) {
         this.player = new Sprite(new Image("/ship.png"), 0.5f, 0.5f);
+        addSprite(player);
         this.laserImage = new Image("/shoot.png");
 
         this.controller = game.getInput().getController(0);
@@ -61,7 +64,7 @@ public class TestShooter extends State {
     public void update(Game game) {
         // Angle
         if (!this.controller.isConnected()) {
-            MousePosition mouse = game.getInput().getVirtualMousePosition();
+            MousePosition mouse = game.getInput().getMousePosition();
             double mouseAngle = MathUtils.getAngle(player.x, player.y, mouse.getX(), mouse.getY());
             player.angle = Math.toDegrees(mouseAngle) + 90;
         } else {
@@ -84,16 +87,25 @@ public class TestShooter extends State {
             h += this.controller.getJoyStickValue(ControllerAxe.JOYSTICK_1_HORIZONTAL, true);
         }
 
+        // Dash
+        if (this.controller.getJoyStickValue(ControllerAxe.LT, false) > 0 && player.getForces().size() == 0) {
+            MousePosition mouse = game.getInput().getMousePosition();
+            double angle = player.angle - 90;
+            MathUtils.AngleValue value = MathUtils.getMoveValue(angle, player.x, player.y, 1f, 1f);
+            player.applyForce(new Vector(value.x / 100, value.y / 100));
+        }
+
         player.x += h / 1000 * speed;
         player.y += v / 1000 * speed;
 
         // Shoot
         if (game.getInput().isMouseDown(Buttons.LEFT)
-                || this.controller.isConnected() && this.controller.getJoyStickValue(ControllerAxe.LT, false) > 0) {
+                || this.controller.isConnected() && this.controller.getJoyStickValue(ControllerAxe.RT, false) > 0) {
             if (System.currentTimeMillis() - lastShoot >= laserCooldown) {
                 Sprite laser = new Sprite(laserImage, player.x, player.y);
                 laser.angle = player.angle - 90;
                 laser.moveFromAngle(0.002f, 0.002f);
+                addSprite(laser);
                 laserList.add(laser);
 
                 lastShoot = System.currentTimeMillis();
@@ -102,7 +114,7 @@ public class TestShooter extends State {
 
         for (Sprite laser : laserList) {
             if (!game.getCamera().isPartiallyVisible(laser)) {
-                System.out.println("lol " + laser.x + " " + laser.y);
+                removeSprite(laser);
                 lasertoRemove.add(laser);
                 continue;
             }
@@ -140,7 +152,7 @@ public class TestShooter extends State {
     }
 
     @Override
-    public void onMouseMove(Game game, int x, int y) {
+    public void onMouseMove(Game game, float x, float y) {
         light.setPosition(x, y);
     }
 

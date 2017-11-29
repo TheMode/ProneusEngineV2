@@ -17,14 +17,14 @@ public abstract class Button extends Component {
 	
 	public Button(String text, float x, float y, float width, float height) {
 		this.rect = new Rectangle(x, y, width, height, Color.GRAY, true);
-		this.border = new Rectangle(x, y-2, width+2, height+2, Color.DARK_GRAY, true);
-		this.text = text;
+        this.border = new Rectangle(x, y - 0.0002f, width + 2, height + 0.0002f, Color.DARK_GRAY, true);
+        this.text = text;
 	}
 
 	@Override
 	public void update(Game game) {
-		MousePosition mouse = game.getInput().getVirtualMousePosition().toCameraPosition();
-		System.out.println(mouse.getX()+" "+mouse.getY());
+        MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
+        System.out.println(mouse.getX()+" "+mouse.getY());
 		this.hover = this.rect.interact(mouse.getX(), mouse.getY());
 		
 		this.rect.setColor(this.hover ? new Color(64, 64, 64) : Color.GRAY);
