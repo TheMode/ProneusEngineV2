@@ -10,12 +10,12 @@ import fr.proneus.engine.graphic.animation.AnimationFrame;
 import fr.proneus.engine.utils.Vector;
 
 public class Sprite {
-    public float x, y;
     public double scale;
     public double scaleX;
     public double scaleY;
     public double angle;
     public long lastAnimationDraw;
+    private float x, y;
     // TODO abstract
     private Image image;
     private DrawType drawType;
@@ -125,6 +125,27 @@ public class Sprite {
 
     public List<Force> getForces() {
         return forces;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void move(float x, float y) {
+        this.x += x;
+        this.y += y;
     }
 
     public void moveFromAngle(double angle, float speedx, float speedy) {

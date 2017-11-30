@@ -3,8 +3,12 @@ package fr.proneus.engine.test.state;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.graphic.shape.RoundedRectangle;
+import fr.proneus.engine.script.Script;
+import fr.proneus.engine.utils.FileUtils;
 import fr.proneus.engine.utils.Vector;
+import org.luaj.vm2.Varargs;
 import org.lwjgl.glfw.GLFW;
 
 import fr.proneus.engine.Game;
@@ -57,7 +61,9 @@ public class TestShooter extends State {
         // light.setAmbientShowRange(1f);
 
         getLightManager().addLight(light);
-
+        Script script = game.getScriptManager().loadScript("/scripts/testscript.lua");
+        Varargs result = script.runMethod("testFunct", player);
+        System.out.println("test: " + result.checkdouble(1));
     }
 
     @Override
@@ -65,7 +71,7 @@ public class TestShooter extends State {
         // Angle
         if (!this.controller.isConnected()) {
             MousePosition mouse = game.getInput().getMousePosition();
-            double mouseAngle = MathUtils.getAngle(player.x, player.y, mouse.getX(), mouse.getY());
+            double mouseAngle = MathUtils.getAngle(player.getX(), player.getY(), mouse.getX(), mouse.getY());
             player.angle = Math.toDegrees(mouseAngle) + 90;
         } else {
             double angle = this.controller.getJoystickAngle(JoyStick.JOYSTICK_2, true);
@@ -91,18 +97,17 @@ public class TestShooter extends State {
         if (this.controller.getJoyStickValue(ControllerAxe.LT, false) > 0 && player.getForces().size() == 0) {
             MousePosition mouse = game.getInput().getMousePosition();
             double angle = player.angle - 90;
-            MathUtils.AngleValue value = MathUtils.getMoveValue(angle, player.x, player.y, 1f, 1f);
+            MathUtils.AngleValue value = MathUtils.getMoveValue(angle, player.getX(), player.getY(), 1f, 1f);
             player.applyForce(new Vector(value.x / 100, value.y / 100));
         }
 
-        player.x += h / 1000 * speed;
-        player.y += v / 1000 * speed;
+        player.move(h / 1000 * speed, v / 1000 * speed);
 
         // Shoot
         if (game.getInput().isMouseDown(Buttons.LEFT)
                 || this.controller.isConnected() && this.controller.getJoyStickValue(ControllerAxe.RT, false) > 0) {
             if (System.currentTimeMillis() - lastShoot >= laserCooldown) {
-                Sprite laser = new Sprite(laserImage, player.x, player.y);
+                Sprite laser = new Sprite(laserImage, player.getX(), player.getY());
                 laser.angle = player.angle - 90;
                 laser.moveFromAngle(0.002f, 0.002f);
                 addSprite(laser);

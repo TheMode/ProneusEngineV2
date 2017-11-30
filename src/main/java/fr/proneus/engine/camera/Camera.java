@@ -50,7 +50,7 @@ public class Camera {
     }
 
     public boolean isPartiallyVisible(Sprite sprite) {
-        return isPartiallyVisible(sprite.x, sprite.y, sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
+        return isPartiallyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
                 sprite.getImage().getRegionPixelHeight() / (float) game.getVirtualHeight());
     }
 
@@ -65,7 +65,7 @@ public class Camera {
     }
 
     public boolean isFullyVisible(Sprite sprite) {
-        return isFullyVisible(sprite.x, sprite.y, sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
+        return isFullyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
                 sprite.getImage().getRegionPixelHeight() / (float) game.getVirtualHeight());
     }
 

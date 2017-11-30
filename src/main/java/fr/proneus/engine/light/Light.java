@@ -16,6 +16,7 @@ import java.io.*;
 
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
+import fr.proneus.engine.utils.FileUtils;
 
 public class Light {
 
@@ -53,8 +54,8 @@ public class Light {
 
 		try {
 			String line;
-			BufferedReader reader = new BufferedReader(new InputStreamReader(Game.class.getResourceAsStream("/shader/light.frag")));
-			while ((line = reader.readLine()) != null) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(FileUtils.getInternalFile("/shader/light.frag")));
+            while ((line = reader.readLine()) != null) {
 				fragmentShaderSource.append(line).append("\n");
 			}
 			reader.close();
@@ -104,23 +105,23 @@ public class Light {
 		this.y = y;
 	}
 	
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
 	public Color getColor() {
 		return color;
 	}
-	
-	public void setLightType(LightType lightType) {
-		this.lightType = lightType;
-	}
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 	
 	public LightType getLightType() {
 		return lightType;
 	}
-	
-	public float getAmbientColor() {
+
+    public void setLightType(LightType lightType) {
+        this.lightType = lightType;
+    }
+
+    public float getAmbientColor() {
 		return ambientColor;
 	}
 	

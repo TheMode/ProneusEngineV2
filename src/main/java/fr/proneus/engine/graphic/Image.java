@@ -33,6 +33,7 @@ import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 
 import fr.proneus.engine.Game;
+import fr.proneus.engine.utils.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
 
@@ -48,7 +49,7 @@ public class Image {
 
     public Image(String path, float x, float y, float width, float height) {
         try {
-            this.image = ImageIO.read(Game.class.getResourceAsStream(path));
+            this.image = ImageIO.read(FileUtils.getInternalFile(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +66,7 @@ public class Image {
 
     public Image(String path) {
         try {
-            this.image = ImageIO.read(Game.class.getResourceAsStream(path));
+            this.image = ImageIO.read(FileUtils.getInternalFile(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,8 +128,8 @@ public class Image {
             glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
 
         // Sprite position & image region
-        float x = sprite.x * (float) graphic.getGame().getWidth();
-        float y = sprite.y * (float) graphic.getGame().getHeight();
+        float x = sprite.getX() * (float) graphic.getGame().getWidth();
+        float y = sprite.getY() * (float) graphic.getGame().getHeight();
         glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, 0);
 
         // Rotation
