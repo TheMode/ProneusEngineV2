@@ -9,66 +9,38 @@ import fr.proneus.engine.state.State;
 
 public class DiscordRPCManager {
 
-	private DiscordRPC discordRPC;
+    private DiscordRPC discordRPC;
+    private String applicationId;
+    private boolean isOnSteam;
 
-	public DiscordRPCManager() {
+	public DiscordRPCManager(boolean isOnSteam, String applicationId) {
+        this.discordRPC = DiscordRPC.INSTANCE;
+        this.applicationId = applicationId;
+        this.isOnSteam = isOnSteam;
+    }
 
-	}
-
-	public void connect(Game game, String applicationID) {
+	public void connect(Game game) {
 		State state = game.getState();
-		discordRPC = DiscordRPC.INSTANCE;
 		DiscordEventHandlers handler = new DiscordEventHandlers();
-		handler.ready = new DiscordEventHandlers.OnReady() {
-
-			@Override
-			public void accept() {
-				state.onDiscordRPCReady(game);
-
-			}
+		handler.ready = () -> state.onDiscordRPCReady(game);
+		handler.disconnected = (error, message) -> state.onDiscordRPCDisconnected(game, message);
+		handler.errored = (error, message) -> state.onDiscordRPCErrored(game, message);
+		handler.joinGame = secret -> state.onDiscordRPCJoinGame(game, secret);
+		handler.spectateGame = secret -> state.onDiscordRPCSpectateGame(game, secret);
+		handler.joinRequest = request -> {
+		    DiscordRPCJoinRequest joinRequest = new DiscordRPCJoinRequest(request.userId, request.username, request.discriminator, request.avatar);
+		    state.onDiscordRPCJoinRequest(game, joinRequest);
 		};
-		handler.disconnected = new DiscordEventHandlers.OnStatus() {
-
-			@Override
-			public void accept(int arg0, String arg1) {
-				state.onDiscordRPCDisconnected(game);
-
-			}
-		};
-		handler.disconnected = new DiscordEventHandlers.OnStatus() {
-
-			@Override
-			public void accept(int arg0, String arg1) {
-				state.onDiscordRPCErrored(game);
-
-			}
-		};
-		handler.joinGame = new DiscordEventHandlers.OnGameUpdate() {
-
-			@Override
-			public void accept(String arg0) {
-				state.onDiscordRPCJoinGame(game);
-
-			}
-		};
-		handler.spectateGame = new DiscordEventHandlers.OnGameUpdate() {
-
-			@Override
-			public void accept(String arg0) {
-				state.onDiscordRPCSpectateGame(game);
-
-			}
-		};
-		handler.joinRequest = new DiscordEventHandlers.OnJoinRequest() {
-
-			@Override
-			public void accept(DiscordJoinRequest arg0) {
-				state.onDiscordRPCJoinRequest(game);
-
-			}
-		};
-		discordRPC.Discord_Initialize(applicationID, handler, true, "");
+        this.discordRPC.Discord_Initialize(this.applicationId, handler, true, this.isOnSteam ? this.applicationId : "");
 	}
+
+	public void disconnect() {
+	    this.discordRPC.Discord_Shutdown();
+    }
+
+    public void respond(String userId, Response response) {
+	    this.discordRPC.Discord_Respond(userId, response.getId());
+    }
 
 	public void update(DiscordRPCInfo info) {
 		DiscordRichPresence pre = new DiscordRichPresence();
@@ -101,4 +73,23 @@ public class DiscordRPCManager {
 		return discordRPC;
 	}
 
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public enum Response {
+	    NO(0),
+        YES(1),
+        IGNORE(2);
+
+	    private int id;
+
+	    Response(int id) {
+	        this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
 }

@@ -175,10 +175,6 @@ public class Game {
                     close.onClose(this);
                 }
 
-                if (hasDiscordRPCEnabled()) {
-                    discordRPGManager.getDiscordRPC().Discord_Shutdown();
-                }
-
                 destroy();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -222,9 +218,9 @@ public class Game {
         this.debug = debug;
     }
 
-    protected void enableDiscordRPC(String applicationID) {
-        this.discordRPGManager = new DiscordRPCManager();
-        this.discordRPGManager.connect(this, applicationID);
+    protected void enableDiscordRPC(String applicationId) {
+        this.discordRPGManager = new DiscordRPCManager(false, applicationId);
+        this.discordRPGManager.connect(this);
     }
 
     private void initWindow(WindowType windowType) {
@@ -482,6 +478,9 @@ public class Game {
 
     public void setState(State state) {
         this.state.exit(this);
+        if (hasDiscordRPCEnabled()) {
+            this.discordRPGManager.disconnect();
+        }
         this.timerManager.reset();
         this.state = state;
         this.keyboardManager.setListener(state);

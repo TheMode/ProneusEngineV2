@@ -3,6 +3,7 @@ package fr.proneus.engine.graphic;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import javax.imageio.ImageIO;
@@ -43,21 +44,28 @@ public class Image {
     }
 
     public Image(String path) {
+        this(path, 0, 0, 1, 1);
+    }
+
+    public Image(InputStream inputStream, float x, float y, float width, float height) {
         try {
-            this.image = ImageIO.read(FileUtils.getInternalFile(path));
+            this.image = ImageIO.read(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        this.path = path;
+        this.path = "";
 
         this.imageWidth = image.getWidth();
         this.imageHeight = image.getHeight();
 
-        this.regionX = 0;
-        this.regionY = 0;
-        this.regionWidth = 1;
-        this.regionHeight = 1;
+        this.regionX = x;
+        this.regionY = y;
+        this.regionWidth = width;
+        this.regionHeight = height;
+    }
+
+    public Image(InputStream inputStream) {
+        this(inputStream, 0, 0, 1, 1);
     }
 
     public void draw(Sprite sprite, Graphics graphic) {

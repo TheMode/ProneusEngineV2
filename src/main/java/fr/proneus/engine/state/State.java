@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.proneus.engine.Game;
+import fr.proneus.engine.discord.DiscordRPCJoinRequest;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Sprite;
 import fr.proneus.engine.gui.Component;
@@ -55,19 +56,19 @@ public abstract class State {
     public void onDiscordRPCReady(Game game) {
     }
 
-    public void onDiscordRPCDisconnected(Game game) {
+    public void onDiscordRPCDisconnected(Game game, String message) {
     }
 
-    public void onDiscordRPCErrored(Game game) {
+    public void onDiscordRPCErrored(Game game, String message) {
     }
 
-    public void onDiscordRPCJoinGame(Game game) {
+    public void onDiscordRPCJoinGame(Game game, String secret) {
     }
 
-    public void onDiscordRPCSpectateGame(Game game) {
+    public void onDiscordRPCSpectateGame(Game game, String secret) {
     }
 
-    public void onDiscordRPCJoinRequest(Game game) {
+    public void onDiscordRPCJoinRequest(Game game, DiscordRPCJoinRequest joinRequest) {
     }
 
     // Sprites

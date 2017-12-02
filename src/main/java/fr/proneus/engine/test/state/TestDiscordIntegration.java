@@ -18,7 +18,8 @@ public class TestDiscordIntegration extends State {
 			info.setDetails("Details about the game");
 			// info.setStartTimestamp(System.currentTimeMillis());
 			info.setEndTimestamp(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(20));
-			info.setParty("ID", 2, 10);
+			info.setParty("ID", 1, 10);
+			info.setJoinSecret("secret");
 			game.updateDiscordRPC(info);
 		}
 	}
