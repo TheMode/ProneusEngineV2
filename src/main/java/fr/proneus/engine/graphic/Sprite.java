@@ -65,6 +65,7 @@ public class Sprite {
         if (currentAnimation != null) {
             if (System.currentTimeMillis() - lastAnimationDraw > currentAnimationSpeed) {
                 this.lastAnimationDraw = System.currentTimeMillis();
+                // TODO Maybe bugged ?
                 AnimationFrame frame = currentAnimation.frames.get(currentAnimationFrame);
                 this.image.setRegionX(frame.x);
                 this.image.setRegionY(frame.y);
