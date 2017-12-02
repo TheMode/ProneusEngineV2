@@ -1,30 +1,5 @@
 package fr.proneus.engine.graphic;
 
-import static org.lwjgl.opengl.GL11.GL_LINEAR;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_RGBA8;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glGenTextures;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotated;
-import static org.lwjgl.opengl.GL11.glScaled;
-import static org.lwjgl.opengl.GL11.glTexCoord2f;
-import static org.lwjgl.opengl.GL11.glTexImage2D;
-import static org.lwjgl.opengl.GL11.glTexParameteri;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +8,12 @@ import java.nio.ByteBuffer;
 import javax.imageio.ImageIO;
 
 import fr.proneus.engine.Game;
+import fr.proneus.engine.camera.Camera;
 import fr.proneus.engine.utils.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class Image {
 
@@ -130,13 +108,15 @@ public class Image {
         // Sprite position & image region
         float x = sprite.getX() * (float) graphic.getGame().getWidth();
         float y = sprite.getY() * (float) graphic.getGame().getHeight();
-        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, 0);
+        // setup Z coord
+        float z = sprite.getZ();
+        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, z);
 
         // Rotation
         if (sprite.angle != 0)
             glRotated(sprite.angle, 0, 0, 1);
 
-        // Scale
+        // Scale (global/sprite)
         double scaleX = Math.max(
                 sprite.scale + (sprite.scaleX - 1) + (graphic.getGlobalScale() - 1) + (graphic.getScaleX() - 1), 0);
         double scaleY = Math.max(
@@ -144,6 +124,12 @@ public class Image {
         if (scaleX != 1 || scaleY != 1) {
             glScaled(scaleX, scaleY, 1);
         }
+
+        // Scale (camera)
+        Camera camera = graphic.getGame().getCamera();
+        float cameraZoomX = camera.getZoomX();
+        float cameraZoomY = camera.getZoomY();
+        glScalef(cameraZoomX, cameraZoomY, 0);
 
         glTranslatef(-(x + regionX + regionWidth / 2), -(y + regionY + regionHeight / 2), 0);
 

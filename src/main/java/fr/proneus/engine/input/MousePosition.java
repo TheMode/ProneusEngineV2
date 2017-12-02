@@ -22,7 +22,10 @@ public class MousePosition {
     }
 
     public MousePosition toCameraPosition() {
-        return new MousePosition(game, x - game.getCamera().getX(), y - game.getCamera().getY());
+        // Add camera position and zoom to current mouse position
+        float mouseX = (x - game.getCamera().getX()) / game.getCamera().getZoomX();
+        float mouseY = (y - game.getCamera().getY()) / game.getCamera().getZoomY();
+        return new MousePosition(game, x, y);
     }
 
 

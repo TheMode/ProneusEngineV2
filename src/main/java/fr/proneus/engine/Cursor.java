@@ -10,9 +10,9 @@ public enum Cursor {
 	VRESIZE_CURSOR(0x36006);
 	
 	private int value;
-	
-	private Cursor(int value) {
-		this.value = value;
+
+    Cursor(int value) {
+        this.value = value;
 	}
 	
 	public int getValue() {

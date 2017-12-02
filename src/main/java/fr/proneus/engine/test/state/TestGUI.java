@@ -20,7 +20,7 @@ public class TestGUI extends State {
 
 	@Override
 	public void create(Game game) {
-		username = new TextField(game.getVirtualWidth() / 2 - 100, 300, 200, 35, game.getCurrentFont());
+        username = new TextField(0.5f - 0.02f, 300, 200, 35, game.getCurrentFont());
 
 		password = new TextField(game.getVirtualWidth() / 2 - 100, 400, 200, 35, game.getCurrentFont());
 		password.setPassword('*');

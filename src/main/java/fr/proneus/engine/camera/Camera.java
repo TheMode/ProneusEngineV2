@@ -11,6 +11,7 @@ public class Camera {
 
     private Game game;
     private float x, y;
+    private float zoomX = 1, zoomY = 1;
 
     public Camera(Game game) {
         this.game = game;
@@ -26,6 +27,16 @@ public class Camera {
         this.y += y;
     }
 
+    public void setZoom(float x, float y) {
+        zoomX = zoomX + x <= 0 ? 0 : x;
+        zoomY = zoomY + y <= 0 ? 0 : x;
+    }
+
+    public void zoom(float x, float y) {
+        zoomX += zoomX + x <= 0 ? 0 : x;
+        zoomY += zoomY + y <= 0 ? 0 : x;
+    }
+
     public float getX() {
         return x;
     }
@@ -34,8 +45,17 @@ public class Camera {
         return y;
     }
 
+    public float getZoomX() {
+        return zoomX;
+    }
+
+    public float getZoomY() {
+        return zoomY;
+    }
+
     public Rectangle getCameraRectangle() {
         // TODO faire marcher  les methodes "visible" =(
+        // TODO integrate zoom
         //float cameraWidth = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualWidth() : game.getWidth();
         //float cameraHeight = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualHeight() : game.getHeight();
         float cameraWidth = game.getVirtualWidth();

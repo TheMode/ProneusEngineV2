@@ -24,8 +24,8 @@ public class Graphics {
 	}
 
 	public void drawShape(Shape shape) {
-		shape.draw();
-	}
+        shape.draw(this);
+    }
 
 	public void drawString(String text, float x, float y, FontStyle style, Color color) {
 		if (font != null)
@@ -52,29 +52,29 @@ public class Graphics {
 		this.font = font;
 	}
 
-	public void setGlobalScale(double globalScale) {
-		this.globalScale = globalScale;
-	}
-
-	public void setScaleX(double scaleX) {
-		this.scaleX = scaleX;
-	}
-
-	public void setScaleY(double scaleY) {
-		this.scaleY = scaleY;
-	}
-
 	public double getGlobalScale() {
 		return globalScale;
 	}
+
+    public void setGlobalScale(double globalScale) {
+        this.globalScale = globalScale;
+    }
 
 	public double getScaleX() {
 		return scaleY;
 	}
 
+    public void setScaleX(double scaleX) {
+        this.scaleX = scaleX;
+    }
+
 	public double getScaleY() {
 		return scaleX;
 	}
+
+    public void setScaleY(double scaleY) {
+        this.scaleY = scaleY;
+    }
 
 	public Game getGame() {
 		return game;

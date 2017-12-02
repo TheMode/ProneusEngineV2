@@ -31,9 +31,9 @@ public class Slider extends Component {
 
 	@Override
 	public void update(Game game) {
-		this.valueRect = new Rectangle(x, y, (float) width * ((float) value / (float) max), height, Color.WHITE, true);
-		this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
-		this.circle = new Circle(x + (float) width * ((float) value / (float) max), y + height / 2,
+        this.valueRect = new Rectangle(x, y, width * ((float) value / (float) max), height, Color.WHITE, true);
+        this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
+        this.circle = new Circle(x + width * ((float) value / (float) max), y + height / 2,
                 this.focus ? new Color(200, 200, 200) : Color.GRAY, height * 1.75f, true);
     }
 
@@ -63,7 +63,7 @@ public class Slider extends Component {
         if (this.focus) {
             MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
             float mouseX = mouse.getX() - (int) this.x;
-            this.value = (int) ((float) mouseX / (float) width * (float) max);
+            this.value = (int) (mouseX / width * (float) max);
 
 			value = value < 0 ? 0 : value > max ? max : value;
 		}

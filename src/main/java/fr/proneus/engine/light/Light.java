@@ -158,8 +158,8 @@ public class Light {
 
 		private int id;
 
-		private LightType(int id) {
-			this.id = id;
+        LightType(int id) {
+            this.id = id;
 		}
 
 		public int getID() {

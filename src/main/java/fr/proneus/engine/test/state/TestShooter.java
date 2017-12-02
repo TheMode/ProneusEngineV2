@@ -6,6 +6,8 @@ import java.util.List;
 import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.graphic.shape.RoundedRectangle;
 import fr.proneus.engine.script.Script;
+import fr.proneus.engine.script.ScriptArgs;
+import fr.proneus.engine.script.ScriptValue;
 import fr.proneus.engine.utils.FileUtils;
 import fr.proneus.engine.utils.Vector;
 import org.luaj.vm2.Varargs;
@@ -62,8 +64,9 @@ public class TestShooter extends State {
 
         getLightManager().addLight(light);
         Script script = game.getScriptManager().loadScript("/scripts/testscript.lua");
-        Varargs result = script.runMethod("testFunct", player);
-        System.out.println("test: " + result.checkdouble(1));
+        ScriptValue scriptValue = script.runMethod("testFunct", player);
+        ScriptArgs scriptArgs = scriptValue.getArg(1);
+        System.out.println("test: " + scriptArgs.toString());
     }
 
     @Override
@@ -76,7 +79,7 @@ public class TestShooter extends State {
         } else {
             double angle = this.controller.getJoystickAngle(JoyStick.JOYSTICK_2, true);
             if (angle != 0) {
-                player.angle = angle + 90;
+                player.angle = angle;
             }
         }
 
@@ -119,6 +122,7 @@ public class TestShooter extends State {
 
         for (Sprite laser : laserList) {
             if (!game.getCamera().isPartiallyVisible(laser)) {
+                System.out.println("test");
                 removeSprite(laser);
                 lasertoRemove.add(laser);
                 continue;
@@ -154,6 +158,11 @@ public class TestShooter extends State {
         } else if (key == GLFW.GLFW_KEY_Y) {
             game.changeWindow(WindowType.NORMAL);
         }
+    }
+
+    @Override
+    public void onMouseScroll(Game game, float power) {
+        game.getCamera().zoom(power * 0.5f, power * 0.5f);
     }
 
     @Override

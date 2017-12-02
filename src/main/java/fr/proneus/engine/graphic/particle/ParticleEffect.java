@@ -12,16 +12,13 @@ import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public abstract class ParticleEffect {
 
-    private ParticleType type;
-
-    private Game game;
-
-    private Image image;
-    private List<Particle> particles;
-
     public int step;
     public float defaultX, defaultY;
     public int maxStep;
+    private ParticleType type;
+    private Game game;
+    private Image image;
+    private List<Particle> particles;
 
     public ParticleEffect(ParticleType type, float defaultX, float defaultY, int maxStep) {
         this.type = type;
@@ -114,7 +111,7 @@ public abstract class ParticleEffect {
     }
 
     public enum ParticleType {
-        POINT, IMAGE;
+        POINT, IMAGE
     }
 
     public class Particle {

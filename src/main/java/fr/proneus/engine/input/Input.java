@@ -44,8 +44,8 @@ public class Input {
     }
 
     public MousePosition getMousePosition() {
-        float x = ((float) game.getVirtualWidth() / (float) game.getWidth() * (float) mousePosition.x) / (float) game.getVirtualWidth();
-        float y = ((float) game.getVirtualHeight() / (float) game.getHeight() * (float) mousePosition.y) / (float) game.getVirtualHeight();
+        float x = ((float) game.getVirtualWidth() / (float) game.getWidth() * mousePosition.x) / (float) game.getVirtualWidth();
+        float y = ((float) game.getVirtualHeight() / (float) game.getHeight() * mousePosition.y) / (float) game.getVirtualHeight();
         return new MousePosition(game, x, y);
     }
 

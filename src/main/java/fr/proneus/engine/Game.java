@@ -161,9 +161,14 @@ public class Game {
     protected void start() {
 
         try {
-            init();
-            this.soundManager.init();
-            loop();
+            // TODO best way ?
+            try {
+                init();
+                this.soundManager.init();
+                loop();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } finally {
             try {
                 if (close != null) {
@@ -577,7 +582,7 @@ public class Game {
     }
 
     public enum WindowType {
-        NORMAL, BORDERLESS, FULLSCREEN;
+        NORMAL, BORDERLESS, FULLSCREEN
     }
 
 }

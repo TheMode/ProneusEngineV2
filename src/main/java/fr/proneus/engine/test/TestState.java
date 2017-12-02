@@ -33,8 +33,8 @@ public class TestState extends State {
 	}
 
 	@Override
-	public void onMouseScroll(Game game, double power) {
-		scale = scale + power * .05f;
+    public void onMouseScroll(Game game, float power) {
+        scale = scale + power * .05f;
 	}
 
 }

@@ -15,7 +15,7 @@ public class Sprite {
     public double scaleY;
     public double angle;
     public long lastAnimationDraw;
-    private float x, y;
+    private float x, y, z;
     // TODO abstract
     private Image image;
     private DrawType drawType;
@@ -141,6 +141,14 @@ public class Sprite {
 
     public void setY(float y) {
         this.y = y;
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
     }
 
     public void move(float x, float y) {

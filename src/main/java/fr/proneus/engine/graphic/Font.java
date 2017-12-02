@@ -201,6 +201,6 @@ public class Font {
 	}
 
 	public enum FontStyle {
-		RIGHT, LEFT, CENTERED;
-	}
+        RIGHT, LEFT, CENTERED
+    }
 }

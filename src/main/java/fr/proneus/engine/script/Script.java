@@ -15,13 +15,16 @@ public class Script {
         this.value = value;
     }
 
-    public Varargs runMethod(String name, Object... args) {
+    public ScriptValue runMethod(String name, Object... args) {
         LuaValue value = globals.get(name);
         LuaValue[] luaArgs = new LuaValue[args.length];
         for (int i = 0; i < args.length; i++) {
             luaArgs[i] = CoerceJavaToLua.coerce(args[i]);
         }
-        return value.invoke(luaArgs);
+        if (!value.isnil()) {
+            return new ScriptValue(value.invoke(luaArgs));
+        }
+        return null;
     }
 
 }

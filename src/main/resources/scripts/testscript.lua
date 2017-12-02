@@ -1,4 +1,4 @@
 function testFunct(player)
     print("Current player X : " .. player:getX())
-    return player:getX()
+    return 'Test string return'
 end

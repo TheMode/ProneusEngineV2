@@ -42,7 +42,7 @@ public abstract class State {
     public void onMouseUp(Game game, int key) {
     }
 
-    public void onMouseScroll(Game game, double power) {
+    public void onMouseScroll(Game game, float power) {
     }
 
     public void onControllerConnect(Game game, int joy) {
