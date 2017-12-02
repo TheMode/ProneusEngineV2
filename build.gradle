@@ -31,12 +31,31 @@ dependencies {
     compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
     compile "org.lwjgl:lwjgl-stb:$lwjglVersion"
     compile "org.lwjgl:lwjgl-tinyfd:$lwjglVersion"
-    runtime "org.lwjgl:lwjgl:$lwjglVersion:$lwjglNatives"
-    runtime "org.lwjgl:lwjgl-glfw:$lwjglVersion:$lwjglNatives"
-    runtime "org.lwjgl:lwjgl-openal:$lwjglVersion:$lwjglNatives"
-    runtime "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
-    runtime "org.lwjgl:lwjgl-stb:$lwjglVersion:$lwjglNatives"
-    runtime "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:$lwjglNatives"
+
+    runtime "org.lwjgl:lwjgl:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl:$lwjglVersion:natives-macos"
+
+    runtime "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl-glfw:$lwjglVersion:natives-macos"
+
+    runtime "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl-openal:$lwjglVersion:natives-macos"
+
+    runtime "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl-opengl:$lwjglVersion:natives-macos"
+
+    runtime "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl-stb:$lwjglVersion:natives-macos"
+
+    runtime "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-windows"
+    runtime "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-linux"
+    runtime "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-macos"
+
     compile "com.code-disaster.steamworks4j:steamworks4j:${steamworks4jVersion}"
     compile "org.joml:joml:${jomlVersion}"
 	compile "com.github.MinnDevelopment:Java-DiscordRPC:v${discordRPCVersion}"
@@ -44,4 +63,10 @@ dependencies {
 	compile "org.jbox2d:jbox2d-library:2.2.1.1"
 	compile "org.luaj:luaj-jse:3.0-beta2"
 	compile "com.mashape.unirest:unirest-java:1.4.9"
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
