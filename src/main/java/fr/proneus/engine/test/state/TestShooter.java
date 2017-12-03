@@ -144,6 +144,8 @@ public class TestShooter extends State {
             laser.draw(graphic);
         }
 
+        graphic.drawString("SALUT", 0.5f, 0.5f);
+
     }
 
     @Override

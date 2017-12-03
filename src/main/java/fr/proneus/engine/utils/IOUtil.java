@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import fr.proneus.engine.Game;
 import org.lwjgl.BufferUtils;
 
 public class IOUtil {
@@ -34,8 +35,8 @@ public class IOUtil {
 					;
 			}
 		} else {
-			try (InputStream source = IOUtil.class.getClassLoader().getResourceAsStream(resource);
-					ReadableByteChannel rbc = Channels.newChannel(source)) {
+			try (InputStream source = Game.class.getResourceAsStream(resource);
+				 ReadableByteChannel rbc = Channels.newChannel(source)) {
 				buffer = createByteBuffer(bufferSize);
 
 				while (true) {

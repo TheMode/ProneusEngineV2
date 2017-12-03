@@ -6,6 +6,7 @@ import fr.proneus.engine.Game;
 import fr.proneus.engine.test.state.TestDiscordIntegration;
 import fr.proneus.engine.test.state.TestFileChooser;
 import fr.proneus.engine.test.state.TestShooter;
+import fr.proneus.engine.test.state.TestVideo;
 
 public class TestEngine {
 
@@ -20,7 +21,7 @@ public class TestEngine {
 		//app.setBorderless();
 		app.setScale(true);
 		app.setIcon("/test2.png");
-		app.enableDiscordRPC("appId");
+		//app.enableDiscordRPC("appId");
 		app.start();
 	}
 
