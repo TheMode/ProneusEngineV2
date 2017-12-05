@@ -55,11 +55,11 @@ public abstract class ParticleEffect {
                     particle.color.a);
             if (isImage) {
 
-                float regionX = image.getRegionPixelX();
-                float regionY = image.getRegionPixelY();
+                float regionX = image.getRegionX();
+                float regionY = image.getRegionY();
 
-                float regionWidth = image.getRegionPixelWidth();
-                float regionHeight = image.getRegionPixelHeight();
+                float regionWidth = image.getRegionWidth() / (float) Game.getDefaultWidth();
+                float regionHeight = image.getRegionHeight() / (float) Game.getDefaultHeight();
 
                 float imageWidth = image.getImagePixelWidth();
                 float imageHeight = image.getImagePixelHeight();

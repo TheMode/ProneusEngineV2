@@ -1,48 +1,5 @@
 package fr.proneus.engine;
 
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_FRONT;
-import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_RGBA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_STENCIL_TEST;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_BYTE;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearStencil;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glMatrixMode;
-import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glReadBuffer;
-import static org.lwjgl.opengl.GL11.glReadPixels;
-import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glViewport;
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
-
-import fr.proneus.engine.script.ScriptManager;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWImage.Buffer;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLUtil;
-import org.lwjgl.system.Callback;
-
 import fr.proneus.engine.audio.Sound;
 import fr.proneus.engine.audio.SoundManager;
 import fr.proneus.engine.camera.Camera;
@@ -52,23 +9,34 @@ import fr.proneus.engine.discord.DiscordRPCManager;
 import fr.proneus.engine.graphic.Font;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
-import fr.proneus.engine.input.ControllerManager;
-import fr.proneus.engine.input.Input;
-import fr.proneus.engine.input.KeyboardManager;
-import fr.proneus.engine.input.MouseManager;
-import fr.proneus.engine.input.MousePositionManager;
-import fr.proneus.engine.input.MouseScrollManager;
+import fr.proneus.engine.input.*;
+import fr.proneus.engine.script.ScriptManager;
 import fr.proneus.engine.state.State;
 import fr.proneus.engine.timer.Timer;
 import fr.proneus.engine.timer.TimerManager;
 import fr.proneus.engine.timer.TimerRunnable;
 import fr.proneus.engine.utils.ByteBufferUtils;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWImage.Buffer;
+import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLUtil;
+import org.lwjgl.system.Callback;
+
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Game {
 
-    protected int width;
-    protected int height;
-    protected int virtualWidth, virtualHeight;
+    private static int defaultWidth, defaultHeight;
+    protected int width, height;
     private long window;
     private WindowType windowType;
     private String title;
@@ -118,8 +86,10 @@ public class Game {
         this.title = title;
         this.width = width;
         this.height = height;
-        this.virtualWidth = 1920;
-        this.virtualHeight = 1080;
+
+        // Default
+        this.defaultWidth = width;
+        this.defaultHeight = height;
 
         this.camera = new Camera(this);
 
@@ -156,6 +126,14 @@ public class Game {
         this.maxfps = Integer.MAX_VALUE;
         this.tps = 60;
 
+    }
+
+    public static int getDefaultWidth() {
+        return defaultWidth;
+    }
+
+    public static int getDefaultHeight() {
+        return defaultHeight;
     }
 
     protected void start() {
@@ -375,7 +353,7 @@ public class Game {
                 glPushMatrix();
 
                 // Camera translate
-                glTranslatef(camera.getX() * 1920f, camera.getY() * 1080f, 0);
+                glTranslatef(camera.getX() * (float) Game.getDefaultWidth(), camera.getY() * (float) Game.getDefaultHeight(), 0);
 
                 state.render(this, graphic);
                 // Change if issue
@@ -429,14 +407,6 @@ public class Game {
 
     public int getHeight() {
         return height;
-    }
-
-    public int getVirtualWidth() {
-        return virtualWidth;
-    }
-
-    public int getVirtualHeight() {
-        return virtualHeight;
     }
 
     public boolean isScalable() {

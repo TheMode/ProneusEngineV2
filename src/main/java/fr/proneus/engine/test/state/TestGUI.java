@@ -3,7 +3,6 @@ package fr.proneus.engine.test.state;
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
-import fr.proneus.engine.graphic.Font.FontStyle;
 import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.gui.Button;
 import fr.proneus.engine.gui.TextField;
@@ -11,56 +10,56 @@ import fr.proneus.engine.state.State;
 
 public class TestGUI extends State {
 
-	private TextField username;
-	private TextField password;
+    private TextField username;
+    private TextField password;
 
-	private Button button;
+    private Button button;
 
-	private boolean isLogged;
+    private boolean isLogged;
 
-	@Override
-	public void create(Game game) {
-        username = new TextField(0.5f - 0.02f, 300, 200, 35, game.getCurrentFont());
+    @Override
+    public void create(Game game) {
+        username = new TextField(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, game.getCurrentFont());
 
-		password = new TextField(game.getVirtualWidth() / 2 - 100, 400, 200, 35, game.getCurrentFont());
-		password.setPassword('*');
+        password = new TextField(0.5f - 0.1f, 0.3f, 0.2f, 0.05f, game.getCurrentFont());
+        password.setPassword('*');
 
-		button = new Button("Connexion", game.getVirtualWidth() / 2 - 100, 500, 200, 100) {
+        button = new Button("Connexion", 0.5f - 0.1f, 0.5f, 0.2f, 0.1f) {
 
-			@Override
-			public void onClick(int key) {
-				isLogged = true;
-				System.out.println(username.getText() + " : " + password.getText());
+            @Override
+            public void onClick(int key) {
+                isLogged = true;
+                System.out.println(username.getText() + " : " + password.getText());
 
-			}
-		};
-		
-		addComponent(username);
-		addComponent(password);
-		addComponent(button);
+            }
+        };
 
-	}
+        addComponent(username);
+        addComponent(password);
+        addComponent(button);
 
-	@Override
-	public void update(Game game) {
+    }
 
-	}
+    @Override
+    public void update(Game game) {
 
-	@Override
-	public void render(Game game, Graphics graphic) {
-		graphic.drawShape(new Rectangle(0, 0, game.getVirtualWidth(), game.getVirtualHeight(), Color.RED, true));
-		graphic.drawString("Username: ", game.getVirtualWidth() / 2 - 100, 300 + 35, FontStyle.LEFT, Color.WHITE);
-		graphic.drawString("Password: ", game.getVirtualWidth() / 2 - 100, 400 + 35, FontStyle.LEFT, Color.WHITE);
+    }
 
-		if (isLogged)
-			graphic.drawString("Connexion en cours...",
-					game.getVirtualWidth() / 2 - graphic.getFont().getWidth("Connexion en cours...") / 2, 200,
-					Color.GREEN);
-	}
+    @Override
+    public void render(Game game, Graphics graphic) {
+        graphic.draw(new Rectangle(0f, 0, 1, 1, Color.RED, true));
+        //graphic.drawString("Username: ", game.getVirtualWidth() / 2 - 100, 300 + 35, FontStyle.LEFT, Color.WHITE);
+        //graphic.drawString("Password: ", game.getVirtualWidth() / 2 - 100, 400 + 35, FontStyle.LEFT, Color.WHITE);
 
-	@Override
-	public void exit(Game game) {
+        if (isLogged)
+            graphic.drawString("Connexion en cours...",
+                    0.5f - graphic.getFont().getWidth("Connexion en cours...") / 2, 0.2f,
+                    Color.GREEN);
+    }
 
-	}
+    @Override
+    public void exit(Game game) {
+
+    }
 
 }

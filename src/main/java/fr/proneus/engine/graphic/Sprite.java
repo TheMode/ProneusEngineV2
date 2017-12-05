@@ -1,13 +1,12 @@
 package fr.proneus.engine.graphic;
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import fr.proneus.engine.Game;
-import fr.proneus.engine.graphic.Image.DrawType;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
 import fr.proneus.engine.utils.Vector;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Sprite {
     public double scale;
@@ -16,9 +15,8 @@ public class Sprite {
     public double angle;
     public long lastAnimationDraw;
     private float x, y, z;
-    // TODO abstract
+
     private Image image;
-    private DrawType drawType;
     // Force
     private List<Force> forces;
     private float forceSpeed = 0.05f;
@@ -33,7 +31,6 @@ public class Sprite {
 
     public Sprite(Image image, float x, float y) {
         this.image = image;
-        this.drawType = DrawType.TOP_LEFT;
         this.scale = 1;
         this.scaleX = 1;
         this.scaleY = 1;
@@ -45,7 +42,6 @@ public class Sprite {
         this.animations = new HashMap<>();
     }
 
-    // Velocity
     public void update(Game game) {
         // Velocity
         Iterator<Force> iter = forces.iterator();
@@ -59,7 +55,7 @@ public class Sprite {
         }
     }
 
-    public void draw(Graphics graphic) {
+    public void render(Graphics graphics) {
 
         // Animation
         if (currentAnimation != null) {
@@ -82,8 +78,16 @@ public class Sprite {
             }
         }
 
+        image.setX(x);
+        image.setY(y);
+        image.setZ(z);
+        image.setScale(scale);
+        image.setScaleX(scaleX);
+        image.setScaleY(scaleY);
+        image.setAngle(angle);
+
         // Draw
-        image.draw(this, graphic);
+        image.draw(graphics);
     }
 
     public void onAnimationEnd(Runnable animationEnd) {
@@ -176,14 +180,6 @@ public class Sprite {
 
     public void setImage(Image image) {
         this.image = image;
-    }
-
-    public DrawType getDrawType() {
-        return drawType;
-    }
-
-    public void setDrawType(DrawType drawType) {
-        this.drawType = drawType;
     }
 
     public class Force {

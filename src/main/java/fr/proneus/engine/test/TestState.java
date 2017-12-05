@@ -24,8 +24,8 @@ public class TestState extends State {
 	@Override
 	public void render(Game game, Graphics graphic) {
 		this.sprite.scale = scale;
-		this.sprite.draw(graphic);
-	}
+        graphic.draw(sprite);
+    }
 
 	@Override
 	public void exit(Game game) {

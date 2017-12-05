@@ -1,18 +1,5 @@
 package fr.proneus.engine.test.state;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.proneus.engine.graphic.shape.Rectangle;
-import fr.proneus.engine.graphic.shape.RoundedRectangle;
-import fr.proneus.engine.script.Script;
-import fr.proneus.engine.script.ScriptArgs;
-import fr.proneus.engine.script.ScriptValue;
-import fr.proneus.engine.utils.FileUtils;
-import fr.proneus.engine.utils.Vector;
-import org.luaj.vm2.Varargs;
-import org.lwjgl.glfw.GLFW;
-
 import fr.proneus.engine.Game;
 import fr.proneus.engine.Game.WindowType;
 import fr.proneus.engine.graphic.Color;
@@ -21,13 +8,21 @@ import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.graphic.Sprite;
 import fr.proneus.engine.input.Buttons;
 import fr.proneus.engine.input.Controller;
-import fr.proneus.engine.input.MousePosition;
 import fr.proneus.engine.input.Controller.ControllerAxe;
 import fr.proneus.engine.input.Controller.JoyStick;
+import fr.proneus.engine.input.MousePosition;
 import fr.proneus.engine.light.Light;
 import fr.proneus.engine.light.Light.LightType;
+import fr.proneus.engine.script.Script;
+import fr.proneus.engine.script.ScriptArgs;
+import fr.proneus.engine.script.ScriptValue;
 import fr.proneus.engine.state.State;
 import fr.proneus.engine.utils.MathUtils;
+import fr.proneus.engine.utils.Vector;
+import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestShooter extends State {
 
@@ -122,7 +117,6 @@ public class TestShooter extends State {
 
         for (Sprite laser : laserList) {
             if (!game.getCamera().isPartiallyVisible(laser)) {
-                System.out.println("test");
                 removeSprite(laser);
                 lasertoRemove.add(laser);
                 continue;
@@ -139,9 +133,9 @@ public class TestShooter extends State {
 
     @Override
     public void render(Game game, Graphics graphic) {
-        player.draw(graphic);
+        graphic.draw(player);
         for (Sprite laser : laserList) {
-            laser.draw(graphic);
+            graphic.draw(laser);
         }
 
         graphic.drawString("SALUT", 0.5f, 0.5f);

@@ -1,32 +1,30 @@
 package fr.proneus.engine.graphic;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
-import javax.imageio.ImageIO;
-
 import fr.proneus.engine.Game;
-import fr.proneus.engine.camera.Camera;
+import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.utils.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL12;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+
 import static org.lwjgl.opengl.GL11.*;
 
-public class Image {
+public class Image extends Renderable {
 
     private BufferedImage image;
     private String path;
     private int imageWidth, imageHeight;
-    private float regionX, regionY, regionWidth, regionHeight;
     private int texID;
 
     private Color color;
 
     public Image(String path, float x, float y, float width, float height) {
+        super(0, 0, 0, 0);
         try {
             this.image = ImageIO.read(FileUtils.getInternalFile(path));
         } catch (IOException e) {
@@ -37,10 +35,7 @@ public class Image {
         this.imageWidth = image.getWidth();
         this.imageHeight = image.getHeight();
 
-        this.regionX = x;
-        this.regionY = y;
-        this.regionWidth = width;
-        this.regionHeight = height;
+        setImageValue(this, x, y, width, height);
     }
 
     public Image(String path) {
@@ -48,6 +43,7 @@ public class Image {
     }
 
     public Image(InputStream inputStream, float x, float y, float width, float height) {
+        super(x, y, width, height);
         try {
             this.image = ImageIO.read(inputStream);
         } catch (IOException e) {
@@ -58,94 +54,33 @@ public class Image {
         this.imageWidth = image.getWidth();
         this.imageHeight = image.getHeight();
 
-        this.regionX = x;
-        this.regionY = y;
-        this.regionWidth = width;
-        this.regionHeight = height;
+        setImageValue(this, x, y, width, height);
     }
 
     public Image(InputStream inputStream) {
         this(inputStream, 0, 0, 1, 1);
     }
 
-    public void draw(Sprite sprite, Graphics graphic) {
+    @Override
+    public void render() {
         if (!isLoaded())
             texID = loadTexture(image);
 
-        float regionX = getRegionPixelX();
-        float regionY = getRegionPixelY();
-
-        float regionWidth = getRegionPixelWidth();
-        float regionHeight = getRegionPixelHeight();
-
-        float imageWidth = getImagePixelWidth();
-        float imageHeight = getImagePixelHeight();
-
-        glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, texID);
 
-        float translateX = 0;
-        float translateY = 0;
-        switch (sprite.getDrawType()) {
-            case CENTERED:
-                translateX = -regionX - regionWidth / 2;
-                translateY = -regionY - regionHeight / 2;
-                break;
-            case TOP_LEFT:
-                translateX = -regionX;
-                translateY = -regionY;
-                break;
-            case TOP_RIGHT:
-                translateX = -regionX + regionWidth;
-                translateY = -regionY;
-                break;
-            case DOWN_LEFT:
-                translateX = -regionX;
-                translateY = -regionY + regionHeight;
-                break;
-            case DOWN_RIGHT:
-                translateX = -regionX + regionWidth;
-                translateY = -regionY + regionHeight;
-                break;
-        }
-
-        glTranslatef(translateX, translateY, 0);
-        if (color != null)
-            glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
-
-        // Sprite position & image region
-        float x = sprite.getX() * (float) graphic.getGame().getWidth();
-        float y = sprite.getY() * (float) graphic.getGame().getHeight();
-        // setup Z coord
-        float z = sprite.getZ();
-        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, z);
-
-        // Rotation
-        if (sprite.angle != 0)
-            glRotated(sprite.angle, 0, 0, 1);
-
-        // Scale (global/sprite)
-        double scaleX = Math.max(
-                sprite.scale + (sprite.scaleX - 1) + (graphic.getGlobalScale() - 1) + (graphic.getScaleX() - 1), 0);
-        double scaleY = Math.max(
-                sprite.scale + (sprite.scaleY - 1) + (graphic.getGlobalScale() - 1) + (graphic.getScaleY() - 1), 0);
-        if (scaleX != 1 || scaleY != 1) {
-            glScaled(scaleX, scaleY, 1);
-        }
-
-        // Scale (camera)
-        Camera camera = graphic.getGame().getCamera();
-        float cameraZoomX = camera.getZoomX();
-        float cameraZoomY = camera.getZoomY();
-        glScalef(cameraZoomX, cameraZoomY, 0);
-
-        glTranslatef(-(x + regionX + regionWidth / 2), -(y + regionY + regionHeight / 2), 0);
+        float regionX = getRegionX();
+        float regionY = getRegionY();
+        float regionWidth = getRegionWidth();
+        float regionHeight = getRegionHeight();
 
         float dcx = regionX / imageWidth;
         float dcy = regionY / imageHeight;
 
         float dcw = (regionX + regionWidth) / imageWidth;
         float dch = (regionY + regionHeight) / imageHeight;
+
+        float x = this.getX() * (float) Game.getDefaultWidth();
+        float y = this.getY() * (float) Game.getDefaultHeight();
 
         glBegin(GL_QUADS);
 
@@ -159,8 +94,6 @@ public class Image {
         glVertex2f((regionX) + x, (regionY + regionHeight) + y);
 
         glEnd();
-
-        glPopMatrix();
     }
 
     private int loadTexture(BufferedImage image) {
@@ -197,16 +130,10 @@ public class Image {
         return textureID;
     }
 
-    public float getCenterX() {
-        return regionWidth / 2;
-    }
-
-    public float getCenterY() {
-        return regionHeight / 2;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
+    @Override
+    public boolean interact(float x, float y) {
+        // TODO optimize ?
+        return new Rectangle(getX(), getY(), getWidth(), getHeight()).interact(x, y);
     }
 
     public int getTextureID() {
@@ -226,7 +153,7 @@ public class Image {
     }
 
     public float getImageWidth() {
-        return imageWidth / 1920f;
+        return imageWidth / (float) Game.getDefaultWidth();
     }
 
     public int getImagePixelWidth() {
@@ -234,22 +161,15 @@ public class Image {
     }
 
     public float getImageHeight() {
-        return imageHeight / 1080f;
+        return imageHeight / (float) Game.getDefaultHeight();
     }
 
     public int getImagePixelHeight() {
         return imageHeight;
     }
 
-    public float getRegionPixelX() {
-        return regionX * (float) imageWidth;
-    }
 
-    public float getRegionPixelY() {
-        return regionY * (float) imageHeight;
-    }
-
-    public float getRegionX() {
+    /*public float getRegionX() {
         return regionX;
     }
 
@@ -273,10 +193,6 @@ public class Image {
         this.regionWidth = regionWidth;
     }
 
-    public float getRegionPixelWidth() {
-        return regionWidth * getImagePixelWidth();
-    }
-
     public float getRegionHeight() {
         return regionHeight;
     }
@@ -284,13 +200,8 @@ public class Image {
     public void setRegionHeight(float regionHeight) {
         this.regionHeight = regionHeight;
     }
-
     public float getRegionPixelHeight() {
         return regionHeight * getImagePixelHeight();
-    }
-
-    public enum DrawType {
-        CENTERED, TOP_LEFT, TOP_RIGHT, DOWN_LEFT, DOWN_RIGHT
-    }
+    }*/
 
 }

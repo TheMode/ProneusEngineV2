@@ -39,10 +39,10 @@ public class Slider extends Component {
 
 	@Override
 	public void render(Game game, Graphics graphic) {
-		graphic.drawShape(underRect);
-		graphic.drawShape(valueRect);
-		graphic.drawShape(circle);
-	}
+        graphic.draw(underRect);
+        graphic.draw(valueRect);
+        graphic.draw(circle);
+    }
 
 	@Override
 	public void onMouseDown(Game game, int key) {

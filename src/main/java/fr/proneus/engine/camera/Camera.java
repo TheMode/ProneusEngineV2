@@ -1,11 +1,10 @@
 package fr.proneus.engine.camera;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.Game.WindowType;
 import fr.proneus.engine.graphic.Color;
+import fr.proneus.engine.graphic.Renderable;
 import fr.proneus.engine.graphic.Sprite;
 import fr.proneus.engine.graphic.shape.Rectangle;
-import fr.proneus.engine.graphic.shape.Shape;
 
 public class Camera {
 
@@ -55,11 +54,11 @@ public class Camera {
 
     public Rectangle getCameraRectangle() {
         // TODO faire marcher  les methodes "visible" =(
-        // TODO integrate zoom
+        // TODO zoom support
         //float cameraWidth = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualWidth() : game.getWidth();
         //float cameraHeight = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualHeight() : game.getHeight();
-        float cameraWidth = game.getVirtualWidth();
-        float cameraHeight = game.getVirtualHeight();
+        //float cameraWidth = game.getVirtualWidth();
+        //float cameraHeight = game.getVirtualHeight();
         return new Rectangle(-this.x, -this.y, 1, 1, Color.WHITE, false);
     }
 
@@ -70,12 +69,12 @@ public class Camera {
     }
 
     public boolean isPartiallyVisible(Sprite sprite) {
-        return isPartiallyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
-                sprite.getImage().getRegionPixelHeight() / (float) game.getVirtualHeight());
+        return isPartiallyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionWidth() / (float) game.getWidth(),
+                sprite.getImage().getRegionHeight() / (float) game.getHeight());
     }
 
-    public boolean isPartiallyVisible(Shape shape) {
-        return isPartiallyVisible(shape.x, shape.y, shape.width, shape.height);
+    public boolean isPartiallyVisible(Renderable renderable) {
+        return isPartiallyVisible(renderable.getX(), renderable.getY(), renderable.getWidth(), renderable.getHeight());
     }
 
     public boolean isFullyVisible(float x, float y, float width, float height) {
@@ -85,12 +84,12 @@ public class Camera {
     }
 
     public boolean isFullyVisible(Sprite sprite) {
-        return isFullyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionPixelWidth() / (float) game.getVirtualWidth(),
-                sprite.getImage().getRegionPixelHeight() / (float) game.getVirtualHeight());
+        return isFullyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionWidth() / (float) game.getWidth(),
+                sprite.getImage().getRegionHeight() / (float) game.getHeight());
     }
 
-    public boolean isFullyVisible(Shape shape) {
-        return isFullyVisible(shape.x, shape.y, shape.width, shape.height);
+    public boolean isFullyVisible(Renderable renderable) {
+        return isFullyVisible(renderable.getX(), renderable.getY(), renderable.getWidth(), renderable.getHeight());
     }
 
 }

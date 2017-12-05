@@ -35,8 +35,8 @@ public abstract class ImageButton extends Component {
 	@Override
 	public void render(Game game, Graphics graphic) {
 		graphic.draw(hover ? hoverSprite : sprite);
-		graphic.drawString(text, rect.x + rect.width / 2, rect.y + rect.height / 2, FontStyle.CENTERED, Color.WHITE);
-	}
+        graphic.drawString(text, rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2, FontStyle.CENTERED, Color.WHITE);
+    }
 
 	@Override
 	public void onMouseDown(Game game, int key) {
