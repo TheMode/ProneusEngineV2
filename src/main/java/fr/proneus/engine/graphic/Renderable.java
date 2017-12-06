@@ -16,10 +16,10 @@ public abstract class Renderable {
     private DrawType drawType;
 
     public Renderable(float x, float y, float width, float height) {
-        this.x = x * (float) Game.getDefaultWidth();
-        this.y = y * (float) Game.getDefaultHeight();
-        this.width = width * (float) Game.getDefaultWidth();
-        this.height = height * (float) Game.getDefaultHeight();
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.scale = 1;
         this.scaleX = 1;
         this.scaleY = 1;

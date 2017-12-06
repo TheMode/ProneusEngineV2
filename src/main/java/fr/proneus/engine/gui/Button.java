@@ -34,8 +34,8 @@ public abstract class Button extends Component {
     public void render(Game game, Graphics graphic) {
         graphic.draw(border);
         graphic.draw(rect);
-        float buttonX = (rect.getX() / Game.getDefaultWidth()) + (rect.getWidth() / Game.getDefaultWidth() / 2);
-        float buttonY = (rect.getY() / Game.getDefaultHeight()) + (rect.getHeight() / Game.getDefaultHeight() / 2);
+        float buttonX = rect.getX() + (rect.getWidth() / 2);
+        float buttonY = rect.getY() + (rect.getHeight() / 2);
         graphic.drawString(text, buttonX, buttonY, FontStyle.CENTERED, getColor());
     }
 

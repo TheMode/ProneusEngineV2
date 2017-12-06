@@ -79,8 +79,8 @@ public class Image extends Renderable {
         float dcw = (regionX + regionWidth) / imageWidth;
         float dch = (regionY + regionHeight) / imageHeight;
 
-        float x = this.getX() * (float) Game.getDefaultWidth();
-        float y = this.getY() * (float) Game.getDefaultHeight();
+        float x = getX() * (float) Game.getDefaultWidth();
+        float y = getY() * (float) Game.getDefaultHeight();
 
         glBegin(GL_QUADS);
 
