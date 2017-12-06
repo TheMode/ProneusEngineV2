@@ -63,7 +63,9 @@ public class TextField extends Component {
             graphic.setFont(font);
         }
         graphic.draw(textField);
-        graphic.drawString(drawText, x, y + height);
+        // TODO change
+        float textHeight = 0.01f;
+        graphic.drawString(drawText, x, y + height - textHeight);
 
         if (focus) {
             float x = this.x;
