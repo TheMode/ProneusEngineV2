@@ -2,8 +2,6 @@ package fr.proneus.engine.utils;
 
 import fr.proneus.engine.Game;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import java.io.*;
 
 public class FileUtils {
@@ -34,6 +32,7 @@ public class FileUtils {
     }
 
     public static String getExternalFileString(String path) {
+
         String value = "";
         try {
             String line;
