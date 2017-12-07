@@ -7,7 +7,7 @@ import fr.proneus.engine.test.state.TestShooter;
 public class TestEngine {
 
     public static void main(String[] args) {
-        Application app = new Application("NexusFight", 1280, 720, new TestGUI());
+        Application app = new Application("NexusFight", 1280, 720, new TestShooter());
 
         app.setCloseCallBack(game -> {
             System.out.println("Game closed!");

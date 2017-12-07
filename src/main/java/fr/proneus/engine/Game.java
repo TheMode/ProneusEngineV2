@@ -339,7 +339,7 @@ public class Game {
 
                 glfwPollEvents();
                 state.update(this);
-                state.spritesUpdate(this);
+                state.renderablesUpdate(this);
                 state.componentsUpdate(this);
             }
             // Update end

@@ -18,12 +18,8 @@ public class Graphics {
         this.scaleY = 1f;
     }
 
-    public void draw(Sprite sprite) {
-        sprite.render(this);
-    }
-
     public void draw(Renderable renderable) {
-        renderable.draw(this);
+        renderable.render(this);
     }
 
     public void drawString(String text, float x, float y, FontStyle style, Color color) {

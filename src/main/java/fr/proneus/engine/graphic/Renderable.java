@@ -2,6 +2,11 @@ package fr.proneus.engine.graphic;
 
 import fr.proneus.engine.Game;
 import fr.proneus.engine.camera.Camera;
+import fr.proneus.engine.utils.Vector;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -15,6 +20,10 @@ public abstract class Renderable {
     private Color color;
     private DrawType drawType;
 
+    // Force
+    private List<Force> forces;
+    private float defaultForceSpeed = 0.05f;
+
     public Renderable(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
@@ -24,6 +33,8 @@ public abstract class Renderable {
         this.scaleX = 1;
         this.scaleY = 1;
         this.drawType = DrawType.TOP_LEFT;
+
+        this.forces = new ArrayList<>();
     }
 
     public void setImageValue(Image image, float regionX, float regionY, float regionWidth, float regionHeight) {
@@ -45,9 +56,25 @@ public abstract class Renderable {
         this.angle = angle;
     }
 
-    public void draw(Graphics graphic) {
+    public void update(Game game) {
+        // Velocity
+        Iterator<Force> iter = forces.iterator();
+        while (iter.hasNext()) {
+            Force force = iter.next();
+            force.apply(this);
+
+            if (force.finished) {
+                iter.remove();
+            }
+        }
+    }
+
+    public void render(Graphics graphic) {
         glPushMatrix();
-        glBindTexture(GL_TEXTURE_2D, 0);
+
+        if (!(this instanceof Sprite)) {
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
 
         float translateX = 0;
         float translateY = 0;
@@ -233,7 +260,81 @@ public abstract class Renderable {
         return height / 2;
     }
 
+    // Movement
+    public void move(float x, float y) {
+        this.setX(getX() + x);
+        this.setY(getY() + y);
+    }
+
+    public void moveFromAngle(double angle, float speedx, float speedy) {
+        double rad = Math.toRadians(angle);
+        float xMovement = (float) Math.cos(rad) * speedx;
+        float yMovement = (float) Math.sin(rad) * speedy;
+
+        this.setX(getX() + xMovement);
+        this.setY(getY() + yMovement);
+    }
+
+    public void moveFromAngle(float speedx, float speedy) {
+        moveFromAngle(angle, speedx, speedy);
+    }
+
+    public List<Force> getForces() {
+        return forces;
+    }
+
+    public void applyForce(Vector vector, float forceSpeed) {
+        this.forces.add(new Force(vector, forceSpeed));
+    }
+
+    public void applyForce(Vector vector) {
+        applyForce(vector, defaultForceSpeed);
+    }
+
     public enum DrawType {
         CENTERED, TOP_LEFT, TOP_RIGHT, DOWN_LEFT, DOWN_RIGHT
     }
+
+    public class Force {
+
+        public Vector appliedVector;
+        public Vector achievedVector;
+        public float forceSpeed;
+        public boolean finished;
+
+        public boolean positiveX, positiveY;
+
+        public Force(Vector vector, float forceSpeed) {
+            this.appliedVector = vector;
+            this.achievedVector = new Vector(0, 0);
+            this.forceSpeed = forceSpeed;
+
+            positiveX = appliedVector.getX() > 0;
+            positiveY = appliedVector.getY() > 0;
+        }
+
+        public void apply(Renderable renderable) {
+            if (!renderable.forces.contains(this)) {
+                renderable.forces.add(this);
+            }
+
+
+            float appliedForceX = (float) appliedVector.getX() * forceSpeed;
+            float appliedForceY = (float) appliedVector.getY() * forceSpeed;
+            appliedForceX = positiveX ? (float) Math.min(achievedVector.getX() + appliedForceX, appliedVector.getX()) :
+                    (float) Math.max(achievedVector.getX() + appliedForceX, appliedVector.getX());
+            appliedForceY = positiveY ? (float) Math.min(achievedVector.getY() + appliedForceY, appliedVector.getY()) :
+                    (float) Math.max(achievedVector.getY() + appliedForceY, appliedVector.getY());
+            achievedVector.setX(appliedForceX);
+            achievedVector.setY(appliedForceY);
+
+            renderable.setX(renderable.getX() + x);
+            renderable.setY(renderable.getY() + y);
+
+            if (appliedVector.getX() == achievedVector.getX() && appliedVector.getY() == achievedVector.getY()) {
+                finished = true;
+            }
+        }
+    }
+
 }

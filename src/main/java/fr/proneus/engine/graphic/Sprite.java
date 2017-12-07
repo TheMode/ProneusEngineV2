@@ -3,22 +3,30 @@ package fr.proneus.engine.graphic;
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
-import fr.proneus.engine.utils.Vector;
+import fr.proneus.engine.graphic.shape.Rectangle;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL12;
 
-import java.util.*;
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
-public class Sprite {
+import static org.lwjgl.opengl.GL11.*;
+
+public class Sprite extends Renderable {
     public double scale;
     public double scaleX;
     public double scaleY;
     public double angle;
     public long lastAnimationDraw;
-    private float x, y, z;
 
+    // Image settings
     private Image image;
+    private int imageID;
+
     // Force
-    private List<Force> forces;
     private float forceSpeed = 0.05f;
 
     private Map<String, Animation> animations;
@@ -30,43 +38,27 @@ public class Sprite {
     private Runnable animationEnd;
 
     public Sprite(Image image, float x, float y) {
+        super(x, y, 0, 0);
         this.image = image;
-        this.scale = 1;
-        this.scaleX = 1;
-        this.scaleY = 1;
-        this.x = x;
-        this.y = y;
 
-        this.forces = new ArrayList<>();
+        setImageValue(image, image.getRegionX(), image.getRegionY(), image.getRegionWidth(), getRegionHeight());
 
         this.animations = new HashMap<>();
     }
 
+    @Override
     public void update(Game game) {
-        // Velocity
-        Iterator<Force> iter = forces.iterator();
-        while (iter.hasNext()) {
-            Force force = iter.next();
-            force.apply(this);
-
-            if (force.finished) {
-                iter.remove();
-            }
-        }
-    }
-
-    public void render(Graphics graphics) {
-
+        super.update(game);
         // Animation
         if (currentAnimation != null) {
             if (System.currentTimeMillis() - lastAnimationDraw > currentAnimationSpeed) {
                 this.lastAnimationDraw = System.currentTimeMillis();
                 // TODO Maybe bugged ?
                 AnimationFrame frame = currentAnimation.frames.get(currentAnimationFrame);
-                this.image.setRegionX(frame.x);
-                this.image.setRegionY(frame.y);
-                this.image.setRegionWidth(frame.width);
-                this.image.setRegionHeight(frame.height);
+                this.setRegionX(frame.x);
+                this.setRegionY(frame.y);
+                this.setRegionWidth(frame.width);
+                this.setRegionHeight(frame.height);
                 if (currentAnimation.frames.get(currentAnimationFrame + 1) == null) {
                     if (animationEnd != null) {
                         animationEnd.run();
@@ -77,17 +69,75 @@ public class Sprite {
                 }
             }
         }
+    }
 
-        image.setX(x);
-        image.setY(y);
-        image.setZ(z);
-        image.setScale(scale);
-        image.setScaleX(scaleX);
-        image.setScaleY(scaleY);
-        image.setAngle(angle);
+    @Override
+    public void render() {
+        if (!isImageLoaded())
+            imageID = loadTexture(image.getBufferedImage());
 
-        // Draw
-        image.draw(graphics);
+        glBindTexture(GL_TEXTURE_2D, imageID);
+
+        float regionX = getRegionX();
+        float regionY = getRegionY();
+        float regionWidth = getRegionWidth();
+        float regionHeight = getRegionHeight();
+
+        float dcx = regionX / (float) image.getImagePixelWidth();
+        float dcy = regionY / (float) image.getImagePixelHeight();
+
+        float dcw = (regionX + regionWidth) / (float) image.getImagePixelWidth();
+        float dch = (regionY + regionHeight) / (float) image.getImagePixelHeight();
+
+        float x = getX() * (float) Game.getDefaultWidth();
+        float y = getY() * (float) Game.getDefaultHeight();
+
+        glBegin(GL_QUADS);
+
+        glTexCoord2f(dcx, dcy);
+        glVertex2f((regionX) + x, (regionY) + y);
+        glTexCoord2f(dcw, dcy);
+        glVertex2f((regionX + regionWidth) + x, (regionY) + y);
+        glTexCoord2f(dcw, dch);
+        glVertex2f((regionX + regionWidth) + x, (regionY + regionHeight) + y);
+        glTexCoord2f(dcx, dch);
+        glVertex2f((regionX) + x, (regionY + regionHeight) + y);
+
+        glEnd();
+    }
+
+    private int loadTexture(BufferedImage image) {
+        int[] pixels = new int[image.getWidth() * image.getHeight()];
+        image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
+
+        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
+
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                int pixel = pixels[y * image.getWidth() + x];
+                buffer.put((byte) ((pixel >> 16) & 0xFF)); // R
+                buffer.put((byte) ((pixel >> 8) & 0xFF)); // G
+                buffer.put((byte) (pixel & 0xFF)); // B
+                buffer.put((byte) ((pixel >> 24) & 0xFF)); // A
+
+            }
+        }
+
+        buffer.flip();
+
+        int textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getWidth(), image.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                buffer);
+
+        return textureID;
     }
 
     public void onAnimationEnd(Runnable animationEnd) {
@@ -120,58 +170,19 @@ public class Sprite {
         return null;
     }
 
-    public void applyForce(Vector vector, float forceSpeed) {
-        this.forces.add(new Force(vector, forceSpeed));
+    @Override
+    public boolean interact(float x, float y) {
+        // TODO optimize ?
+        return new Rectangle(getX(), getY(), getWidth(), getHeight()).interact(x, y);
     }
 
-    public void applyForce(Vector vector) {
-        applyForce(vector, forceSpeed);
+    // Image settings
+    public int getImageID() {
+        return imageID;
     }
 
-    public List<Force> getForces() {
-        return forces;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public void setY(float y) {
-        this.y = y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public void setZ(float z) {
-        this.z = z;
-    }
-
-    public void move(float x, float y) {
-        this.x += x;
-        this.y += y;
-    }
-
-    public void moveFromAngle(double angle, float speedx, float speedy) {
-        double rad = Math.toRadians(angle);
-        float xMovement = (float) Math.cos(rad) * speedx;
-        float yMovement = (float) Math.sin(rad) * speedy;
-
-        this.x += xMovement;
-        this.y += yMovement;
-    }
-
-    public void moveFromAngle(float speedx, float speedy) {
-        moveFromAngle(angle, speedx, speedy);
+    public boolean isImageLoaded() {
+        return this.imageID != 0;
     }
 
     public Image getImage() {
@@ -180,48 +191,6 @@ public class Sprite {
 
     public void setImage(Image image) {
         this.image = image;
-    }
-
-    public class Force {
-
-        public Vector appliedVector;
-        public Vector achievedVector;
-        public float forceSpeed;
-        public boolean finished;
-
-        public boolean positiveX, positiveY;
-
-        public Force(Vector vector, float forceSpeed) {
-            this.appliedVector = vector;
-            this.achievedVector = new Vector(0, 0);
-            this.forceSpeed = forceSpeed;
-
-            positiveX = appliedVector.getX() > 0;
-            positiveY = appliedVector.getY() > 0;
-        }
-
-        public void apply(Sprite sprite) {
-            if (!sprite.forces.contains(this)) {
-                sprite.forces.add(this);
-            }
-
-
-            float appliedForceX = (float) appliedVector.getX() * forceSpeed;
-            float appliedForceY = (float) appliedVector.getY() * forceSpeed;
-            appliedForceX = positiveX ? (float) Math.min(achievedVector.getX() + appliedForceX, appliedVector.getX()) :
-                    (float) Math.max(achievedVector.getX() + appliedForceX, appliedVector.getX());
-            appliedForceY = positiveY ? (float) Math.min(achievedVector.getY() + appliedForceY, appliedVector.getY()) :
-                    (float) Math.max(achievedVector.getY() + appliedForceY, appliedVector.getY());
-            achievedVector.setX(appliedForceX);
-            achievedVector.setY(appliedForceY);
-
-            sprite.x += appliedForceX;
-            sprite.y += appliedForceY;
-
-            if (appliedVector.getX() == achievedVector.getX() && appliedVector.getY() == achievedVector.getY()) {
-                finished = true;
-            }
-        }
     }
 
 }

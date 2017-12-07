@@ -1,14 +1,13 @@
 package fr.proneus.engine.graphic.particle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.glVertex2f;
 
 public abstract class ParticleEffect {
 
@@ -47,8 +46,9 @@ public abstract class ParticleEffect {
         updateParticles();
         glPushMatrix();
         for (Particle particle : particles) {
+            // TODO fix particle image
             if (isImage) {
-                glBindTexture(GL_TEXTURE_2D, image.getTextureID());
+                //glBindTexture(GL_TEXTURE_2D, image.getTextureID());
             }
 
             glColor4f((float) particle.color.r / 255, (float) particle.color.g / 255, (float) particle.color.g / 255,

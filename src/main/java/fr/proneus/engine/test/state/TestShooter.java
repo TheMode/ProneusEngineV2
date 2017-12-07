@@ -6,6 +6,7 @@ import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.graphic.Sprite;
+import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.input.Buttons;
 import fr.proneus.engine.input.Controller;
 import fr.proneus.engine.input.Controller.ControllerAxe;
@@ -41,10 +42,11 @@ public class TestShooter extends State {
 
     private Light light;
 
+    private Rectangle rect;
+
     @Override
     public void create(Game game) {
-        this.player = new Sprite(new Image("/ship.png"), 0.5f, 0.5f);
-        addSprite(player);
+        this.player = this.<Sprite>createRenderable(new Sprite(new Image("/ship.png"), 0.5f, 0.5f));
         this.laserImage = new Image("/shoot.png");
 
         this.controller = game.getInput().getController(0);
@@ -105,10 +107,9 @@ public class TestShooter extends State {
         if (game.getInput().isMouseDown(Buttons.LEFT)
                 || this.controller.isConnected() && this.controller.getJoyStickValue(ControllerAxe.RT, false) > 0) {
             if (System.currentTimeMillis() - lastShoot >= laserCooldown) {
-                Sprite laser = new Sprite(laserImage, player.getX(), player.getY());
+                Sprite laser = this.<Sprite>createRenderable(new Sprite(laserImage, player.getX(), player.getY()));
                 laser.angle = player.angle - 90;
                 laser.moveFromAngle(0.002f, 0.002f);
-                addSprite(laser);
                 laserList.add(laser);
 
                 lastShoot = System.currentTimeMillis();
@@ -117,7 +118,7 @@ public class TestShooter extends State {
 
         for (Sprite laser : laserList) {
             if (!game.getCamera().isPartiallyVisible(laser)) {
-                removeSprite(laser);
+                removeRenderable(laser);
                 lasertoRemove.add(laser);
                 continue;
             }
@@ -135,7 +136,7 @@ public class TestShooter extends State {
     public void render(Game game, Graphics graphic) {
         graphic.draw(player);
         for (Sprite laser : laserList) {
-            graphic.draw(laser);
+            //graphic.draw(laser);
         }
 
         graphic.drawString("SALUT", 0.5f, 0.5f);

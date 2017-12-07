@@ -1,19 +1,19 @@
 package fr.proneus.engine.state;
 
+import fr.proneus.engine.Game;
+import fr.proneus.engine.discord.DiscordRPCJoinRequest;
+import fr.proneus.engine.graphic.Graphics;
+import fr.proneus.engine.graphic.Renderable;
+import fr.proneus.engine.gui.Component;
+import fr.proneus.engine.light.LightManager;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import fr.proneus.engine.Game;
-import fr.proneus.engine.discord.DiscordRPCJoinRequest;
-import fr.proneus.engine.graphic.Graphics;
-import fr.proneus.engine.graphic.Sprite;
-import fr.proneus.engine.gui.Component;
-import fr.proneus.engine.light.LightManager;
-
 public abstract class State {
 
-    private List<Sprite> sprites = new ArrayList<>();
+    private List<Renderable> renderables = new ArrayList<>();
     private List<Component> components = new ArrayList<>();
     private LightManager lightManager = new LightManager();
 
@@ -72,27 +72,28 @@ public abstract class State {
     }
 
     // Sprites
-    public void spritesUpdate(Game game) {
-        for (Sprite sprite : sprites) {
-            sprite.update(game);
+    public void renderablesUpdate(Game game) {
+        for (Renderable renderable : renderables) {
+            renderable.update(game);
         }
     }
 
-    public List<Sprite> getLoadedSprites() {
-        return sprites;
+    public List<Renderable> getLoadedRenderables() {
+        return renderables;
     }
 
-    public void addSprite(Sprite sprite) {
-        sprites.add(sprite);
+    public <T extends Renderable> T createRenderable(Renderable renderable) {
+        renderables.add(renderable);
+        return (T) renderable;
     }
 
-    public void removeSprite(Sprite sprite) {
-        Iterator<Sprite> iter = sprites.iterator();
+    public void removeRenderable(Renderable renderable) {
+        Iterator<Renderable> iter = renderables.iterator();
 
         while (iter.hasNext()) {
-            Sprite s = iter.next();
+            Renderable r = iter.next();
 
-            if (s.equals(sprite)) {
+            if (r.equals(renderable)) {
                 iter.remove();
                 break;
             }

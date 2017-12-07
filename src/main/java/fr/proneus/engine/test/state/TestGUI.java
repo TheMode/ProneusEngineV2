@@ -51,6 +51,13 @@ public class TestGUI extends State {
         //graphic.drawString("Username: ", game.getVirtualWidth() / 2 - 100, 300 + 35, FontStyle.LEFT, Color.WHITE);
         //graphic.drawString("Password: ", game.getVirtualWidth() / 2 - 100, 400 + 35, FontStyle.LEFT, Color.WHITE);
 
+        // Test performance
+        int performance = 10000;
+        for (int i = 0; i < performance; i++) {
+            graphic.draw(new Rectangle(0, 0, 1, 1));
+        }
+
+
         if (isLogged)
             graphic.drawString("Connexion en cours...",
                     0.5f - graphic.getFont().getWidth("Connexion en cours...") / 2, 0.2f,
