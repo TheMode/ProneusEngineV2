@@ -22,7 +22,6 @@ public class Rectangle extends Renderable {
 
     @Override
     public void render() {
-
         float x = getX() * (float) Game.getDefaultWidth();
         float y = getY() * (float) Game.getDefaultHeight();
         float width = getWidth() * (float) Game.getDefaultWidth();

@@ -328,8 +328,8 @@ public abstract class Renderable {
             achievedVector.setX(appliedForceX);
             achievedVector.setY(appliedForceY);
 
-            renderable.setX(renderable.getX() + x);
-            renderable.setY(renderable.getY() + y);
+            renderable.setX(renderable.getX() + appliedForceX);
+            renderable.setY(renderable.getY() + appliedForceY);
 
             if (appliedVector.getX() == achievedVector.getX() && appliedVector.getY() == achievedVector.getY()) {
                 finished = true;

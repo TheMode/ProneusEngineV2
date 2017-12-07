@@ -1,7 +1,6 @@
 package fr.proneus.engine.test;
 
 import fr.proneus.engine.Application;
-import fr.proneus.engine.test.state.TestGUI;
 import fr.proneus.engine.test.state.TestShooter;
 
 public class TestEngine {
@@ -12,7 +11,7 @@ public class TestEngine {
         app.setCloseCallBack(game -> {
             System.out.println("Game closed!");
         });
-        //app.setFpsLimit(60);
+        // app.setFpsLimit(1);
         app.setTPS(60);
         //app.setBorderless();
         app.setScale(true);

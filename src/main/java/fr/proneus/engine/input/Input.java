@@ -26,6 +26,18 @@ public class Input {
         return keyboard.keys[key];
     }
 
+    public boolean isKeyUp(int key) {
+        return !keyboard.keys[key];
+    }
+
+    public boolean isKeyJustDown(int key) {
+        return keyboard.keysDown[key];
+    }
+
+    public boolean isKeyJustUp(int key) {
+        return keyboard.keysUp[key];
+    }
+
     public String getKeyReturn(int key, int scancode) {
         String keyString = glfwGetKeyName(key, scancode);
         if (keyString == null) {

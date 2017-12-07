@@ -1,12 +1,10 @@
 package fr.proneus.engine.test.state;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.Game.WindowType;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.graphic.Sprite;
-import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.input.Buttons;
 import fr.proneus.engine.input.Controller;
 import fr.proneus.engine.input.Controller.ControllerAxe;
@@ -42,11 +40,9 @@ public class TestShooter extends State {
 
     private Light light;
 
-    private Rectangle rect;
-
     @Override
     public void create(Game game) {
-        this.player = this.<Sprite>createRenderable(new Sprite(new Image("/ship.png"), 0.5f, 0.5f));
+        this.player = this.createRenderable(new Sprite(new Image("/ship.png"), 0.5f, 0.5f));
         this.laserImage = new Image("/shoot.png");
 
         this.controller = game.getInput().getController(0);
@@ -72,11 +68,11 @@ public class TestShooter extends State {
         if (!this.controller.isConnected()) {
             MousePosition mouse = game.getInput().getMousePosition();
             double mouseAngle = MathUtils.getAngle(player.getX(), player.getY(), mouse.getX(), mouse.getY());
-            player.angle = Math.toDegrees(mouseAngle) + 90;
+            player.setAngle(Math.toDegrees(mouseAngle) + 90);
         } else {
             double angle = this.controller.getJoystickAngle(JoyStick.JOYSTICK_2, true);
             if (angle != 0) {
-                player.angle = angle;
+                player.setAngle(angle);
             }
         }
 
@@ -96,7 +92,7 @@ public class TestShooter extends State {
         // Dash
         if (this.controller.getJoyStickValue(ControllerAxe.LT, false) > 0 && player.getForces().size() == 0) {
             MousePosition mouse = game.getInput().getMousePosition();
-            double angle = player.angle - 90;
+            double angle = player.getAngle() - 90;
             MathUtils.AngleValue value = MathUtils.getMoveValue(angle, player.getX(), player.getY(), 1f, 1f);
             player.applyForce(new Vector(value.x / 100, value.y / 100));
         }
@@ -107,8 +103,8 @@ public class TestShooter extends State {
         if (game.getInput().isMouseDown(Buttons.LEFT)
                 || this.controller.isConnected() && this.controller.getJoyStickValue(ControllerAxe.RT, false) > 0) {
             if (System.currentTimeMillis() - lastShoot >= laserCooldown) {
-                Sprite laser = this.<Sprite>createRenderable(new Sprite(laserImage, player.getX(), player.getY()));
-                laser.angle = player.angle - 90;
+                Sprite laser = this.createRenderable(new Sprite(laserImage, player.getX(), player.getY()));
+                laser.setAngle(player.getAngle() - 90);
                 laser.moveFromAngle(0.002f, 0.002f);
                 laserList.add(laser);
 
@@ -136,7 +132,7 @@ public class TestShooter extends State {
     public void render(Game game, Graphics graphic) {
         graphic.draw(player);
         for (Sprite laser : laserList) {
-            //graphic.draw(laser);
+            graphic.draw(laser);
         }
 
         graphic.drawString("SALUT", 0.5f, 0.5f);
@@ -146,15 +142,6 @@ public class TestShooter extends State {
     @Override
     public void exit(Game game) {
 
-    }
-
-    @Override
-    public void onKeyUp(Game game, int key, int scancode) {
-        if (key == GLFW.GLFW_KEY_T) {
-            game.changeWindow(WindowType.BORDERLESS);
-        } else if (key == GLFW.GLFW_KEY_Y) {
-            game.changeWindow(WindowType.NORMAL);
-        }
     }
 
     @Override

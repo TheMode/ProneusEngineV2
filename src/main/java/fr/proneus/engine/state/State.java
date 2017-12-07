@@ -25,12 +25,6 @@ public abstract class State {
 
     public abstract void exit(Game game);
 
-    public void onKeyDown(Game game, int key, int scancode) {
-    }
-
-    public void onKeyUp(Game game, int key, int scancode) {
-    }
-
     public void onKeyRepeat(Game game, int key, int scancode) {
     }
 

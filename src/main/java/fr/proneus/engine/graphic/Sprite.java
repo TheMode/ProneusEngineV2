@@ -16,22 +16,14 @@ import java.util.Map.Entry;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Sprite extends Renderable {
-    public double scale;
-    public double scaleX;
-    public double scaleY;
-    public double angle;
-    public long lastAnimationDraw;
-
-    // Image settings
+    // Image
     private Image image;
     private int imageID;
 
-    // Force
-    private float forceSpeed = 0.05f;
-
+    // Animation
     private Map<String, Animation> animations;
-
     private Animation currentAnimation;
+    private long lastAnimationDraw;
     private int currentAnimationFrame;
     private int currentAnimationSpeed;
 
@@ -41,7 +33,7 @@ public class Sprite extends Renderable {
         super(x, y, 0, 0);
         this.image = image;
 
-        setImageValue(image, image.getRegionX(), image.getRegionY(), image.getRegionWidth(), getRegionHeight());
+        setImageValue(image, image.getRegionX(), image.getRegionY(), image.getRegionWidth(), image.getRegionHeight());
 
         this.animations = new HashMap<>();
     }
@@ -182,7 +174,7 @@ public class Sprite extends Renderable {
     }
 
     public boolean isImageLoaded() {
-        return this.imageID != 0;
+        return getImageID() != 0;
     }
 
     public Image getImage() {
@@ -190,6 +182,9 @@ public class Sprite extends Renderable {
     }
 
     public void setImage(Image image) {
+        if (!this.image.equals(image)) {
+            imageID = 0;
+        }
         this.image = image;
     }
 
