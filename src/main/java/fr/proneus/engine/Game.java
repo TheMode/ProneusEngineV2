@@ -431,8 +431,7 @@ public class Game {
     }
 
     public void setCursor(Cursor cursor) {
-        long c = glfwCreateStandardCursor(cursor.getValue());
-        glfwSetCursor(window, c);
+        glfwSetCursor(window, glfwCreateStandardCursor(cursor.getValue()));
     }
 
     public String getClipboard() {

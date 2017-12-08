@@ -17,8 +17,10 @@ public abstract class Button extends Component {
 
     public Button(String text, float x, float y, float width, float height) {
         this.rect = new Rectangle(x, y, width, height, Color.GRAY, true);
+        this.rect.applyCameraZoom(false);
         float borderSize = 0.005f;
         this.border = new Rectangle(x - borderSize, y - borderSize, width + borderSize * 2, height + borderSize * 2, getColor(), true);
+        this.border.applyCameraZoom(false);
         this.text = text;
     }
 

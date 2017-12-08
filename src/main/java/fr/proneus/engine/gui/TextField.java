@@ -42,6 +42,7 @@ public class TextField extends Component {
         this.separator = 0;
 
         this.textField = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
+        this.textField.applyCameraZoom(false);
         this.font = font;
 
         this.acceptedString = acceptedString;
@@ -66,7 +67,7 @@ public class TextField extends Component {
             graphic.setFont(font);
         }
         graphic.draw(textField);
-        // TODO change
+        // TODO optimize (center)
         float textHeight = 0.01f;
         graphic.drawString(drawText, x, y + height - textHeight);
 
@@ -84,6 +85,7 @@ public class TextField extends Component {
             } catch (StringIndexOutOfBoundsException e) {
                 x += font.getWidth(drawText);
             }
+            // TODO camera zoom false
             if (separator > 0) {
                 graphic.draw(new Rectangle(x, y - height + height, 0.001f, height));
             } else {

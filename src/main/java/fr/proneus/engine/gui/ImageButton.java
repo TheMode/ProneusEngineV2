@@ -19,8 +19,11 @@ public abstract class ImageButton extends Component {
 
     public ImageButton(String text, float x, float y, Image image, Image hoverImage) {
         this.sprite = new Sprite(image, x, y);
+        this.sprite.applyCameraZoom(false);
         this.hoverSprite = new Sprite(hoverImage, x, y);
+        this.hoverSprite.applyCameraZoom(false);
         this.rect = new Rectangle(x, y, image.getRegionWidth(), image.getRegionHeight());
+        this.rect.applyCameraZoom(false);
         this.text = text;
 
     }

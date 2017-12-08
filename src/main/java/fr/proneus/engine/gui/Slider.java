@@ -31,6 +31,7 @@ public class Slider extends Component {
 
     @Override
     public void update(Game game) {
+        // TODO camera zoom false
         this.valueRect = new Rectangle(x, y, width * ((float) value / (float) max), height, Color.WHITE, true);
         this.underRect = new Rectangle(x, y, width, height, Color.DARK_GRAY, true);
         this.circle = new Circle(x + width * ((float) value / (float) max), y + height / 2,

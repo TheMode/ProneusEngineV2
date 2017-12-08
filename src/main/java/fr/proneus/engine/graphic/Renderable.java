@@ -23,6 +23,9 @@ public abstract class Renderable {
     private List<Force> forces;
     private float defaultForceSpeed = 0.05f;
 
+    // Camera
+    private boolean zoomable;
+
     public Renderable(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;
@@ -34,6 +37,8 @@ public abstract class Renderable {
         this.drawType = DrawType.TOP_LEFT;
 
         this.forces = new ArrayList<>();
+
+        this.zoomable = true;
     }
 
     public void setImageValue(Image image, float regionX, float regionY, float regionWidth, float regionHeight) {
@@ -123,10 +128,12 @@ public abstract class Renderable {
         }
 
         // Scale (camera)
-        Camera camera = graphic.getGame().getCamera();
-        float cameraZoomX = camera.getZoomX();
-        float cameraZoomY = camera.getZoomY();
-        glScalef(cameraZoomX, cameraZoomY, 0);
+        if (zoomable) {
+            Camera camera = graphic.getGame().getCamera();
+            float cameraZoomX = camera.getZoomX();
+            float cameraZoomY = camera.getZoomY();
+            glScalef(cameraZoomX, cameraZoomY, 0);
+        }
 
         glTranslatef(-(x + regionX + regionWidth / 2), -(y + regionY + regionHeight / 2), 0);
 
@@ -280,6 +287,10 @@ public abstract class Renderable {
 
     public void applyForce(Vector vector) {
         applyForce(vector, defaultForceSpeed);
+    }
+
+    public void applyCameraZoom(boolean zoomable) {
+        this.zoomable = zoomable;
     }
 
     public enum DrawType {
