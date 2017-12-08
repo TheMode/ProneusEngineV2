@@ -130,7 +130,10 @@ public class TestShooter extends State {
 
     @Override
     public void render(Game game, Graphics graphic) {
+        System.out.println(game.getFps());
+
         graphic.draw(player);
+
         for (Sprite laser : laserList) {
             graphic.draw(laser);
         }

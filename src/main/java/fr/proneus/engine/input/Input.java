@@ -65,6 +65,18 @@ public class Input {
         return mouse.keys[key];
     }
 
+    public boolean isMouseUp(int key) {
+        return !mouse.keys[key];
+    }
+
+    public boolean isMouseJustDown(int key) {
+        return mouse.keysDown[key];
+    }
+
+    public boolean isMouseJustUp(int key) {
+        return mouse.keysUp[key];
+    }
+
     public Controller getController(int joy) {
         return controller.getController(joy);
     }

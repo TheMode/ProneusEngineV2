@@ -336,7 +336,10 @@ public class Game {
                 if (hasDiscordRPCEnabled()) {
                     discordRPGManager.getDiscordRPC().Discord_RunCallbacks();
                 }
+                // Reset input
                 keyboardManager.resetKeys();
+                mouseManager.resetKeys();
+
                 glfwPollEvents();
                 state.update(this);
                 state.renderablesUpdate(this);

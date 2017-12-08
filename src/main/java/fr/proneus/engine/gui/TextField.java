@@ -54,7 +54,10 @@ public class TextField extends Component {
 
     @Override
     public void update(Game game) {
-
+        if (game.getInput().isMouseJustDown(0)) {
+            MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
+            this.focus = textField.interact(mouse.getX(), mouse.getY());
+        }
     }
 
     @Override
@@ -177,14 +180,6 @@ public class TextField extends Component {
     @Override
     public void onKeyRepeat(Game game, int key, int scancode) {
         onPress(game, key, scancode);
-    }
-
-    @Override
-    public void onMouseDown(Game game, int key) {
-        if (key == 0) {
-            MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
-            this.focus = textField.interact(mouse.getX(), mouse.getY());
-        }
     }
 
     public void allowSpace(boolean space) {

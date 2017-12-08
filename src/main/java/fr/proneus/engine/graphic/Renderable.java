@@ -14,7 +14,6 @@ public abstract class Renderable {
 
     private float x, y, width, height;
     private float regionX, regionY, regionWidth, regionHeight;
-    private float z;
     private double scale, scaleX, scaleY;
     private double angle;
     private Color color;
@@ -108,7 +107,7 @@ public abstract class Renderable {
         // Sprite position & image region
         float x = this.x * (float) Game.getDefaultWidth();
         float y = this.y * (float) Game.getDefaultHeight();
-        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, z);
+        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, 0);
 
         // Rotation
         if (angle != 0)
@@ -154,14 +153,6 @@ public abstract class Renderable {
 
     public void setY(float y) {
         this.y = y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
-    public void setZ(float z) {
-        this.z = z;
     }
 
     public float getRegionX() {

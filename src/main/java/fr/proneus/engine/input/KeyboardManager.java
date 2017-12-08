@@ -9,9 +9,9 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyboardManager extends GLFWKeyCallback {
 
-    public boolean[] keys = new boolean[65536];
-    public boolean[] keysDown = new boolean[65536];
-    public boolean[] keysUp = new boolean[65536];
+    protected boolean[] keys = new boolean[65536];
+    protected boolean[] keysDown = new boolean[65536];
+    protected boolean[] keysUp = new boolean[65536];
     private Game game;
     private State state;
 
@@ -31,6 +31,22 @@ public class KeyboardManager extends GLFWKeyCallback {
             for (Component comp : state.getComponents()) {
                 if (comp.isVisible())
                     comp.onKeyRepeat(game, key, scancode);
+            }
+        }
+
+        if (action == GLFW_PRESS) {
+            state.onKeyDown(game, key, scancode);
+            for (Component comp : state.getComponents()) {
+                if (comp.isVisible())
+                    comp.onKeyDown(game, key, scancode);
+            }
+        }
+
+        if (action == GLFW_RELEASE) {
+            state.onKeyUp(game, key, scancode);
+            for (Component comp : state.getComponents()) {
+                if (comp.isVisible())
+                    comp.onKeyUp(game, key, scancode);
             }
         }
 

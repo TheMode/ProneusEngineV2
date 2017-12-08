@@ -27,7 +27,7 @@ public class TestGUI extends State {
         button = new Button("Connexion", 0.5f - 0.1f, 0.5f, 0.2f, 0.1f) {
 
             @Override
-            public void onClick(int key) {
+            public void onClick() {
                 isLogged = true;
                 System.out.println(username.getText() + " : " + password.getText());
 

@@ -1,53 +1,41 @@
 package fr.proneus.engine.input;
 
+import fr.proneus.engine.Game;
+import fr.proneus.engine.state.State;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import fr.proneus.engine.Game;
-import fr.proneus.engine.gui.Component;
-import fr.proneus.engine.state.State;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseManager extends GLFWMouseButtonCallback {
 
-	private Game game;
+    protected boolean[] keys = new boolean[8];
+    protected boolean[] keysDown = new boolean[8];
+    protected boolean[] keysUp = new boolean[8];
+    private Game game;
+    private State state;
 
-	private State state;
+    public MouseManager(Game game) {
+        this.game = game;
+    }
 
-	protected boolean[] keys = new boolean[8];
+    @Override
+    public void invoke(long window, int key, int scancode, int mods) {
+        keys[key] = scancode != GLFW.GLFW_RELEASE;
+        keysDown[key] = scancode == GLFW_PRESS;
+        keysUp[key] = scancode == GLFW_RELEASE;
 
-	public MouseManager(Game game) {
-		this.game = game;
-	}
+    }
 
-	@Override
-	public void invoke(long window, int key, int scancode, int mods) {
-		keys[key] = scancode != GLFW.GLFW_RELEASE;
+    public void resetKeys() {
+        this.keysDown = new boolean[8];
+        this.keysUp = new boolean[8];
+    }
 
-		switch (scancode) {
-		case 0:
-			state.onMouseUp(game, key);
-			for (Component comp : state.getComponents()) {
-				if (comp.isVisible())
-					comp.onMouseUp(game, key);
-			}
-			break;
-		case 1:
-			state.onMouseDown(game, key);
-			for (Component comp : state.getComponents()) {
-				if (comp.isVisible())
-					comp.onMouseDown(game, key);
-			}
-			break;
+    public void setListener(State state) {
+        this.state = state;
 
-		default:
-			break;
-		}
-
-	}
-
-	public void setListener(State state) {
-		this.state = state;
-
-	}
+    }
 
 }

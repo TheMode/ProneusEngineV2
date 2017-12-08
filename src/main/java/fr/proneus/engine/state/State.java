@@ -28,13 +28,13 @@ public abstract class State {
     public void onKeyRepeat(Game game, int key, int scancode) {
     }
 
+    public void onKeyDown(Game game, int key, int scancode) {
+    }
+
+    public void onKeyUp(Game game, int key, int scancode) {
+    }
+
     public void onMouseMove(Game game, float x, float y) {
-    }
-
-    public void onMouseDown(Game game, int key) {
-    }
-
-    public void onMouseUp(Game game, int key) {
     }
 
     public void onMouseScroll(Game game, float power) {

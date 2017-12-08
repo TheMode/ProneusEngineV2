@@ -28,6 +28,11 @@ public abstract class Button extends Component {
         this.hover = this.rect.interact(mouse.getX(), mouse.getY());
 
         this.border.setColor(getColor());
+
+        if (game.getInput().isMouseJustDown(0)) {
+            if (hover)
+                onClick();
+        }
     }
 
     @Override
@@ -39,16 +44,10 @@ public abstract class Button extends Component {
         graphic.drawString(text, buttonX, buttonY, FontStyle.CENTERED, getColor());
     }
 
-    @Override
-    public void onMouseDown(Game game, int key) {
-        if (hover)
-            onClick(key);
-    }
-
     private Color getColor() {
         return this.hover ? Color.WHITE : Color.BLACK;
     }
 
-    public abstract void onClick(int key);
+    public abstract void onClick();
 
 }
