@@ -10,8 +10,8 @@ public class ScriptValue {
         this.args = args;
     }
 
-    public ScriptArgs getArg(int arg) {
-        return new ScriptArgs(args, arg);
+    public ScriptArg getArg(int arg) {
+        return new ScriptArg(args, arg);
     }
 
 }

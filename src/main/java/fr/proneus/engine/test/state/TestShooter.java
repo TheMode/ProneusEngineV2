@@ -9,16 +9,16 @@ import fr.proneus.engine.input.Buttons;
 import fr.proneus.engine.input.Controller;
 import fr.proneus.engine.input.Controller.ControllerAxe;
 import fr.proneus.engine.input.Controller.JoyStick;
+import fr.proneus.engine.input.Keys;
 import fr.proneus.engine.input.MousePosition;
 import fr.proneus.engine.light.Light;
 import fr.proneus.engine.light.Light.LightType;
 import fr.proneus.engine.script.Script;
-import fr.proneus.engine.script.ScriptArgs;
+import fr.proneus.engine.script.ScriptArg;
 import fr.proneus.engine.script.ScriptValue;
 import fr.proneus.engine.state.State;
 import fr.proneus.engine.utils.MathUtils;
 import fr.proneus.engine.utils.Vector;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +58,13 @@ public class TestShooter extends State {
         getLightManager().addLight(light);
         Script script = game.getScriptManager().loadScript("/scripts/testscript.lua");
         ScriptValue scriptValue = script.runMethod("testFunct", player);
-        ScriptArgs scriptArgs = scriptValue.getArg(1);
+        ScriptArg scriptArgs = scriptValue.getArg(1);
         System.out.println("test: " + scriptArgs.toString());
     }
 
     @Override
     public void update(Game game) {
-        // Angle
+        // Player angle
         if (!this.controller.isConnected()) {
             MousePosition mouse = game.getInput().getMousePosition();
             double mouseAngle = MathUtils.getAngle(player.getX(), player.getY(), mouse.getX(), mouse.getY());
@@ -78,11 +78,11 @@ public class TestShooter extends State {
 
         // Movement
         float v = 0;
-        v += game.getInput().isKeyDown(GLFW.GLFW_KEY_W) ? -1 : 0;
-        v += game.getInput().isKeyDown(GLFW.GLFW_KEY_S) ? 1 : 0;
+        v += game.getInput().isKeyDown(Keys.W) ? -1 : 0;
+        v += game.getInput().isKeyDown(Keys.S) ? 1 : 0;
         float h = 0;
-        h += game.getInput().isKeyDown(GLFW.GLFW_KEY_A) ? -1 : 0;
-        h += game.getInput().isKeyDown(GLFW.GLFW_KEY_D) ? 1 : 0;
+        h += game.getInput().isKeyDown(Keys.A) ? -1 : 0;
+        h += game.getInput().isKeyDown(Keys.D) ? 1 : 0;
 
         if (this.controller.isConnected()) {
             v += this.controller.getJoyStickValue(ControllerAxe.JOYSTICK_1_VERTICAL, true);
@@ -130,8 +130,6 @@ public class TestShooter extends State {
 
     @Override
     public void render(Game game, Graphics graphic) {
-        System.out.println(game.getFps());
-
         graphic.draw(player);
 
         for (Sprite laser : laserList) {

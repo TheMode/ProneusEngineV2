@@ -8,8 +8,6 @@ import fr.proneus.engine.state.State;
 
 public class TestFileChooser extends State {
 
-    // TODO
-
     @Override
     public void create(Game game) {
         Color color = FileDialog.createColorChooserDialog("TITRE", Color.GOLD).getColor();

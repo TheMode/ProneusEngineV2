@@ -39,10 +39,13 @@ public class Rectangle extends Renderable {
 
     @Override
     public boolean interact(float x, float y) {
-        float scaledX = this.getX();
-        float scaledWidth = this.getWidth();
-        float scaledY = this.getY();
-        float scaledHeight = this.getHeight();
+        // TODO verify for image
+        float scaledWidth = getWidth() * (float) getTotalScaleX();
+        float scaledHeight = getHeight() * (float) getTotalScaleY();
+        float scaledX = getX() + (1 - scaledWidth) / 2;
+        float scaledY = getY() + (1 - scaledHeight) / 2;
+        System.out.println(getTotalScaleX() + " " + getTotalScaleY());
+        // System.out.println(scaledX + " " + scaledY + " " + scaledWidth + " " + scaledHeight);
         boolean result = scaledX <= x && scaledX + scaledWidth >= x && scaledY <= y && scaledY + scaledHeight >= y;
         return result;
     }

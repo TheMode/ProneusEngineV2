@@ -12,8 +12,11 @@ public class Camera {
     private float x, y;
     private float zoomX = 1, zoomY = 1;
 
+    private Rectangle cameraRect;
+
     public Camera(Game game) {
         this.game = game;
+        this.cameraRect = new Rectangle(-this.x, -this.y, 1, 1, Color.WHITE, false);
     }
 
     public void setPosition(float x, float y) {
@@ -53,13 +56,10 @@ public class Camera {
     }
 
     public Rectangle getCameraRectangle() {
-        // TODO faire marcher  les methodes "visible" =(
         // TODO zoom support
-        //float cameraWidth = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualWidth() : game.getWidth();
-        //float cameraHeight = !game.getWindowType().equals(WindowType.NORMAL) ? game.getVirtualHeight() : game.getHeight();
-        //float cameraWidth = game.getVirtualWidth();
-        //float cameraHeight = game.getVirtualHeight();
-        return new Rectangle(-this.x, -this.y, 1, 1, Color.WHITE, false);
+        this.cameraRect.setX(-this.x);
+        this.cameraRect.setY(-this.y);
+        return cameraRect;
     }
 
     public boolean isPartiallyVisible(float x, float y, float width, float height) {
@@ -69,8 +69,9 @@ public class Camera {
     }
 
     public boolean isPartiallyVisible(Sprite sprite) {
-        return isPartiallyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionWidth() / (float) game.getWidth(),
-                sprite.getImage().getRegionHeight() / (float) game.getHeight());
+        float width = sprite.getImage().getRegionWidth() * (float) sprite.getImage().getImagePixelWidth() / (float) Game.getDefaultWidth();
+        float height = sprite.getImage().getRegionHeight() * (float) sprite.getImage().getImagePixelHeight() / (float) Game.getDefaultHeight();
+        return isPartiallyVisible(sprite.getX(), sprite.getY(), width, height);
     }
 
     public boolean isPartiallyVisible(Renderable renderable) {
@@ -84,8 +85,9 @@ public class Camera {
     }
 
     public boolean isFullyVisible(Sprite sprite) {
-        return isFullyVisible(sprite.getX(), sprite.getY(), sprite.getImage().getRegionWidth() / (float) game.getWidth(),
-                sprite.getImage().getRegionHeight() / (float) game.getHeight());
+        float width = sprite.getImage().getRegionWidth() * (float) sprite.getImage().getImagePixelWidth() / (float) Game.getDefaultWidth();
+        float height = sprite.getImage().getRegionHeight() * (float) sprite.getImage().getImagePixelHeight() / (float) Game.getDefaultHeight();
+        return isFullyVisible(sprite.getX(), sprite.getY(), width, height);
     }
 
     public boolean isFullyVisible(Renderable renderable) {

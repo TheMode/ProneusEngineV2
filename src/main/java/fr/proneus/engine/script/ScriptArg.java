@@ -1,13 +1,15 @@
 package fr.proneus.engine.script;
 
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.Varargs;
 
-public class ScriptArgs {
+public class ScriptArg {
 
     private Varargs args;
     private int arg;
 
-    protected ScriptArgs(Varargs args, int arg) {
+    // TODO check if
+    protected ScriptArg(Varargs args, int arg) {
         this.args = args;
         this.arg = arg;
     }
@@ -20,8 +22,17 @@ public class ScriptArgs {
         return args.checkjstring(arg);
     }
 
-    public int toInteger() {
-        return args.checkint(arg);
+    public boolean isInt() {
+        try {
+            args.checkint(arg);
+            return true;
+        } catch (LuaError exception) {
+            return false;
+        }
+    }
+
+    public int toInt() {
+        return args.toint(arg);
     }
 
     public long toLong() {

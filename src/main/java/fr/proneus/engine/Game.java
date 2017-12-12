@@ -52,6 +52,8 @@ public class Game {
     private int tps;
     private double delta;
 
+    private boolean allowResizeLoop;
+
     private CloseCallBack close;
 
     private Callback debugProc;
@@ -80,6 +82,7 @@ public class Game {
 
     // Script
     private ScriptManager scriptManager;
+    private boolean do_Redraw = true;
 
     public Game(String title, int width, int height, State state) {
         this.windowType = WindowType.NORMAL;
@@ -246,6 +249,10 @@ public class Game {
         glfwSetScrollCallback(window, mouseScrollManager);
         glfwSetJoystickCallback(controllerManager);
 
+
+        // TODO TEST
+        glfwSetCharModsCallback(window, this::testChar);
+
         // Resize Ratio
         glfwSetWindowAspectRatio(window, 16, 9);
 
@@ -268,6 +275,12 @@ public class Game {
             glfwSetWindowSize(window, width, height);
             glfwSetWindowPos(window, 0, 0);
         }
+    }
+
+    // TODO
+    private void testChar(long l, int code, int mods) {
+        // System.out.println(code);
+        // System.out.println(glfwGetKeyName(code, 0));
     }
 
     private void init() {
@@ -308,6 +321,8 @@ public class Game {
         glOrtho(0, width, height, 0, -1, 1);
         glMatrixMode(GL_MODELVIEW);
 
+        this.allowResizeLoop = true;
+
         while (!glfwWindowShouldClose(window)) {
             double timeSinceStart = glfwGetTime();
             delta = timeSinceStart * 1000 - oldTimeSinceStart * 1000;
@@ -331,44 +346,15 @@ public class Game {
 
             // Update
             if (tick) {
-
-                // Discord
-                if (hasDiscordRPCEnabled()) {
-                    discordRPGManager.getDiscordRPC().Discord_RunCallbacks();
-                }
-                // Reset input
-                keyboardManager.resetKeys();
-                mouseManager.resetKeys();
-
-                glfwPollEvents();
-                state.update(this);
-                state.renderablesUpdate(this);
-                state.componentsUpdate(this);
+                update();
             }
-            // Update end
 
             // Render
             if (render) {
-                glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-                glPushMatrix();
-
-                // Camera translate
-                glTranslatef(camera.getX() * (float) Game.getDefaultWidth(), camera.getY() * (float) Game.getDefaultHeight(), 0);
-
-                state.render(this, graphic);
-                // Change if issue
-                state.getLightManager().render(this);
-                state.componentsRender(this, graphic);
-
-                glPopMatrix();
-
-                glfwSwapBuffers(window);
+                render();
             }
-            // Render end
 
+            // Fps counter
             if (System.currentTimeMillis() - timer > 1000) {
                 timer += 1000;
                 fps = frames;
@@ -379,11 +365,50 @@ public class Game {
         glDisable(GL_TEXTURE_2D);
     }
 
+    private void update() {
+        // Discord
+        if (hasDiscordRPCEnabled()) {
+            discordRPGManager.getDiscordRPC().Discord_RunCallbacks();
+        }
+        // Reset input
+        keyboardManager.resetKeys();
+        mouseManager.resetKeys();
+
+        glfwPollEvents();
+        state.update(this);
+        state.renderablesUpdate(this);
+        state.componentsUpdate(this);
+    }
+
+    private void render() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+        glPushMatrix();
+
+        // Camera translate
+        glTranslatef(camera.getX() * (float) Game.getDefaultWidth(), camera.getY() * (float) Game.getDefaultHeight(), 0);
+
+        state.render(this, graphic);
+        // Change if issue
+        state.getLightManager().render(this);
+        state.componentsRender(this, graphic);
+
+        glPopMatrix();
+
+        glfwSwapBuffers(window);
+    }
+
     private void windowSizeChanged(long window, int width, int height) {
         this.width = width;
         this.height = height;
-
         glViewport(0, 0, width, height);
+        // Redraw during resize for windows users
+        if (this.allowResizeLoop) {
+            // Update ?
+            render();
+        }
 
     }
 

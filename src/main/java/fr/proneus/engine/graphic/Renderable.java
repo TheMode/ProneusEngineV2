@@ -13,11 +13,17 @@ import static org.lwjgl.opengl.GL11.*;
 public abstract class Renderable {
 
     private float x, y, width, height;
-    private float regionX, regionY, regionWidth, regionHeight;
-    private double scale, scaleX, scaleY;
     private double angle;
     private Color color;
     private DrawType drawType;
+
+    // Image
+    private boolean isImage;
+    private float regionX, regionY, regionWidth, regionHeight;
+
+    // Scale
+    private double scale, scaleX, scaleY;
+    private double totalScaleX, totalScaleY;
 
     // Force
     private List<Force> forces;
@@ -34,7 +40,11 @@ public abstract class Renderable {
         this.scale = 1;
         this.scaleX = 1;
         this.scaleY = 1;
+        this.totalScaleX = 1;
+        this.totalScaleY = 1;
         this.drawType = DrawType.TOP_LEFT;
+
+        this.isImage = (this instanceof Sprite);
 
         this.forces = new ArrayList<>();
 
@@ -74,9 +84,10 @@ public abstract class Renderable {
     }
 
     public void render(Graphics graphic) {
+        // TODO support for rectangle draw type & not centered scale
         glPushMatrix();
 
-        if (!(this instanceof Sprite)) {
+        if (!isImage) {
             glBindTexture(GL_TEXTURE_2D, 0);
         }
 
@@ -109,33 +120,27 @@ public abstract class Renderable {
         if (color != null)
             glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
 
-        // Sprite position & image region
+        // Start center
         float x = this.x * (float) Game.getDefaultWidth();
         float y = this.y * (float) Game.getDefaultHeight();
-        glTranslatef(x + regionX + regionWidth / 2, y + regionY + regionHeight / 2, 0);
+        float centerX = isImage ? x + regionX + regionWidth / 2 : x + width * (float) Game.getDefaultWidth() / 2;
+        float centerY = isImage ? y + regionY + regionHeight / 2 : y + height * (float) Game.getDefaultHeight() / 2;
+        glTranslatef(centerX, centerY, 0);
 
         // Rotation
         if (angle != 0)
             glRotated(angle, 0, 0, 1);
 
-        // Scale (global/sprite)
-        double scaleX = Math.max(
-                this.scale + (this.scaleX - 1) + (graphic.getGlobalScale() - 1) + (graphic.getScaleX() - 1), 0);
-        double scaleY = Math.max(
-                this.scale + (this.scaleY - 1) + (graphic.getGlobalScale() - 1) + (graphic.getScaleY() - 1), 0);
+        // Scale (global/sprite/Camera)
+        refreshScale(graphic);
+        double scaleX = getTotalScaleX();
+        double scaleY = getTotalScaleY();
         if (scaleX != 1 || scaleY != 1) {
-            glScaled(scaleX, scaleY, 1);
+            glScaled(scaleX, scaleY, 0);
         }
 
-        // Scale (camera)
-        if (zoomable) {
-            Camera camera = graphic.getGame().getCamera();
-            float cameraZoomX = camera.getZoomX();
-            float cameraZoomY = camera.getZoomY();
-            glScalef(cameraZoomX, cameraZoomY, 0);
-        }
-
-        glTranslatef(-(x + regionX + regionWidth / 2), -(y + regionY + regionHeight / 2), 0);
+        // End center
+        glTranslatef(-centerX, -centerY, 0);
 
         render();
 
@@ -208,6 +213,28 @@ public abstract class Renderable {
 
     public void setHeight(float height) {
         this.height = height;
+    }
+
+    public void refreshScale(Graphics graphics) {
+        double resultX = Math.max(
+                this.scale + (this.scaleX - 1) + (graphics.getGlobalScale() - 1) + (graphics.getScaleX() - 1), 0);
+        double resultY = Math.max(
+                this.scale + (this.scaleY - 1) + (graphics.getGlobalScale() - 1) + (graphics.getScaleY() - 1), 0);
+        if (zoomable) {
+            Camera camera = graphics.getGame().getCamera();
+            resultX += camera.getZoomX() - 1;
+            resultY += camera.getZoomY() - 1;
+        }
+        this.totalScaleX = resultX;
+        this.totalScaleY = resultY;
+    }
+
+    public double getTotalScaleX() {
+        return totalScaleX;
+    }
+
+    public double getTotalScaleY() {
+        return totalScaleY;
     }
 
     public double getScale() {

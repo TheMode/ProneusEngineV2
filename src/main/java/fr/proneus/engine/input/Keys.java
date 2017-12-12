@@ -1,181 +1,149 @@
 package fr.proneus.engine.input;
 
 public class Keys {
-	
-	public static final int ANY_KEY = -1;
-	public static final int NUM_0 = 7;
-	public static final int NUM_1 = 8;
-	public static final int NUM_2 = 9;
-	public static final int NUM_3 = 10;
-	public static final int NUM_4 = 11;
-	public static final int NUM_5 = 12;
-	public static final int NUM_6 = 13;
-	public static final int NUM_7 = 14;
-	public static final int NUM_8 = 15;
-	public static final int NUM_9 = 16;
-	public static final int A = 29;
-	public static final int ALT_LEFT = 57;
-	public static final int ALT_RIGHT = 58;
-	public static final int APOSTROPHE = 75;
-	public static final int AT = 77;
-	public static final int B = 30;
-	public static final int BACK = 4;
-	public static final int BACKSLASH = 73;
-	public static final int C = 31;
-	public static final int CALL = 5;
-	public static final int CAMERA = 27;
-	public static final int CLEAR = 28;
-	public static final int COMMA = 55;
-	public static final int D = 32;
-	public static final int DEL = 67;
-	public static final int BACKSPACE = 67;
-	public static final int FORWARD_DEL = 112;
-	public static final int DPAD_CENTER = 23;
-	public static final int DPAD_DOWN = 20;
-	public static final int DPAD_LEFT = 21;
-	public static final int DPAD_RIGHT = 22;
-	public static final int DPAD_UP = 19;
-	public static final int CENTER = 23;
-	public static final int DOWN = 20;
-	public static final int LEFT = 21;
-	public static final int RIGHT = 22;
-	public static final int UP = 19;
-	public static final int E = 33;
-	public static final int ENDCALL = 6;
-	public static final int ENTER = 66;
-	public static final int ENVELOPE = 65;
-	public static final int EQUALS = 70;
-	public static final int EXPLORER = 64;
-	public static final int F = 34;
-	public static final int FOCUS = 80;
-	public static final int G = 35;
-	public static final int GRAVE = 68;
-	public static final int H = 36;
-	public static final int HEADSETHOOK = 79;
-	public static final int HOME = 3;
-	public static final int I = 37;
-	public static final int J = 38;
-	public static final int K = 39;
-	public static final int L = 40;
-	public static final int LEFT_BRACKET = 71;
-	public static final int M = 41;
-	public static final int MEDIA_FAST_FORWARD = 90;
-	public static final int MEDIA_NEXT = 87;
-	public static final int MEDIA_PLAY_PAUSE = 85;
-	public static final int MEDIA_PREVIOUS = 88;
-	public static final int MEDIA_REWIND = 89;
-	public static final int MEDIA_STOP = 86;
-	public static final int MENU = 82;
-	public static final int MINUS = 69;
-	public static final int MUTE = 91;
-	public static final int N = 42;
-	public static final int NOTIFICATION = 83;
-	public static final int NUM = 78;
-	public static final int O = 43;
-	public static final int P = 44;
-	public static final int PERIOD = 56;
-	public static final int PLUS = 81;
-	public static final int POUND = 18;
-	public static final int POWER = 26;
-	public static final int Q = 45;
-	public static final int R = 46;
-	public static final int RIGHT_BRACKET = 72;
-	public static final int S = 47;
-	public static final int SEARCH = 84;
-	public static final int SEMICOLON = 74;
-	public static final int SHIFT_LEFT = 59;
-	public static final int SHIFT_RIGHT = 60;
-	public static final int SLASH = 76;
-	public static final int SOFT_LEFT = 1;
-	public static final int SOFT_RIGHT = 2;
-	public static final int SPACE = 62;
-	public static final int STAR = 17;
-	public static final int SYM = 63;
-	public static final int T = 48;
-	public static final int TAB = 61;
-	public static final int U = 49;
-	public static final int UNKNOWN = 0;
-	public static final int V = 50;
-	public static final int VOLUME_DOWN = 25;
-	public static final int VOLUME_UP = 24;
-	public static final int W = 51;
-	public static final int X = 52;
-	public static final int Y = 53;
-	public static final int Z = 54;
-	public static final int META_ALT_LEFT_ON = 16;
-	public static final int META_ALT_ON = 2;
-	public static final int META_ALT_RIGHT_ON = 32;
-	public static final int META_SHIFT_LEFT_ON = 64;
-	public static final int META_SHIFT_ON = 1;
-	public static final int META_SHIFT_RIGHT_ON = 128;
-	public static final int META_SYM_ON = 4;
-	public static final int CONTROL_LEFT = 129;
-	public static final int CONTROL_RIGHT = 130;
-	public static final int ESCAPE = 131;
-	public static final int END = 132;
-	public static final int INSERT = 133;
-	public static final int PAGE_UP = 92;
-	public static final int PAGE_DOWN = 93;
-	public static final int PICTSYMBOLS = 94;
-	public static final int SWITCH_CHARSET = 95;
-	public static final int BUTTON_CIRCLE = 255;
-	public static final int BUTTON_A = 96;
-	public static final int BUTTON_B = 97;
-	public static final int BUTTON_C = 98;
-	public static final int BUTTON_X = 99;
-	public static final int BUTTON_Y = 100;
-	public static final int BUTTON_Z = 101;
-	public static final int BUTTON_L1 = 102;
-	public static final int BUTTON_R1 = 103;
-	public static final int BUTTON_L2 = 104;
-	public static final int BUTTON_R2 = 105;
-	public static final int BUTTON_THUMBL = 106;
-	public static final int BUTTON_THUMBR = 107;
-	public static final int BUTTON_START = 108;
-	public static final int BUTTON_SELECT = 109;
-	public static final int BUTTON_MODE = 110;
 
-	public static final int NUMPAD_0 = 144;
-	public static final int NUMPAD_1 = 145;
-	public static final int NUMPAD_2 = 146;
-	public static final int NUMPAD_3 = 147;
-	public static final int NUMPAD_4 = 148;
-	public static final int NUMPAD_5 = 149;
-	public static final int NUMPAD_6 = 150;
-	public static final int NUMPAD_7 = 151;
-	public static final int NUMPAD_8 = 152;
-	public static final int NUMPAD_9 = 153;
+    /**
+     * The unknown key.
+     */
+    public static final int UNKNOWN = -1;
 
-//public static final int BACKTICK = 0;
-//public static final int TILDE = 0;
-//public static final int UNDERSCORE = 0;
-//public static final int DOT = 0;
-//public static final int BREAK = 0;
-//public static final int PIPE = 0;
-//public static final int EXCLAMATION = 0;
-//public static final int QUESTIONMARK = 0;
+    /**
+     * Printable keys.
+     */
+    public static final int
+            SPACE = 32,
+            APOSTROPHE = 39,
+            COMMA = 44,
+            MINUS = 45,
+            PERIOD = 46,
+            SLASH = 47,
+            NUM_0 = 48,
+            NUM_1 = 49,
+            NUM_2 = 50,
+            NUM_3 = 51,
+            NUM_4 = 52,
+            NUM_5 = 53,
+            NUM_6 = 54,
+            NUM_7 = 55,
+            NUM_8 = 56,
+            NUM_9 = 57,
+            SEMICOLON = 59,
+            EQUAL = 61,
+            A = 65,
+            B = 66,
+            C = 67,
+            D = 68,
+            E = 69,
+            F = 70,
+            G = 71,
+            H = 72,
+            I = 73,
+            J = 74,
+            K = 75,
+            L = 76,
+            M = 77,
+            N = 78,
+            O = 79,
+            P = 80,
+            Q = 81,
+            R = 82,
+            S = 83,
+            T = 84,
+            U = 85,
+            V = 86,
+            W = 87,
+            X = 88,
+            Y = 89,
+            Z = 90,
+            LEFT_BRACKET = 91,
+            BACKSLASH = 92,
+            RIGHT_BRACKET = 93,
+            GRAVE_ACCENT = 96,
+            WORLD_1 = 161,
+            WORLD_2 = 162;
+    /**
+     * Function keys.
+     */
+    public static final int
+            ESCAPE = 256,
+            ENTER = 257,
+            TAB = 258,
+            BACKSPACE = 259,
+            INSERT = 260,
+            DELETE = 261,
+            RIGHT = 262,
+            LEFT = 263,
+            DOWN = 264,
+            UP = 265,
+            PAGE_UP = 266,
+            PAGE_DOWN = 267,
+            HOME = 268,
+            END = 269,
+            CAPS_LOCK = 280,
+            SCROLL_LOCK = 281,
+            NUM_LOCK = 282,
+            PRINT_SCREEN = 283,
+            PAUSE = 284,
+            F1 = 290,
+            F2 = 291,
+            F3 = 292,
+            F4 = 293,
+            F5 = 294,
+            F6 = 295,
+            F7 = 296,
+            F8 = 297,
+            F9 = 298,
+            F10 = 299,
+            F11 = 300,
+            F12 = 301,
+            F13 = 302,
+            F14 = 303,
+            F15 = 304,
+            F16 = 305,
+            F17 = 306,
+            F18 = 307,
+            F19 = 308,
+            F20 = 309,
+            F21 = 310,
+            F22 = 311,
+            F23 = 312,
+            F24 = 313,
+            F25 = 314,
+            KP_0 = 320,
+            KP_1 = 321,
+            KP_2 = 322,
+            KP_3 = 323,
+            KP_4 = 324,
+            KP_5 = 325,
+            KP_6 = 326,
+            KP_7 = 327,
+            KP_8 = 328,
+            KP_9 = 329,
+            KP_DECIMAL = 330,
+            KP_DIVIDE = 331,
+            KP_MULTIPLY = 332,
+            KP_SUBTRACT = 333,
+            KP_ADD = 334,
+            KP_ENTER = 335,
+            KP_EQUAL = 336,
+            LEFT_SHIFT = 340,
+            LEFT_CONTROL = 341,
+            LEFT_ALT = 342,
+            LEFT_SUPER = 343,
+            RIGHT_SHIFT = 344,
+            RIGHT_CONTROL = 345,
+            RIGHT_ALT = 346,
+            RIGHT_SUPER = 347,
+            MENU = 348,
+            LAST = MENU;
+    // TODO check use ?
+    public static final int GLFW_MOD_SHIFT = 0x1;
+    public static final int GLFW_MOD_CONTROL = 0x2;
+    public static final int GLFW_MOD_ALT = 0x4;
+    public static final int GLFW_MOD_SUPER = 0x8;
 
-//` | VK_BACKTICK
-//~ | VK_TILDE
-//: | VK_COLON
-//_ | VK_UNDERSCORE
-//. | VK_DOT
-//(break) | VK_BREAK
-//| | VK_PIPE
-//! | VK_EXCLAMATION
-//? | VK_QUESTION
-	public static final int COLON = 243;
-	public static final int F1 = 244;
-	public static final int F2 = 245;
-	public static final int F3 = 246;
-	public static final int F4 = 247;
-	public static final int F5 = 248;
-	public static final int F6 = 249;
-	public static final int F7 = 250;
-	public static final int F8 = 251;
-	public static final int F9 = 252;
-	public static final int F10 = 253;
-	public static final int F11 = 254;
-	public static final int F12 = 255;
+    public static int getCapsValue(int key) {
+        return key;
+    }
 
 }

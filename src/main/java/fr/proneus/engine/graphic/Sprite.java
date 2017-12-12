@@ -29,6 +29,9 @@ public class Sprite extends Renderable {
 
     private Runnable animationEnd;
 
+    // Interact rectangle
+    private Rectangle interactRectangle;
+
     public Sprite(Image image, float x, float y) {
         super(x, y, 0, 0);
         this.image = image;
@@ -36,6 +39,8 @@ public class Sprite extends Renderable {
         setImageValue(image, image.getRegionX(), image.getRegionY(), image.getRegionWidth(), image.getRegionHeight());
 
         this.animations = new HashMap<>();
+
+        this.interactRectangle = new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
@@ -164,8 +169,12 @@ public class Sprite extends Renderable {
 
     @Override
     public boolean interact(float x, float y) {
-        // TODO optimize ?
-        return new Rectangle(getX(), getY(), getWidth(), getHeight()).interact(x, y);
+        // TODO check if is working ?
+        this.interactRectangle.setX(getRegionX() / image.getImagePixelWidth());
+        this.interactRectangle.setY(getRegionY() / image.getImagePixelHeight());
+        this.interactRectangle.setWidth(getRegionWidth() / image.getImagePixelWidth());
+        this.interactRectangle.setHeight(getRegionHeight() / image.getImagePixelHeight());
+        return this.interactRectangle.interact(x, y);
     }
 
     // Image settings
@@ -173,6 +182,7 @@ public class Sprite extends Renderable {
         return imageID;
     }
 
+    // Image is loaded during first draw
     public boolean isImageLoaded() {
         return getImageID() != 0;
     }
@@ -181,6 +191,7 @@ public class Sprite extends Renderable {
         return image;
     }
 
+    // The new image will have to be loaded
     public void setImage(Image image) {
         if (!this.image.equals(image)) {
             imageID = 0;

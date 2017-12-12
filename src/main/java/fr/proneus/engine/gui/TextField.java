@@ -5,9 +5,8 @@ import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Font;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.shape.Rectangle;
+import fr.proneus.engine.input.Keys;
 import fr.proneus.engine.input.MousePosition;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class TextField extends Component {
 
@@ -105,7 +104,7 @@ public class TextField extends Component {
             separator++;
         }
         switch (key) {
-            case GLFW_KEY_BACKSPACE:
+            case Keys.BACKSPACE:
                 if (text.length() > 0 && text.length() > separator - 1) {
                     if (separator == 0)
                         break;
@@ -118,14 +117,14 @@ public class TextField extends Component {
                 }
                 break;
 
-            case GLFW_KEY_LEFT:
+            case Keys.LEFT:
                 if (text.length() != 0 && separator - 1 >= 0) {
                     separator--;
                 }
 
                 break;
 
-            case GLFW_KEY_RIGHT:
+            case Keys.RIGHT:
                 if (text.length() != 0 && separator < text.length()) {
                     separator++;
                 }

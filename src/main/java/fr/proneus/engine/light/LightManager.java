@@ -60,7 +60,7 @@ public class LightManager {
             // Shader uniforms
             glUniform1i(glGetUniformLocation(shaderProgram, "lightType"), light.getLightType().getID());
             glUniform2f(glGetUniformLocation(shaderProgram, "lightLocation"), x, y);
-            glUniform2f(glGetUniformLocation(shaderProgram, "resolution"), Game.getDefaultWidth(), Game.getDefaultHeight());
+            glUniform2f(glGetUniformLocation(shaderProgram, "resolution"), game.getWidth(), game.getHeight());
             glUniform4f(glGetUniformLocation(shaderProgram, "lightColor"), (float) light.getColor().r / 255f,
                     (float) light.getColor().g / 255f, (float) light.getColor().b / 255f, light.getColor().a);
 
@@ -72,12 +72,14 @@ public class LightManager {
             }
 
             // Draw
+            float width = Game.getDefaultWidth();
+            float height = Game.getDefaultHeight();
             glBegin(GL_QUADS);
             {
                 glVertex2f(0, 0);
-                glVertex2f(0, Game.getDefaultHeight());
-                glVertex2f(Game.getDefaultWidth(), Game.getDefaultHeight());
-                glVertex2f(Game.getDefaultWidth(), 0);
+                glVertex2f(0, height);
+                glVertex2f(width, height);
+                glVertex2f(width, 0);
             }
             glEnd();
 

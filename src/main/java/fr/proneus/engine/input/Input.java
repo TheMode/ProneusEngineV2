@@ -2,7 +2,6 @@ package fr.proneus.engine.input;
 
 import fr.proneus.engine.Game;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
 
 public class Input {
@@ -42,7 +41,7 @@ public class Input {
         String keyString = glfwGetKeyName(key, scancode);
         if (keyString == null) {
             switch (key) {
-                case GLFW_KEY_SPACE:
+                case Keys.SPACE:
                     return " ";
 
                 default:
