@@ -34,7 +34,7 @@ public class TestGUI extends State {
         this.pressedButtonImage = new Image("/HUD/button_pressed.png");
 
         username = new TextField(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, game.getCurrentFont());
-        usernameRectangle = this.createRenderable(new Rectangle(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, Color.RED, true));
+        usernameRectangle = this.createRenderable(new Rectangle(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, Color.DARK_GRAY, true));
         usernameRectangle.applyCameraZoom(false);
 
         password = new TextField(0.5f - 0.1f, 0.3f, 0.2f, 0.05f, game.getCurrentFont());
@@ -53,14 +53,13 @@ public class TestGUI extends State {
             }
         };
 
-        //addComponent(username);
+        addComponent(username);
         addComponent(password);
         addComponent(button);
     }
 
     @Override
     public void update(Game game) {
-
     }
 
     @Override

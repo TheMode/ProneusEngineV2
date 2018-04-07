@@ -26,7 +26,7 @@ public class TextField extends Component {
 
     private Font font;
 
-    private String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ-_ ";
+    private String characters;
     private int length;
 
     public TextField(float x, float y, float width, float height, Font font, String characters, int length) {
@@ -47,7 +47,7 @@ public class TextField extends Component {
     }
 
     public TextField(float x, float y, float width, float height, Font font) {
-        this(x, y, width, height, font, "", 255);
+        this(x, y, width, height, font, "ABCDEFGHIJKLMNOPQRSTUVWXYZ-_ ", 255);
     }
 
     @Override
