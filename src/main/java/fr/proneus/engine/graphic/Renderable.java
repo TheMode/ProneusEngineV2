@@ -119,12 +119,14 @@ public abstract class Renderable {
 
         if (color != null)
             glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
+        else
+            glColor4f(1f, 1f, 1f, 1f);
 
         // Start center
-        float x = this.x * (float) Game.getDefaultWidth();
-        float y = this.y * (float) Game.getDefaultHeight();
-        float centerX = isImage ? x + regionX + regionWidth / 2 : x + width * (float) Game.getDefaultWidth() / 2;
-        float centerY = isImage ? y + regionY + regionHeight / 2 : y + height * (float) Game.getDefaultHeight() / 2;
+        float x = this.x * (float) Game.getCameraWidth();
+        float y = this.y * (float) Game.getCameraHeight();
+        float centerX = isImage ? x + regionX + regionWidth / 2 : x + width * (float) Game.getCameraWidth() / 2;
+        float centerY = isImage ? y + regionY + regionHeight / 2 : y + height * (float) Game.getCameraHeight() / 2;
         glTranslatef(centerX, centerY, 0);
 
         // Rotation

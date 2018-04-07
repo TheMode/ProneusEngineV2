@@ -66,11 +66,11 @@ public class Image {
     }
 
     public float getImageWidth() {
-        return imageWidth / (float) Game.getDefaultWidth();
+        return imageWidth / (float) Game.getCameraWidth();
     }
 
     public float getImageHeight() {
-        return imageHeight / (float) Game.getDefaultHeight();
+        return imageHeight / (float) Game.getCameraHeight();
     }
 
     public int getImagePixelWidth() {

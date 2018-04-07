@@ -31,7 +31,7 @@ public abstract class Button extends Component {
 
         this.border.setColor(getColor());
 
-        if (game.getInput().isMouseJustDown(0)) {
+        if (game.getInput().isMouseJustUp(0)) {
             if (hover)
                 onClick();
         }

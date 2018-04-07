@@ -12,7 +12,7 @@ public class Graphics {
 
     public Graphics(Game game) {
         this.game = game;
-        this.font = new Font("/font.ttf", 32);
+        this.font = new Font(game, "/font.ttf", 32);
         this.globalScale = 1f;
         this.scaleX = 1f;
         this.scaleY = 1f;

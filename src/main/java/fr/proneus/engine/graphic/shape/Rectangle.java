@@ -22,10 +22,10 @@ public class Rectangle extends Renderable {
 
     @Override
     public void render() {
-        float x = getX() * (float) Game.getDefaultWidth();
-        float y = getY() * (float) Game.getDefaultHeight();
-        float width = getWidth() * (float) Game.getDefaultWidth();
-        float height = getHeight() * (float) Game.getDefaultHeight();
+        float x = getX() * (float) Game.getCameraWidth();
+        float y = getY() * (float) Game.getCameraHeight();
+        float width = getWidth() * (float) Game.getCameraWidth();
+        float height = getHeight() * (float) Game.getCameraHeight();
 
         glBegin(filled ? GL_QUADS : GL_LINE_LOOP);
 
@@ -39,15 +39,11 @@ public class Rectangle extends Renderable {
 
     @Override
     public boolean interact(float x, float y) {
-        // TODO verify for image
-        float scaledWidth = getWidth() * (float) getTotalScaleX();
-        float scaledHeight = getHeight() * (float) getTotalScaleY();
-        float scaledX = getX() + (1 - scaledWidth) / 2;
-        float scaledY = getY() + (1 - scaledHeight) / 2;
-        System.out.println(getTotalScaleX() + " " + getTotalScaleY());
-        // System.out.println(scaledX + " " + scaledY + " " + scaledWidth + " " + scaledHeight);
-        boolean result = scaledX <= x && scaledX + scaledWidth >= x && scaledY <= y && scaledY + scaledHeight >= y;
-        return result;
+        return getX() <= x && getX() + getWidth() >= x && getY() <= y && getY() + getHeight() >= y;
+    }
+
+    public boolean overlaps (Rectangle r) {
+        return getX() < r.getX() + r.getWidth() && getX() + getWidth() > r.getX() && getY() < r.getY() + r.getHeight() && getY() + getHeight() > r.getY();
     }
 
 }

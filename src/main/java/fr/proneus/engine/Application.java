@@ -6,8 +6,8 @@ public class Application {
 
 	private Game game;
 
-	public Application(String display, int width, int height, State state) {
-		this.game = new Game(display, width, height, state);
+	public Application(String display, int windowsWidth, int windowsHeight, int cameraWidth, int cameraHeight, State state) {
+		this.game = new Game(display, windowsWidth, windowsHeight, cameraWidth, cameraHeight, state);
 	}
 
 	public void start() {
@@ -40,10 +40,6 @@ public class Application {
 
 	public void setResizable(boolean resizable) {
 		game.setResizable(resizable);
-	}
-
-	public void setScale(boolean scale) {
-		game.setScale(scale);
 	}
 
 	public void setFpsLimit(int fps) {

@@ -1,12 +1,15 @@
 package fr.proneus.engine.test;
 
 import fr.proneus.engine.Application;
-import fr.proneus.engine.test.state.TestShooter;
+import fr.proneus.engine.test.state.TestGUI;
 
 public class TestEngine {
 
     public static void main(String[] args) {
-        Application app = new Application("NexusFight", 1280, 720, new TestShooter());
+        Application app = new Application("Breakout",
+                1280, 720,
+                1920, 1080,
+                new TestGUI());
 
         app.setCloseCallBack(game -> {
             System.out.println("Game closed!");
@@ -14,7 +17,6 @@ public class TestEngine {
         // app.setFpsLimit(1);
         app.setTPS(60);
         //app.setBorderless();
-        app.setScale(true);
         app.setIcon("/test2.png");
         //app.enableDiscordRPC("appId");
         app.start();

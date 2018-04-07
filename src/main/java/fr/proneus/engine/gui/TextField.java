@@ -10,8 +10,6 @@ import fr.proneus.engine.input.MousePosition;
 
 public class TextField extends Component {
 
-    public final static String DEFAULT_ACCEPTED = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-_ ";
-
     private float x, y, width, height;
 
     private String text;
@@ -28,10 +26,10 @@ public class TextField extends Component {
 
     private Font font;
 
-    private String acceptedString;
+    private String forbiddenCharacters;
     private int length;
 
-    public TextField(float x, float y, float width, float height, Font font, String acceptedString, int length) {
+    public TextField(float x, float y, float width, float height, Font font, String forbiddenCharacters, int length) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -44,12 +42,12 @@ public class TextField extends Component {
         this.textField.applyCameraZoom(false);
         this.font = font;
 
-        this.acceptedString = acceptedString;
+        this.forbiddenCharacters = forbiddenCharacters;
         this.length = length;
     }
 
     public TextField(float x, float y, float width, float height, Font font) {
-        this(x, y, width, height, font, DEFAULT_ACCEPTED, 255);
+        this(x, y, width, height, font, "", 255);
     }
 
     @Override
@@ -65,8 +63,6 @@ public class TextField extends Component {
         if (!graphic.getFont().equals(font)) {
             graphic.setFont(font);
         }
-        graphic.draw(textField);
-        // TODO optimize (center)
         float textHeight = 0.01f;
         graphic.drawString(drawText, x, y + height - textHeight);
 
@@ -76,9 +72,10 @@ public class TextField extends Component {
                 drawText.substring(0, separator);
                 x += font.getWidth(getTextWidth(drawText, 0, separator));
 
-                if (text.length() > separator) {
+                String rightChar = text.substring(separator - 1, separator);
+                if (rightChar != null && !forbiddenCharacters.contains(" ")) {
                     // Space add
-                    boolean isSpace = text.substring(separator - 1, separator).equals(" ");
+                    boolean isSpace = rightChar.equals(" ");
                     x += isSpace ? 8 / (float) Game.getDefaultWidth() : 0;
                 }
             } catch (StringIndexOutOfBoundsException e) {
@@ -91,18 +88,52 @@ public class TextField extends Component {
                 graphic.draw(new Rectangle(this.x, y - height + height, 0.001f, height));
             }
         }
-
     }
 
-    private void onPress(Game game, int key, int scancode) {
+    private void refresh() {
+        if (font.getWidth(getTextWidth(text, 0, separator)) >= width) {
+            for (int i = 0; i < text.length(); i++) {
+                if (font.getWidth(getTextWidth(text, 0, separator).substring(i)) < width) {
+                    this.view = i;
+                    break;
+                }
+            }
+        } else {
+            view = 0;
+        }
+
+        this.drawText = text.length() > 0 ? text.substring(view) : "";
+
+        if (password) {
+            String passwordText = "";
+            for (int i = 0; i < drawText.length(); i++) {
+                passwordText += passwordChar;
+            }
+            this.drawText = passwordText;
+        }
+
+        while (font.getWidth(drawText) >= width) {
+            drawText = drawText.substring(0, drawText.length() - 1);
+        }
+    }
+
+    private void onCharPress(Game game, char character) {
         if (!focus)
             return;
-        String keyString = game.getInput().getKeyReturn(key, scancode);
+        String keyString = String.valueOf(character);
         if (keyString != null && !(text.length() >= length)
-                && acceptedString.toLowerCase().contains(keyString.toLowerCase())) {
+                && !forbiddenCharacters.toLowerCase().contains(keyString.toLowerCase())) {
             text = text.substring(0, separator) + keyString + text.substring(separator, text.length());
             separator++;
         }
+
+        refresh();
+
+    }
+
+    private void onKeyPress(Game game, int key) {
+        if (!focus)
+            return;
         switch (key) {
             case Keys.BACKSPACE:
                 if (text.length() > 0 && text.length() > separator - 1) {
@@ -134,31 +165,7 @@ public class TextField extends Component {
                 break;
         }
 
-        if (font.getWidth(getTextWidth(text, 0, separator)) >= width) {
-            for (int i = 0; i < text.length(); i++) {
-                if (font.getWidth(getTextWidth(text, 0, separator).substring(i)) < width) {
-                    this.view = i;
-                    break;
-                }
-            }
-        } else {
-            view = 0;
-        }
-
-        this.drawText = text.length() > 0 ? text.substring(view) : "";
-
-        if (password) {
-            String passwordText = "";
-            for (int i = 0; i < drawText.length(); i++) {
-                passwordText += passwordChar;
-            }
-            this.drawText = passwordText;
-        }
-
-        while (font.getWidth(drawText) >= width) {
-            drawText = drawText.substring(0, drawText.length() - 1);
-        }
-
+        refresh();
     }
 
     private String getTextWidth(String text, int begin, int end) {
@@ -174,18 +181,25 @@ public class TextField extends Component {
     }
 
     @Override
+    public void onCharCallback(Game game, char character) {
+        onCharPress(game, character);
+    }
+
+    @Override
     public void onKeyDown(Game game, int key, int scancode) {
-        onPress(game, key, scancode);
+        onKeyPress(game, key);
     }
 
     @Override
     public void onKeyRepeat(Game game, int key, int scancode) {
-        onPress(game, key, scancode);
+        onKeyPress(game, key);
     }
 
     public void allowSpace(boolean space) {
         if (!space) {
-            this.acceptedString = this.acceptedString.replace(" ", "");
+            this.forbiddenCharacters += " ";
+        } else {
+            this.forbiddenCharacters = this.forbiddenCharacters.replace(" ", "");
         }
     }
 

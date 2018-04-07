@@ -3,28 +3,47 @@ package fr.proneus.engine.test.state;
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
+import fr.proneus.engine.graphic.Image;
+import fr.proneus.engine.graphic.Sprite;
 import fr.proneus.engine.graphic.shape.Rectangle;
-import fr.proneus.engine.gui.Button;
+import fr.proneus.engine.gui.ImageButton;
 import fr.proneus.engine.gui.TextField;
 import fr.proneus.engine.state.State;
 
 public class TestGUI extends State {
 
+    private Sprite background;
+
     private TextField username;
     private TextField password;
 
-    private Button button;
+    private Rectangle usernameRectangle;
+    private Rectangle passwordRectangle;
+
+    private ImageButton button;
+    private Image buttonImage, pressedButtonImage;
 
     private boolean isLogged;
 
     @Override
     public void create(Game game) {
+
+        this.background = new Sprite(new Image("/background/chicago.jpg"), 0f, 0f);
+
+        this.buttonImage = new Image("/HUD/button_default.png");
+        this.pressedButtonImage = new Image("/HUD/button_pressed.png");
+
         username = new TextField(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, game.getCurrentFont());
+        usernameRectangle = this.createRenderable(new Rectangle(0.5f - 0.1f, 0.1f, 0.2f, 0.05f, Color.RED, true));
+        usernameRectangle.applyCameraZoom(false);
 
         password = new TextField(0.5f - 0.1f, 0.3f, 0.2f, 0.05f, game.getCurrentFont());
         password.setPassword('*');
+        password.allowSpace(false);
+        passwordRectangle = this.createRenderable(new Rectangle(0.5f - 0.1f, 0.3f, 0.2f, 0.05f, Color.DARK_GRAY, true));
+        passwordRectangle.applyCameraZoom(false);
 
-        button = new Button("Connexion", 0.5f - 0.1f, 0.5f, 0.2f, 0.1f) {
+        button = new ImageButton(0.5f - 0.1f, 0.5f, buttonImage, buttonImage, pressedButtonImage) {
 
             @Override
             public void onClick() {
@@ -34,10 +53,9 @@ public class TestGUI extends State {
             }
         };
 
-        addComponent(username);
+        //addComponent(username);
         addComponent(password);
         addComponent(button);
-
     }
 
     @Override
@@ -47,16 +65,11 @@ public class TestGUI extends State {
 
     @Override
     public void render(Game game, Graphics graphic) {
-        graphic.draw(new Rectangle(0f, 0, 1, 1, Color.RED, true));
+        graphic.draw(background);
+        graphic.draw(usernameRectangle);
+        graphic.draw(passwordRectangle);
         //graphic.drawString("Username: ", game.getVirtualWidth() / 2 - 100, 300 + 35, FontStyle.LEFT, Color.WHITE);
         //graphic.drawString("Password: ", game.getVirtualWidth() / 2 - 100, 400 + 35, FontStyle.LEFT, Color.WHITE);
-
-        // Test performance
-        int performance = 10000;
-        for (int i = 0; i < performance; i++) {
-            graphic.draw(new Rectangle(0, 0, 1, 1));
-        }
-
 
         if (isLogged)
             graphic.drawString("Connexion en cours...",

@@ -4,7 +4,7 @@ import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
 import fr.proneus.engine.graphic.shape.Rectangle;
-import org.lwjgl.BufferUtils;
+import fr.proneus.engine.utils.ByteBufferUtils;
 import org.lwjgl.opengl.GL12;
 
 import java.awt.image.BufferedImage;
@@ -27,13 +27,11 @@ public class Sprite extends Renderable {
     private int currentAnimationFrame;
     private int currentAnimationSpeed;
 
-    private Runnable animationEnd;
-
     // Interact rectangle
     private Rectangle interactRectangle;
 
     public Sprite(Image image, float x, float y) {
-        super(x, y, 0, 0);
+        super(x, y, image.getImageWidth(), image.getImageHeight());
         this.image = image;
 
         setImageValue(image, image.getRegionX(), image.getRegionY(), image.getRegionWidth(), image.getRegionHeight());
@@ -50,16 +48,14 @@ public class Sprite extends Renderable {
         if (currentAnimation != null) {
             if (System.currentTimeMillis() - lastAnimationDraw > currentAnimationSpeed) {
                 this.lastAnimationDraw = System.currentTimeMillis();
-                // TODO Maybe bugged ?
                 AnimationFrame frame = currentAnimation.frames.get(currentAnimationFrame);
                 this.setRegionX(frame.x);
                 this.setRegionY(frame.y);
                 this.setRegionWidth(frame.width);
                 this.setRegionHeight(frame.height);
+                onAnimationFrame(getAnimationName(), currentAnimationFrame);
                 if (currentAnimation.frames.get(currentAnimationFrame + 1) == null) {
-                    if (animationEnd != null) {
-                        animationEnd.run();
-                    }
+                    onAnimationEnd(getAnimationName());
                     currentAnimationFrame = 0;
                 } else {
                     currentAnimationFrame++;
@@ -86,8 +82,8 @@ public class Sprite extends Renderable {
         float dcw = (regionX + regionWidth) / (float) image.getImagePixelWidth();
         float dch = (regionY + regionHeight) / (float) image.getImagePixelHeight();
 
-        float x = getX() * (float) Game.getDefaultWidth();
-        float y = getY() * (float) Game.getDefaultHeight();
+        float x = getX() * (float) Game.getCameraWidth();
+        float y = getY() * (float) Game.getCameraHeight();
 
         glBegin(GL_QUADS);
 
@@ -107,20 +103,7 @@ public class Sprite extends Renderable {
         int[] pixels = new int[image.getWidth() * image.getHeight()];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
-        ByteBuffer buffer = BufferUtils.createByteBuffer(image.getWidth() * image.getHeight() * 4);
-
-        for (int y = 0; y < image.getHeight(); y++) {
-            for (int x = 0; x < image.getWidth(); x++) {
-                int pixel = pixels[y * image.getWidth() + x];
-                buffer.put((byte) ((pixel >> 16) & 0xFF)); // R
-                buffer.put((byte) ((pixel >> 8) & 0xFF)); // G
-                buffer.put((byte) (pixel & 0xFF)); // B
-                buffer.put((byte) ((pixel >> 24) & 0xFF)); // A
-
-            }
-        }
-
-        buffer.flip();
+        ByteBuffer buffer = ByteBufferUtils.convertImage(image);
 
         int textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
@@ -137,8 +120,10 @@ public class Sprite extends Renderable {
         return textureID;
     }
 
-    public void onAnimationEnd(Runnable animationEnd) {
-        this.animationEnd = animationEnd;
+    public void onAnimationEnd(String name) {
+    }
+
+    public void onAnimationFrame(String name, int frame) {
     }
 
     public void addAnimation(String name, Animation animation) {
@@ -147,7 +132,7 @@ public class Sprite extends Renderable {
 
     public void setAnimation(String name, int speed) {
         if (name == null) {
-            currentAnimation = null;
+            this.currentAnimation = null;
             this.currentAnimationFrame = 0;
             this.currentAnimationSpeed = 0;
             return;
@@ -158,12 +143,10 @@ public class Sprite extends Renderable {
     }
 
     public String getAnimationName() {
-
         for (Entry<String, Animation> anim : animations.entrySet()) {
             if (anim.getValue().equals(currentAnimation))
                 return anim.getKey();
         }
-
         return null;
     }
 
@@ -175,6 +158,10 @@ public class Sprite extends Renderable {
         this.interactRectangle.setWidth(getRegionWidth() / image.getImagePixelWidth());
         this.interactRectangle.setHeight(getRegionHeight() / image.getImagePixelHeight());
         return this.interactRectangle.interact(x, y);
+    }
+
+    public boolean overlaps(Rectangle r) {
+        return getX() < r.getX() + r.getWidth() && getX() + getWidth() > r.getX() && getY() < r.getY() + r.getHeight() && getY() + getHeight() > r.getY();
     }
 
     // Image settings

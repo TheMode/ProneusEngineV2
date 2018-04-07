@@ -37,10 +37,10 @@ public class Game {
 
     private static int defaultWidth, defaultHeight;
     protected int width, height;
+    private static int cameraWidth, cameraHeight;
     private long window;
     private WindowType windowType;
     private String title;
-    private boolean scale;
 
     private State state;
     private Graphics graphic;
@@ -74,6 +74,8 @@ public class Game {
     private MouseScrollManager mouseScrollManager;
     private ControllerManager controllerManager;
 
+    private CharCallback charCallback;
+
     // Discord
     private DiscordRPCManager discordRPGManager;
 
@@ -84,17 +86,19 @@ public class Game {
     private ScriptManager scriptManager;
     private boolean do_Redraw = true;
 
-    public Game(String title, int width, int height, State state) {
+    public Game(String title, int windowsWidth, int windowsHeight, int cameraWidth, int cameraHeight, State state) {
         this.windowType = WindowType.NORMAL;
         this.title = title;
-        this.width = width;
-        this.height = height;
+        this.width = windowsWidth;
+        this.height = windowsHeight;
 
         // Default
         this.defaultWidth = width;
         this.defaultHeight = height;
 
         this.camera = new Camera(this);
+        this.cameraWidth = cameraWidth;
+        this.cameraHeight = cameraHeight;
 
         this.state = state;
 
@@ -114,9 +118,11 @@ public class Game {
         this.controllerManager = new ControllerManager(this);
         this.controllerManager.setListener(state);
 
+        this.charCallback = new CharCallback(this);
+        this.charCallback.setListener(state);
+
         this.input = new Input(this, keyboardManager, mousePositionManager, mouseManager, controllerManager);
 
-        this.scale = true;
         this.resizable = true;
 
         // Data
@@ -137,6 +143,14 @@ public class Game {
 
     public static int getDefaultHeight() {
         return defaultHeight;
+    }
+
+    public static int getCameraWidth() {
+        return cameraWidth;
+    }
+
+    public static int getCameraHeight() {
+        return cameraHeight;
     }
 
     protected void start() {
@@ -181,10 +195,6 @@ public class Game {
 
     protected void setFullScreen() {
         this.windowType = WindowType.FULLSCREEN;
-    }
-
-    protected void setScale(boolean scale) {
-        this.scale = scale;
     }
 
     protected void setMaxFPS(int fps) {
@@ -249,9 +259,7 @@ public class Game {
         glfwSetScrollCallback(window, mouseScrollManager);
         glfwSetJoystickCallback(controllerManager);
 
-
-        // TODO TEST
-        glfwSetCharModsCallback(window, this::testChar);
+        glfwSetCharModsCallback(window, charCallback);
 
         // Resize Ratio
         glfwSetWindowAspectRatio(window, 16, 9);
@@ -275,12 +283,6 @@ public class Game {
             glfwSetWindowSize(window, width, height);
             glfwSetWindowPos(window, 0, 0);
         }
-    }
-
-    // TODO
-    private void testChar(long l, int code, int mods) {
-        // System.out.println(code);
-        // System.out.println(glfwGetKeyName(code, 0));
     }
 
     private void init() {
@@ -318,7 +320,7 @@ public class Game {
         glEnable(GL_TEXTURE_2D);
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        glOrtho(0, width, height, 0, -1, 1);
+        glOrtho(0, cameraWidth, cameraHeight, 0, -1, 1);
         glMatrixMode(GL_MODELVIEW);
 
         this.allowResizeLoop = true;
@@ -388,7 +390,7 @@ public class Game {
         glPushMatrix();
 
         // Camera translate
-        glTranslatef(camera.getX() * (float) Game.getDefaultWidth(), camera.getY() * (float) Game.getDefaultHeight(), 0);
+        glTranslatef(camera.getX() * (float) Game.getCameraWidth(), camera.getY() * (float) Game.getCameraHeight(), 0);
 
         state.render(this, graphic);
         // Change if issue
@@ -437,10 +439,6 @@ public class Game {
         return height;
     }
 
-    public boolean isScalable() {
-        return scale;
-    }
-
     public Graphics getGraphic() {
         return graphic;
     }
@@ -485,6 +483,7 @@ public class Game {
         this.mousePositionManager.setListener(state);
         this.mouseScrollManager.setListener(state);
         this.controllerManager.setListener(state);
+        this.charCallback.setListener(state);
         this.state.create(this);
     }
 

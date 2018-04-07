@@ -34,6 +34,9 @@ public abstract class State {
     public void onKeyUp(Game game, int key, int scancode) {
     }
 
+    public void onCharCallback(Game game, char character){
+    }
+
     public void onMouseMove(Game game, float x, float y) {
     }
 

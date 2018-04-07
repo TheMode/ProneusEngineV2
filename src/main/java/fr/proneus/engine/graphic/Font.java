@@ -18,13 +18,15 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class Font {
 
+    private Game game;
     private String path;
     private int size;
     private int texID;
 
     private STBTTBakedChar.Buffer cdata;
 
-    public Font(String path, int size) {
+    public Font(Game game, String path, int size) {
+        this.game = game;
         this.path = path;
         this.size = size;
 
@@ -53,8 +55,8 @@ public class Font {
             glPushMatrix();
             glBindTexture(GL_TEXTURE_2D, texID);
 
-            float newX = x * (float) Game.getDefaultWidth();
-            float newY = y * (float) Game.getDefaultHeight();
+            float newX = x * (float) Game.getCameraWidth();
+            float newY = y * (float) Game.getCameraHeight();
 
             glTranslatef(newX, newY, 0f);
             glColor4f((float) color.r / 255, (float) color.g / 255, (float) color.b / 255, color.a);
@@ -135,7 +137,7 @@ public class Font {
             length = q.x1();
         }
 
-        return length / (float) Game.getDefaultWidth();
+        return length / (float) Game.getCameraWidth();
     }
 
     public float getHeight(String text) {
@@ -168,7 +170,7 @@ public class Font {
 
         length = length > 0 ? length * 2 : -length;
 
-        return length / (float) Game.getDefaultHeight();
+        return length / (float) Game.getCameraHeight();
     }
 
     private boolean isLoaded() {

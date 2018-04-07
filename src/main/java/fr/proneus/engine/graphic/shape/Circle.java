@@ -1,5 +1,6 @@
 package fr.proneus.engine.graphic.shape;
 
+import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Renderable;
 
@@ -31,13 +32,13 @@ public class Circle extends Renderable {
             float y1 = getY();
             float x1 = getX();
 
-            for (int i = 0; i <= 360; i++) {
-                float degInRad = (float) Math.toRadians(i);
+            for (float i = 0; i <= 2 * Math.PI; i += Math.PI / 32) {
+                float degInRad = i;
                 float x2 = getX() + ((float) Math.cos(degInRad) * radius);
                 float y2 = getY() + ((float) Math.sin(degInRad) * radius);
-                glVertex2f(getX(), getY());
-                glVertex2f(x1 + getX(), y1 + getY());
-                glVertex2f(x2 + getX(), y2 + getY());
+                glVertex2f(getX() * Game.getCameraWidth(), getY() * Game.getCameraHeight());
+                glVertex2f(x1 + getX() * Game.getCameraWidth(), y1 + getY() * Game.getCameraHeight());
+                glVertex2f(x2 + getX() * Game.getCameraWidth(), y2 + getY() * Game.getCameraHeight());
                 y1 = y2;
                 x1 = x2;
             }

@@ -1,8 +1,6 @@
 package fr.proneus.engine.gui;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.graphic.Color;
-import fr.proneus.engine.graphic.Font.FontStyle;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.graphic.Sprite;
@@ -12,38 +10,40 @@ import fr.proneus.engine.input.MousePosition;
 public abstract class ImageButton extends Component {
 
     private Rectangle rect;
-    private Sprite sprite, hoverSprite;
-
-    private String text;
+    private Sprite defaultSprite, hoverSprite, pressSprite;
     private boolean hover;
+    private boolean pressed;
 
-    public ImageButton(String text, float x, float y, Image image, Image hoverImage) {
-        this.sprite = new Sprite(image, x, y);
-        this.sprite.applyCameraZoom(false);
+    public ImageButton(float x, float y, Image image, Image hoverImage, Image pressImage) {
+        this.defaultSprite = new Sprite(image, x, y);
+        this.defaultSprite.applyCameraZoom(false);
         this.hoverSprite = new Sprite(hoverImage, x, y);
         this.hoverSprite.applyCameraZoom(false);
-        this.rect = new Rectangle(x, y, image.getRegionWidth(), image.getRegionHeight());
+        this.pressSprite = new Sprite(pressImage, x, y);
+        this.pressSprite.applyCameraZoom(false);
+        this.rect = new Rectangle(x, y,
+                image.getRegionWidth() * image.getImageWidth(),
+                image.getRegionHeight() * image.getImageHeight());
         this.rect.applyCameraZoom(false);
-        this.text = text;
 
     }
 
     @Override
     public void update(Game game) {
+        if (game.getInput().isMouseJustUp(0)) {
+            if (pressed)
+                onClick();
+        }
         MousePosition mouse = game.getInput().getMousePosition().toCameraPosition();
 
         this.hover = this.rect.interact(mouse.getX(), mouse.getY());
-
-        if (game.getInput().isMouseJustDown(0)) {
-            if (hover)
-                onClick();
-        }
+        this.pressed = hover && game.getInput().isMouseDown(0);
+        this.hover = pressed == false;
     }
 
     @Override
     public void render(Game game, Graphics graphic) {
-        graphic.draw(hover ? hoverSprite : sprite);
-        graphic.drawString(text, rect.getX() + rect.getWidth() / 2, rect.getY() + rect.getHeight() / 2, FontStyle.CENTERED, Color.WHITE);
+        graphic.draw(hover ? hoverSprite : pressed ? pressSprite : defaultSprite);
     }
 
     public abstract void onClick();

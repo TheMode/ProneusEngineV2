@@ -5,6 +5,7 @@ import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.graphic.Sprite;
+import fr.proneus.engine.graphic.shape.Rectangle;
 import fr.proneus.engine.input.Buttons;
 import fr.proneus.engine.input.Controller;
 import fr.proneus.engine.input.Controller.ControllerAxe;
@@ -40,10 +41,15 @@ public class TestShooter extends State {
 
     private Light light;
 
+    private Rectangle background;
+
     @Override
     public void create(Game game) {
         this.player = this.createRenderable(new Sprite(new Image("/ship.png"), 0.5f, 0.5f));
         this.laserImage = new Image("/shoot.png");
+
+        this.background = this.createRenderable(new Rectangle(0f, 0f, 1f, 1f));
+        this.background.setColor(Color.GREEN);
 
         this.controller = game.getInput().getController(0);
 
@@ -130,6 +136,7 @@ public class TestShooter extends State {
 
     @Override
     public void render(Game game, Graphics graphic) {
+        graphic.draw(background);
         graphic.draw(player);
 
         for (Sprite laser : laserList) {
