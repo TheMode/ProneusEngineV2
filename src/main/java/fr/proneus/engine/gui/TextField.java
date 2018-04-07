@@ -26,10 +26,10 @@ public class TextField extends Component {
 
     private Font font;
 
-    private String forbiddenCharacters;
+    private String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ-_ ";
     private int length;
 
-    public TextField(float x, float y, float width, float height, Font font, String forbiddenCharacters, int length) {
+    public TextField(float x, float y, float width, float height, Font font, String characters, int length) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -42,7 +42,7 @@ public class TextField extends Component {
         this.textField.applyCameraZoom(false);
         this.font = font;
 
-        this.forbiddenCharacters = forbiddenCharacters;
+        this.characters = characters;
         this.length = length;
     }
 
@@ -73,7 +73,7 @@ public class TextField extends Component {
                 x += font.getWidth(getTextWidth(drawText, 0, separator));
 
                 String rightChar = text.substring(separator - 1, separator);
-                if (rightChar != null && !forbiddenCharacters.contains(" ")) {
+                if (rightChar != null && characters.contains(" ")) {
                     // Space add
                     boolean isSpace = rightChar.equals(" ");
                     x += isSpace ? 8 / (float) Game.getDefaultWidth() : 0;
@@ -122,7 +122,7 @@ public class TextField extends Component {
             return;
         String keyString = String.valueOf(character);
         if (keyString != null && !(text.length() >= length)
-                && !forbiddenCharacters.toLowerCase().contains(keyString.toLowerCase())) {
+                && characters.toLowerCase().contains(keyString.toLowerCase())) {
             text = text.substring(0, separator) + keyString + text.substring(separator, text.length());
             separator++;
         }
@@ -196,16 +196,20 @@ public class TextField extends Component {
     }
 
     public void allowSpace(boolean space) {
-        if (!space) {
-            this.forbiddenCharacters += " ";
+        if (space) {
+            this.characters += " ";
         } else {
-            this.forbiddenCharacters = this.forbiddenCharacters.replace(" ", "");
+            this.characters = this.characters.replace(" ", "");
         }
     }
 
     public void setPassword(char password) {
         this.password = true;
         this.passwordChar = password;
+    }
+
+    public boolean isFocus() {
+        return focus;
     }
 
     public void setFocus(boolean focus) {
