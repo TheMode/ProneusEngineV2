@@ -48,7 +48,7 @@ dependencies {
     compile group: 'org.mapeditor', name: 'libtiled', version: '0.17'
 
     // Jitpack
-    implementation 'com.github.TheMode911:ModeUtils:e33dfc0cc1'
+    implementation 'com.github.TheMode911:ModeUtils:07ad2f4e8d'
 
 }
 

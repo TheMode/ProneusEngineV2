@@ -8,11 +8,9 @@ import fr.proneus.engine.discord.DiscordRPCInfo;
 import fr.proneus.engine.discord.DiscordRPCManager;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.input.*;
-import fr.proneus.engine.timer.Timer;
-import fr.proneus.engine.timer.TimerManager;
-import fr.proneus.engine.timer.TimerRunnable;
 import fr.proneus.engine.utils.ByteBufferUtils;
 import fr.themode.utils.file.FileUtils;
+import fr.themode.utils.timer.Timer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -64,8 +62,7 @@ public class Game {
 
     private String icon;
 
-    private TimerManager timerManager;
-    private TimerRunnable timerRunnable;
+    private Timer timer;
 
     private SoundManager soundManager;
 
@@ -96,8 +93,7 @@ public class Game {
         // State
         this.state = state;
 
-        this.timerManager = new TimerManager();
-        this.timerRunnable = new TimerRunnable(timerManager);
+        this.timer = new Timer();
 
         this.soundManager = new SoundManager();
 
@@ -259,7 +255,7 @@ public class Game {
     private void loop() {
 
         // Timer
-        new Thread(timerRunnable).start();
+        timer.start();
 
         // Fps
         boolean tick, render;
@@ -366,7 +362,7 @@ public class Game {
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
-        timerRunnable.stop();
+        this.timer.stop();
         soundManager.delete();
 
         System.exit(0);
@@ -424,7 +420,7 @@ public class Game {
         if (hasDiscordRPCEnabled()) {
             this.discordRPGManager.disconnect();
         }
-        this.timerManager.reset();
+        this.timer.reset();
 
         this.state = state;
         this.state.setGame(this);
@@ -462,7 +458,7 @@ public class Game {
         glfwSetWindowShouldClose(glfwGetCurrentContext(), true);
     }
 
-    public BufferedImage getScreenshot() {
+    public BufferedImage screenshot() {
         glReadBuffer(GL_FRONT);
         int bpp = 4;
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * bpp);
@@ -498,7 +494,7 @@ public class Game {
     }
 
     public Timer getTimer() {
-        return timerManager.getTimer();
+        return this.timer;
     }
 
     public Input getInput() {
