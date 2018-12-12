@@ -4,9 +4,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import fr.proneus.engine.graphic.Image;
 
-/**
- * Created by Adamaq01 on 02/12/2017.
- */
 public class DiscordRPCJoinRequest {
 
     private String userId;

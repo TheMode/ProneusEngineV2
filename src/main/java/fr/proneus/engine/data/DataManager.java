@@ -14,7 +14,7 @@ public class DataManager {
 	public DataFile getFile(String name) {
 
 		for (DataFile file : files) {
-			if (file.getName().equalsIgnoreCase(name)) {
+			if (file.getFileName().equalsIgnoreCase(name)) {
 				return file;
 			}
 		}

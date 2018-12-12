@@ -1,20 +1,28 @@
 package fr.proneus.engine.graphic.animation;
 
 import fr.proneus.engine.graphic.Image;
+import fr.proneus.engine.graphic.Texture;
 
 public class AnimationFrame {
-	
-	public float x, y, width, height;
-	
-	public AnimationFrame(Image image, int columns, int rows, int columnsNumber, int rowsNumber) {
-        float spriteX = image.getImagePixelWidth() / columnsNumber;
-        float spriteY = image.getImagePixelHeight() / rowsNumber;
-        this.x = spriteX*columns;
-		this.y = spriteY*rows;
-		this.width = spriteX;
-		this.height = spriteY;
-	}
-	
-	
+
+    public Texture texture;
+    public float x, y, width, height;
+
+    public AnimationFrame(Texture texture, int columns, int rows, int columnsNumber, int rowsNumber) {
+        this.texture = texture;
+
+        Image image = texture.getImage();
+        float pixelWidth = (float) image.getImagePixelWidth();
+        float pixelHeight = (float) image.getImagePixelHeight();
+
+        float spriteX = pixelWidth / (float) columnsNumber;
+        float spriteY = pixelHeight / (float) rowsNumber;
+
+        this.x = spriteX * (float) columns / pixelWidth;
+        this.y = spriteY * rows / pixelHeight;
+        this.width = spriteX / pixelWidth;
+        this.height = spriteY / pixelHeight;
+    }
+
 
 }

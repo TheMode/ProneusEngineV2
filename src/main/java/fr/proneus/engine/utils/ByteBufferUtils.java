@@ -1,11 +1,9 @@
 package fr.proneus.engine.utils;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-
 import org.lwjgl.BufferUtils;
+
+import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 
 public class ByteBufferUtils {
 	
@@ -31,25 +29,6 @@ public class ByteBufferUtils {
         buffer.flip();
          
         return buffer;
-    }
-	
-	public static ByteBuffer byteArrayToByteBuffer(byte[] data) {
-        ByteBuffer d = ByteBuffer.allocateDirect(data.length * 4);
-        d.put(data);
-        d.position(0);
-        return d;
-    }
-	
-	public static byte[] getDataFromInputStream(InputStream inputStream) {
-        byte[] data = new byte[0];
-        try {
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return data;
     }
 
 }

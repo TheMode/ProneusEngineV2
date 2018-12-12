@@ -2,8 +2,6 @@ package fr.proneus.engine.input;
 
 import fr.proneus.engine.Game;
 
-import static org.lwjgl.glfw.GLFW.glfwGetKeyName;
-
 public class Input {
 
     private Game game;
@@ -37,43 +35,26 @@ public class Input {
         return keyboard.keysUp[key];
     }
 
-    public String getKeyReturn(int key, int scancode) {
-        String keyString = glfwGetKeyName(key, scancode);
-        if (keyString == null) {
-            switch (key) {
-                case Keys.SPACE:
-                    return " ";
-
-                default:
-                    return null;
-            }
-        }
-
-        keyString = keyString.replace(" (PAVE NUM.)", "");
-
-        return keyString;
-    }
-
     public MousePosition getMousePosition() {
         float x = mousePosition.x / (float) game.getWidth();
         float y = mousePosition.y / (float) game.getHeight();
         return new MousePosition(game, x, y);
     }
 
-    public boolean isMouseDown(int key) {
-        return mouse.keys[key];
+    public boolean isMouseDown(int button) {
+        return mouse.keys[button];
     }
 
-    public boolean isMouseUp(int key) {
-        return !mouse.keys[key];
+    public boolean isMouseUp(int button) {
+        return !mouse.keys[button];
     }
 
-    public boolean isMouseJustDown(int key) {
-        return mouse.keysDown[key];
+    public boolean isMouseJustDown(int button) {
+        return mouse.keysDown[button];
     }
 
-    public boolean isMouseJustUp(int key) {
-        return mouse.keysUp[key];
+    public boolean isMouseJustUp(int button) {
+        return mouse.keysUp[button];
     }
 
     public Controller getController(int joy) {

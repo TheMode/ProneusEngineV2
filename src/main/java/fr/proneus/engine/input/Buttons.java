@@ -11,6 +11,7 @@ public class Buttons {
             NUM_6 = 5,
             NUM_7 = 6,
             NUM_8 = 7,
+
             LAST = NUM_8,
             LEFT = NUM_1,
             RIGHT = NUM_2,

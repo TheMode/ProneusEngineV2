@@ -1,6 +1,6 @@
 package fr.proneus.engine.filedialog;
 
-import static org.lwjgl.util.tinyfd.TinyFileDialogs.*;
+import static org.lwjgl.util.tinyfd.TinyFileDialogs.tinyfd_inputBox;
 
 public class InputDialog {
 
@@ -8,6 +8,7 @@ public class InputDialog {
 
     protected InputDialog(String title, String message, String defaultMessage) {
         input = tinyfd_inputBox(title, message, defaultMessage);
+        System.out.println("new: "+input);
     }
 
     public String getInput() {

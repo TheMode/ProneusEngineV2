@@ -1,7 +1,7 @@
 package fr.proneus.engine.input;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.state.State;
+import fr.proneus.engine.State;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 

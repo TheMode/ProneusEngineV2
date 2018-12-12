@@ -1,8 +1,7 @@
 package fr.proneus.engine.input;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.gui.Component;
-import fr.proneus.engine.state.State;
+import fr.proneus.engine.State;
 import org.lwjgl.glfw.GLFWJoystickCallback;
 
 import static org.lwjgl.glfw.GLFW.GLFW_CONNECTED;
@@ -22,18 +21,10 @@ public class ControllerManager extends GLFWJoystickCallback {
     public void invoke(int joy, int event) {
         switch (event) {
             case GLFW_CONNECTED:
-                state.onControllerConnect(game, joy);
-                for (Component comp : state.getComponents()) {
-                    if (comp.isVisible())
-                        comp.onControllerConnect(joy);
-                }
+                state.onControllerConnect(joy);
                 break;
             case GLFW_DISCONNECTED:
-                state.onControllerDisconnect(game, joy);
-                for (Component comp : state.getComponents()) {
-                    if (comp.isVisible())
-                        comp.onControllerDisconnect(joy);
-                }
+                state.onControllerDisconnect(joy);
                 break;
         }
 

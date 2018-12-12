@@ -1,8 +1,7 @@
 package fr.proneus.engine.input;
 
 import fr.proneus.engine.Game;
-import fr.proneus.engine.gui.Component;
-import fr.proneus.engine.state.State;
+import fr.proneus.engine.State;
 import org.lwjgl.glfw.GLFWCharModsCallback;
 
 public class CharCallback extends GLFWCharModsCallback {
@@ -18,11 +17,7 @@ public class CharCallback extends GLFWCharModsCallback {
     public void invoke(long window, int code, int mods) {
         char character = (char) code;
 
-        state.onCharCallback(game, character);
-        for (Component comp : state.getComponents()) {
-            if (comp.isVisible())
-                comp.onCharCallback(game, character);
-        }
+        state.onCharCallback(character);
     }
 
     public void setListener(State state) {

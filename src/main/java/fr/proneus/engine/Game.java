@@ -6,16 +6,13 @@ import fr.proneus.engine.camera.Camera;
 import fr.proneus.engine.data.DataManager;
 import fr.proneus.engine.discord.DiscordRPCInfo;
 import fr.proneus.engine.discord.DiscordRPCManager;
-import fr.proneus.engine.graphic.Font;
-import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.input.*;
-import fr.proneus.engine.script.ScriptManager;
-import fr.proneus.engine.state.State;
 import fr.proneus.engine.timer.Timer;
 import fr.proneus.engine.timer.TimerManager;
 import fr.proneus.engine.timer.TimerRunnable;
 import fr.proneus.engine.utils.ByteBufferUtils;
+import fr.themode.utils.file.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWImage;
@@ -26,38 +23,43 @@ import org.lwjgl.opengl.GLUtil;
 import org.lwjgl.system.Callback;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Game {
 
-    private static int defaultWidth, defaultHeight;
     protected int width, height;
     private static int cameraWidth, cameraHeight;
     private long window;
-    private WindowType windowType;
     private String title;
+    private int monitorWidth, monitorHeight;
 
     private State state;
-    private Graphics graphic;
+    private boolean shouldExitState;
 
     private Camera camera;
 
     private int fps;
     private int maxfps;
     private int tps;
+    private double nanoSecondsTicks;
     private double delta;
 
     private boolean allowResizeLoop;
 
-    private CloseCallBack close;
+    private Consumer<Game> close;
 
     private Callback debugProc;
-    private boolean debug;
+    private boolean debug = false;
     private boolean resizable;
 
     private String icon;
@@ -82,24 +84,16 @@ public class Game {
     // Data
     private DataManager dataManager;
 
-    // Script
-    private ScriptManager scriptManager;
-    private boolean do_Redraw = true;
-
     public Game(String title, int windowsWidth, int windowsHeight, int cameraWidth, int cameraHeight, State state) {
-        this.windowType = WindowType.NORMAL;
         this.title = title;
         this.width = windowsWidth;
         this.height = windowsHeight;
-
-        // Default
-        this.defaultWidth = width;
-        this.defaultHeight = height;
 
         this.camera = new Camera(this);
         this.cameraWidth = cameraWidth;
         this.cameraHeight = cameraHeight;
 
+        // State
         this.state = state;
 
         this.timerManager = new TimerManager();
@@ -128,21 +122,17 @@ public class Game {
         // Data
         this.dataManager = new DataManager();
 
-        // Script
-        this.scriptManager = new ScriptManager();
-
         // Fps
         this.maxfps = Integer.MAX_VALUE;
-        this.tps = 60;
+        setTPS(60);
+
+        // File setup
+        FileUtils.setClass(this.getClass());
 
     }
 
-    public static int getDefaultWidth() {
-        return defaultWidth;
-    }
-
-    public static int getDefaultHeight() {
-        return defaultHeight;
+    public static float getAspectRatio() {
+        return (float) getCameraWidth() / (float) getCameraHeight();
     }
 
     public static int getCameraWidth() {
@@ -156,18 +146,21 @@ public class Game {
     protected void start() {
 
         try {
-            // TODO best way ?
+            // TODO better way ?
             try {
                 init();
                 this.soundManager.init();
+
+                setState(state);
                 loop();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } finally {
             try {
+                // Close callback
                 if (close != null) {
-                    close.onClose(this);
+                    close.accept(this);
                 }
 
                 destroy();
@@ -177,7 +170,7 @@ public class Game {
         }
     }
 
-    protected void setCloseCallBack(CloseCallBack callBack) {
+    protected void setCloseCallBack(Consumer<Game> callBack) {
         this.close = callBack;
     }
 
@@ -189,24 +182,13 @@ public class Game {
         this.icon = icon;
     }
 
-    protected void setBorderless() {
-        this.windowType = WindowType.BORDERLESS;
-    }
-
-    protected void setFullScreen() {
-        this.windowType = WindowType.FULLSCREEN;
-    }
-
     protected void setMaxFPS(int fps) {
         this.maxfps = fps > 0 ? fps : this.maxfps;
     }
 
-    protected void setTPS(int tps) {
+    public void setTPS(int tps) {
         this.tps = tps > 0 ? tps : this.tps;
-    }
-
-    protected void setDebug(boolean debug) {
-        this.debug = debug;
+        this.nanoSecondsTicks = 1000000000.0 / (double) tps;
     }
 
     protected void enableDiscordRPC(String applicationId) {
@@ -214,38 +196,32 @@ public class Game {
         this.discordRPGManager.connect(this);
     }
 
-    private void initWindow(WindowType windowType) {
-        boolean isFirstWindow = window == 0;
-        boolean isBorderless = windowType.equals(WindowType.BORDERLESS);
-        boolean isFullScreen = windowType.equals(WindowType.FULLSCREEN);
+    private void initWindow() {
 
         GLFWErrorCallback.createPrint().set();
         if (!glfwInit())
             throw new IllegalStateException("Unable to initialize GLFW");
 
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-        glfwWindowHint(GLFW_DECORATED, isBorderless ? GLFW_FALSE : GLFW_TRUE);
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
 
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        this.monitorWidth = vidmode.width();
+        this.monitorHeight = vidmode.height();
 
-        width = isBorderless ? vidmode.width() : width;
-        height = isBorderless ? vidmode.height() : height;
-        long newWindow = glfwCreateWindow(width, height, title, isFullScreen ? glfwGetPrimaryMonitor() : NULL, window);
-
-        if (!isFirstWindow) {
-            glfwDestroyWindow(window);
-        }
-        this.window = newWindow;
+        this.window = glfwCreateWindow(width, height, title, NULL, NULL);
 
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
         if (icon != null) {
-            Image image = new Image(icon);
+            InputStream iconStream = FileUtils.getInternalFile(icon);
+            Image image = new Image(iconStream);
             Buffer buff = GLFWImage.malloc(1).width(image.getImagePixelWidth()).height(image.getImagePixelHeight())
                     .pixels(ByteBufferUtils.convertImage(image.getBufferedImage()));
             glfwSetWindowIcon(window, buff);
@@ -274,28 +250,13 @@ public class Game {
 
         glfwSwapInterval(0);
         glfwShowWindow(window);
-
-        glEnable(GL_STENCIL_TEST);
-        glClearStencil(0);
-
-        // Borderless
-        if (isBorderless) {
-            glfwSetWindowSize(window, width, height);
-            glfwSetWindowPos(window, 0, 0);
-        }
     }
 
     private void init() {
-
-        initWindow(windowType);
-
-        // Graphics
-        this.graphic = new Graphics(this);
+        initWindow();
     }
 
     private void loop() {
-
-        state.create(this);
 
         // Timer
         new Thread(timerRunnable).start();
@@ -308,20 +269,15 @@ public class Game {
         long beforeFps = System.nanoTime();
         double elapsedTicks;
         double elapsedFps;
-        double nanoSecondsTicks = 1000000000.0 / (double) tps;
         double nanoSecondsFps = 1000000000.0 / (double) maxfps;
         double oldTimeSinceStart = 0;
 
         int frames = 0;
 
-        glEnable(GL_STENCIL_TEST);
-        glClearStencil(0);
-
-        glEnable(GL_TEXTURE_2D);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(0, cameraWidth, cameraHeight, 0, -1, 1);
-        glMatrixMode(GL_MODELVIEW);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glEnable(GL_MULTISAMPLE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         this.allowResizeLoop = true;
 
@@ -340,7 +296,9 @@ public class Game {
             if (elapsedTicks > nanoSecondsTicks) {
                 beforeTicks += nanoSecondsTicks;
                 tick = true;
-            } else if (elapsedFps > nanoSecondsFps) {
+            }
+
+            if (elapsedFps > nanoSecondsFps) {
                 beforeFps += nanoSecondsFps;
                 render = true;
                 frames++;
@@ -364,7 +322,6 @@ public class Game {
             }
 
         }
-        glDisable(GL_TEXTURE_2D);
     }
 
     private void update() {
@@ -377,27 +334,14 @@ public class Game {
         mouseManager.resetKeys();
 
         glfwPollEvents();
-        state.update(this);
-        state.renderablesUpdate(this);
-        state.componentsUpdate(this);
+        state.update();
     }
 
     private void render() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glClearColor(0f, 0f, 0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glPushMatrix();
-
-        // Camera translate
-        glTranslatef(camera.getX() * (float) Game.getCameraWidth(), camera.getY() * (float) Game.getCameraHeight(), 0);
-
-        state.render(this, graphic);
-        // Change if issue
-        state.getLightManager().render(this);
-        state.componentsRender(this, graphic);
-
-        glPopMatrix();
+        state.render();
 
         glfwSwapBuffers(window);
     }
@@ -408,7 +352,6 @@ public class Game {
         glViewport(0, 0, width, height);
         // Redraw during resize for windows users
         if (this.allowResizeLoop) {
-            // Update ?
             render();
         }
 
@@ -439,10 +382,6 @@ public class Game {
         return height;
     }
 
-    public Graphics getGraphic() {
-        return graphic;
-    }
-
     // GLFW's methods
 
     public long getTimeFromStart() {
@@ -465,6 +404,14 @@ public class Game {
         glfwSetClipboardString(window, clipboard);
     }
 
+    public int getMonitorWidth() {
+        return monitorWidth;
+    }
+
+    public int getMonitorHeight() {
+        return monitorHeight;
+    }
+
     // Engine's methods
 
     public State getState() {
@@ -472,19 +419,23 @@ public class Game {
     }
 
     public void setState(State state) {
-        this.state.exit(this);
+        if (this.state != null && shouldExitState)
+            this.state.exit();
         if (hasDiscordRPCEnabled()) {
             this.discordRPGManager.disconnect();
         }
         this.timerManager.reset();
+
         this.state = state;
+        this.state.setGame(this);
         this.keyboardManager.setListener(state);
         this.mouseManager.setListener(state);
         this.mousePositionManager.setListener(state);
         this.mouseScrollManager.setListener(state);
         this.controllerManager.setListener(state);
         this.charCallback.setListener(state);
-        this.state.create(this);
+        this.state.create();
+        this.shouldExitState = true;
     }
 
     public int getFps() {
@@ -505,14 +456,6 @@ public class Game {
 
     public Camera getCamera() {
         return camera;
-    }
-
-    public WindowType getWindowType() {
-        return windowType;
-    }
-
-    public void changeWindow(WindowType windowType) {
-        initWindow(windowType);
     }
 
     public void exit() {
@@ -541,12 +484,17 @@ public class Game {
         return image;
     }
 
-    public Font getCurrentFont() {
-        return graphic.getFont();
+    public Sound loadSound(File file) {
+        try {
+            return new Sound(this.soundManager.loadSound(new FileInputStream(file)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public Sound loadSound(String path) {
-        return new Sound(this.soundManager.loadSound(path));
+    public Sound loadSound(InputStream stream) {
+        return new Sound(this.soundManager.loadSound(stream));
     }
 
     public Timer getTimer() {
@@ -570,14 +518,4 @@ public class Game {
     public DataManager getDataManager() {
         return dataManager;
     }
-
-    // Script
-    public ScriptManager getScriptManager() {
-        return scriptManager;
-    }
-
-    public enum WindowType {
-        NORMAL, BORDERLESS, FULLSCREEN
-    }
-
 }

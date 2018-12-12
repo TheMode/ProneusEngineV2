@@ -1,10 +1,8 @@
 package fr.proneus.engine.input;
 
-import org.lwjgl.glfw.GLFWScrollCallback;
-
 import fr.proneus.engine.Game;
-import fr.proneus.engine.gui.Component;
-import fr.proneus.engine.state.State;
+import fr.proneus.engine.State;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 public class MouseScrollManager extends GLFWScrollCallback {
 
@@ -18,14 +16,7 @@ public class MouseScrollManager extends GLFWScrollCallback {
 
     @Override
     public void invoke(long window, double x, double y) {
-
-
-        state.onMouseScroll(game, (float) y);
-        for (Component comp : state.getComponents()) {
-            if (comp.isVisible())
-                comp.onMouseScroll(game, y);
-        }
-
+        state.onMouseScroll((float) y);
     }
 
     public void setListener(State state) {
