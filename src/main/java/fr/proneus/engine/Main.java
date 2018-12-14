@@ -1,20 +1,19 @@
 package fr.proneus.engine;
 
-import fr.proneus.engine.demo.DemoState;
+import fr.proneus.engine.demo.FileDialogState;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        runGame();
+        runState(new FileDialogState());
     }
 
-    private static void runGame() {
+    private static void runState(State state) {
         int cameraWidth = 512;
         int cameraHeight = 288;
 
         String name = "Motable Client";
-        State state = new DemoState();
 
         Application app = new Application(name,
                 1920, 1080,
