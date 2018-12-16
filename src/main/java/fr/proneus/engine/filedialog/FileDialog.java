@@ -81,7 +81,7 @@ public class FileDialog {
         nNFD_Free(path.get(0));
     }
 
-    private static FileDialogResult convertResult(int result){
+    private static FileDialogResult convertResult(int result) {
         return FileDialogResult.values()[result];
     }
 
@@ -93,7 +93,7 @@ public class FileDialog {
         return path;
     }
 
-    public List<String> getPathList() {
+    public List<String> getMultiPathList() {
         return Collections.unmodifiableList(pathList);
     }
 

@@ -8,6 +8,9 @@ import fr.themode.utils.file.FileUtils;
 
 public class DemoState extends State {
 
+    private float caseWidth = 52f / 512f;
+    private float caseHeight = 52f / 288f;
+
     private Shader objectShader;
     private Shader fontShader;
 
@@ -25,16 +28,13 @@ public class DemoState extends State {
 
         this.fontShader = new Shader("shader/fontvertex.vs", "shader/fontfragment.fs");
 
-        Texture boardTexture = new Texture(new Image(FileUtils.getInternalFile("plateau.png")));
+        Texture boardTexture = new Texture(FileUtils.getInternalFile("plateau.png"));
 
         this.board = new Sprite(boardTexture);
         board.setPosition(0.5f, 0.5f);
 
-        Image animImage = new Image(FileUtils.getInternalFile("chasseur_vol_idle.png"));
-        Texture animTexture = new Texture(animImage);
+        Texture animTexture = new Texture(FileUtils.getInternalFile("chasseur_vol_idle.png"));
         this.object = new Sprite(animTexture);
-        float caseWidth = 52f / 512f;
-        float caseHeight = 52f / 288f;
         float posx = (3 + 1) * caseWidth - caseWidth / 2;
         float posy = (4 + 1) * caseHeight - caseHeight / 2;
         this.object.setPosition(posx, posy, 1);
@@ -47,11 +47,8 @@ public class DemoState extends State {
         object.addAnimation("idle", animation);
         object.setAnimation("idle", 50);
 
-
-        Image cursorImage = new Image(FileUtils.getInternalFile("cursor.png"));
-        Image cursorAnimatedImage = new Image(FileUtils.getInternalFile("cursor_anim.png"));
-        Texture cursorTexture = new Texture(cursorImage);
-        Texture cursorAnimTexture = new Texture(cursorAnimatedImage);
+        Texture cursorTexture = new Texture(FileUtils.getInternalFile("cursor.png"));
+        Texture cursorAnimTexture = new Texture(FileUtils.getInternalFile("cursor_anim.png"));
         this.cursor = new Sprite(cursorTexture);
         this.object.setPositionOrigin(Origin.CENTER);
         Animation cursorAnim = new Animation();
@@ -84,8 +81,8 @@ public class DemoState extends State {
         object.draw(objectShader);
         cursor.draw(objectShader);
 
-        //fontShader.use();
-        //fontObject.draw(fontShader);
+        fontShader.use();
+        fontObject.draw(fontShader);
     }
 
     @Override
@@ -98,8 +95,6 @@ public class DemoState extends State {
         float offsetX = 49f / 512f;
         float offsetY = 53f / 288f;
 
-        float caseWidth = 52f / 512f;
-        float caseHeight = 52f / 288f;
         int caseX = (int) (x / caseWidth);
         int caseY = (int) (y / caseHeight);
 

@@ -1,12 +1,12 @@
 package fr.proneus.engine;
 
-import fr.proneus.engine.demo.FileDialogState;
+import fr.proneus.engine.demo.DemoState;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        runState(new FileDialogState());
+        runState(new DemoState());
     }
 
     private static void runState(State state) {

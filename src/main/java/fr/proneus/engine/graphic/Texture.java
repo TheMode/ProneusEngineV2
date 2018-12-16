@@ -3,6 +3,8 @@ package fr.proneus.engine.graphic;
 import fr.proneus.engine.utils.ByteBufferUtils;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL30C.*;
@@ -15,6 +17,14 @@ public class Texture {
     public Texture(Image image) {
         this.image = image;
         this.textureId = loadTexture(image.getBufferedImage());
+    }
+
+    public Texture(InputStream inputStream) {
+        this(new Image(inputStream));
+    }
+
+    public Texture(File file) {
+        this(new Image(file));
     }
 
     public Image getImage() {
