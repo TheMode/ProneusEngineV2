@@ -3,6 +3,7 @@ package fr.proneus.engine.graphic;
 import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
+import fr.proneus.engine.graphic.shader.Shaders;
 import fr.themode.utils.MathUtils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -23,6 +24,8 @@ public class Sprite {
     private float[] vertices;
     private int vao, verticesVBO, texturesVBO, indicesVBO;
     private float width, height;
+
+    private Shader shader;
 
     private Matrix4f mvp;
     private Matrix4f projection;
@@ -54,13 +57,13 @@ public class Sprite {
 
     private long lastAnimationUpdate;
 
-    public Sprite(Texture texture) {
-        float vertices[] = new float[2 * 4];
+    public Sprite(Texture texture, Shader shader) {
+        float[] vertices = new float[2 * 4];
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
         verticesBuffer.put(vertices);
         verticesBuffer.flip();
 
-        float textures[] = {
+        float[] textures = {
                 1f, 1f,
                 0f, 1f,
                 0f, 0f,
@@ -71,7 +74,7 @@ public class Sprite {
         texturesBuffer.put(textures);
         texturesBuffer.flip();
 
-        byte indices[] = {
+        byte[] indices = {
                 0, 1, 2,
                 2, 3, 0
         };
@@ -101,6 +104,8 @@ public class Sprite {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+        this.shader = shader;
+
         // Default values
         setTexture(texture);
         applyTextureSize();
@@ -119,6 +124,10 @@ public class Sprite {
 
         // Refresh model
         refreshModel();
+    }
+
+    public Sprite(Texture texture) {
+        this(texture, Shaders.getDefaultSpriteShader());
     }
 
     public void setTexture(Texture texture) {
@@ -140,7 +149,7 @@ public class Sprite {
         float _width = width / 2;
         float _height = height / 2;
 
-        float data[] = {
+        float[] data = {
                 -_width, _height, // Top-left
                 _width, _height, // Top-right
                 _width, -_height, // Bottom-right
@@ -170,7 +179,7 @@ public class Sprite {
 
         glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
 
-        float data[] = {
+        float[] data = {
                 x, height,
                 width, height,
                 width, y,
@@ -180,10 +189,14 @@ public class Sprite {
         glBufferSubData(GL_ARRAY_BUFFER, 0, data);
     }
 
-    public void draw(Shader shader) {
+    public void draw() {
+        // TODO change shader use
+        shader.use();
+
         if (shouldRefreshModel) {
             refreshModel();
         }
+        updateAnimation();
 
         shader.setMat4("mvp", mvp);
         shader.setVec4("color", color);

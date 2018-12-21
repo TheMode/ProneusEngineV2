@@ -1,5 +1,6 @@
 package fr.proneus.engine.graphic;
 
+import fr.proneus.engine.graphic.shader.Shaders;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -30,6 +31,8 @@ public class Font {
 
     private FontTexture texture;
 
+    private Shader shader;
+
     private Matrix4f mvp;
     private Matrix4f projection;
     private Matrix4f model;
@@ -48,12 +51,12 @@ public class Font {
         this.texture = texture;
         this.quads = new HashMap<>();
 
-        float data[] = new float[4 * 4];
+        float[] data = new float[4 * 4];
         FloatBuffer dataBuffer = BufferUtils.createFloatBuffer(data.length);
         dataBuffer.put(data);
         dataBuffer.flip();
 
-        byte indices[] = {
+        byte[] indices = {
                 0, 1, 2,
                 2, 3, 0
         };
@@ -77,6 +80,8 @@ public class Font {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+        this.shader = Shaders.getFontShader();
+
         // Default values
         setPosition(0, 0, 0);
         scale(1, 1);
@@ -90,7 +95,9 @@ public class Font {
         this.currentText = "";
     }
 
-    public void draw(Shader shader) {
+    public void draw() {
+        // TODO change shader use
+        shader.use();
         if (currentText == null)
             throw new NullPointerException("Text is null Font#setText");
 

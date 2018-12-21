@@ -11,9 +11,6 @@ public class DemoState extends State {
     private float caseWidth = 52f / 512f;
     private float caseHeight = 52f / 288f;
 
-    private Shader objectShader;
-    private Shader fontShader;
-
     private Sprite board;
     private Sprite object;
     private Sprite cursor;
@@ -24,21 +21,15 @@ public class DemoState extends State {
     @Override
     public void create() {
 
-        this.objectShader = new Shader("shader/vertex.vs", "shader/fragment.fs");
-
-        this.fontShader = new Shader("shader/fontvertex.vs", "shader/fontfragment.fs");
-
         Texture boardTexture = new Texture(FileUtils.getInternalFile("plateau.png"));
-
         this.board = new Sprite(boardTexture);
-        board.setPosition(0.5f, 0.5f);
+        board.setPosition(0.5f, 0.5f); // Centered
 
         Texture animTexture = new Texture(FileUtils.getInternalFile("chasseur_vol_idle.png"));
         this.object = new Sprite(animTexture);
         float posx = (3 + 1) * caseWidth - caseWidth / 2;
         float posy = (4 + 1) * caseHeight - caseHeight / 2;
         this.object.setPosition(posx, posy, 1);
-        this.object.setPositionOrigin(Origin.CENTER);
         Animation animation = new Animation();
         for (int i = 0; i < 24; i++) {
             AnimationFrame frame = new AnimationFrame(animTexture, i, 0, 24, 1);
@@ -50,7 +41,6 @@ public class DemoState extends State {
         Texture cursorTexture = new Texture(FileUtils.getInternalFile("cursor.png"));
         Texture cursorAnimTexture = new Texture(FileUtils.getInternalFile("cursor_anim.png"));
         this.cursor = new Sprite(cursorTexture);
-        this.object.setPositionOrigin(Origin.CENTER);
         Animation cursorAnim = new Animation();
         for (int i = 0; i < 8; i++) {
             AnimationFrame frame = new AnimationFrame(cursorAnimTexture, i, 0, 8, 1);
@@ -69,20 +59,16 @@ public class DemoState extends State {
 
     @Override
     public void update() {
-        object.updateAnimation();
-        cursor.updateAnimation();
         this.fontObject.setText("Test à'éçàé' " + getGame().getFps());
     }
 
     @Override
     public void render() {
-        objectShader.use();
-        board.draw(objectShader);
-        object.draw(objectShader);
-        cursor.draw(objectShader);
+        board.draw();
+        object.draw();
+        cursor.draw();
 
-        fontShader.use();
-        fontObject.draw(fontShader);
+        fontObject.draw();
     }
 
     @Override

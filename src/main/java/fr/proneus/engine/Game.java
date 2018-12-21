@@ -87,8 +87,8 @@ public class Game {
         this.height = windowsHeight;
 
         this.camera = new Camera(this);
-        this.cameraWidth = cameraWidth;
-        this.cameraHeight = cameraHeight;
+        Game.cameraWidth = cameraWidth;
+        Game.cameraHeight = cameraHeight;
 
         // State
         this.state = state;
@@ -279,7 +279,7 @@ public class Game {
 
         while (!glfwWindowShouldClose(window)) {
             double timeSinceStart = glfwGetTime();
-            delta = timeSinceStart * 1000 - oldTimeSinceStart * 1000;
+            delta = timeSinceStart - oldTimeSinceStart;
             oldTimeSinceStart = timeSinceStart;
 
             tick = false;
@@ -316,7 +316,6 @@ public class Game {
                 fps = frames;
                 frames = 0;
             }
-
         }
     }
 
@@ -436,6 +435,10 @@ public class Game {
 
     public int getFps() {
         return fps;
+    }
+
+    public int getDeltaFps() {
+        return (int) (1D / delta);
     }
 
     public int getTps() {

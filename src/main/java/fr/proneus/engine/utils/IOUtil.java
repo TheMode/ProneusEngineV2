@@ -1,6 +1,7 @@
 package fr.proneus.engine.utils;
 
-import static org.lwjgl.BufferUtils.createByteBuffer;
+import fr.proneus.engine.Game;
+import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,45 +13,44 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import fr.proneus.engine.Game;
-import org.lwjgl.BufferUtils;
+import static org.lwjgl.BufferUtils.createByteBuffer;
 
 public class IOUtil {
 
-	private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
-		ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
-		buffer.flip();
-		newBuffer.put(buffer);
-		return newBuffer;
-	}
+    private static ByteBuffer resizeBuffer(ByteBuffer buffer, int newCapacity) {
+        ByteBuffer newBuffer = BufferUtils.createByteBuffer(newCapacity);
+        buffer.flip();
+        newBuffer.put(buffer);
+        return newBuffer;
+    }
 
-	public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
-		ByteBuffer buffer;
+    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+        ByteBuffer buffer;
 
-		Path path = Paths.get(resource);
-		if (Files.isReadable(path)) {
-			try (SeekableByteChannel fc = Files.newByteChannel(path)) {
-				buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
-				while (fc.read(buffer) != -1)
-					;
-			}
-		} else {
-			try (InputStream source = Game.class.getResourceAsStream(resource);
-				 ReadableByteChannel rbc = Channels.newChannel(source)) {
-				buffer = createByteBuffer(bufferSize);
+        Path path = Paths.get(resource);
+        if (Files.isReadable(path)) {
+            try (SeekableByteChannel fc = Files.newByteChannel(path)) {
+                buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
+                while (fc.read(buffer) != -1)
+                    ;
+            }
+        } else {
+            try (InputStream source = Game.class.getResourceAsStream(resource);
+                 ReadableByteChannel rbc = Channels.newChannel(source)) {
+                buffer = createByteBuffer(bufferSize);
 
-				while (true) {
-					int bytes = rbc.read(buffer);
-					if (bytes == -1)
-						break;
-					if (buffer.remaining() == 0)
-						buffer = resizeBuffer(buffer, buffer.capacity() * 2);
-				}
-			}
-		}
+                while (true) {
+                    int bytes = rbc.read(buffer);
+                    if (bytes == -1)
+                        break;
+                    if (buffer.remaining() == 0)
+                        buffer = resizeBuffer(buffer, buffer.capacity() * 2);
+                }
+            }
+        }
 
-		buffer.flip();
-		return buffer;
-	}
+        buffer.flip();
+        return buffer;
+    }
 
 }
