@@ -21,12 +21,14 @@ public class MousePosition {
         return y;
     }
 
-    public MousePosition toCameraPosition() {
+    // TODO toCameraPosition (add Camera#getX and Camera#getY)
+
+    /*public MousePosition toCameraPosition() {
         // Add camera position and zoom to current mouse position
         float mouseX = (x - game.getCamera().getX()) / game.getCamera().getZoomX();
         float mouseY = (y - game.getCamera().getY()) / game.getCamera().getZoomY();
         return new MousePosition(game, x, y);
-    }
+    }*/
 
 
 }
