@@ -2,10 +2,10 @@ package fr.proneus.engine;
 
 import fr.proneus.engine.audio.Sound;
 import fr.proneus.engine.audio.SoundManager;
-import fr.proneus.engine.camera.Camera;
 import fr.proneus.engine.data.DataManager;
 import fr.proneus.engine.discord.DiscordRPCInfo;
 import fr.proneus.engine.discord.DiscordRPCManager;
+import fr.proneus.engine.graphic.Camera;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.input.*;
 import fr.proneus.engine.utils.ByteBufferUtils;
@@ -86,7 +86,7 @@ public class Game {
         this.width = windowsWidth;
         this.height = windowsHeight;
 
-        this.camera = new Camera(this);
+        this.camera = new Camera();
         Game.cameraWidth = cameraWidth;
         Game.cameraHeight = cameraHeight;
 

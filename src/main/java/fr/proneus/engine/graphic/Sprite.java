@@ -366,7 +366,7 @@ public class Sprite {
 
     public boolean interacts(Sprite sprite) {
         if (sprite.finalVertices == null || finalVertices == null)
-            throw new NullPointerException("Final vertives hasn't been calculated Sprite#refreshModel");
+            throw new NullPointerException("Final vertices hasn't been calculated Sprite#refreshModel");
 
         float[] currentVertices = finalVertices;
         int currentLength = currentVertices.length;
