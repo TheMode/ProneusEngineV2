@@ -94,4 +94,9 @@ public class DemoState extends State {
             cursor.setAnimation("cursor", 75);
         }
     }
+
+    @Override
+    public void onKeyDown(int key) {
+        System.out.println("UP");
+    }
 }

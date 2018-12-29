@@ -4,8 +4,7 @@ import fr.proneus.engine.Game;
 import fr.proneus.engine.State;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyboardManager extends GLFWKeyCallback {
 
@@ -27,6 +26,12 @@ public class KeyboardManager extends GLFWKeyCallback {
         keysDown[key] = action == GLFW_PRESS;
         keysUp[key] = action == GLFW_RELEASE;
 
+        if (action == GLFW_REPEAT)
+            state.onKeyRepeat(key);
+        if (action == GLFW_PRESS)
+            state.onKeyDown(key);
+        if (action == GLFW_RELEASE)
+            state.onKeyUp(key);
     }
 
     public void resetKeys() {
