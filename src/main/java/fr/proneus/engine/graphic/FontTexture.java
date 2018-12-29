@@ -55,11 +55,12 @@ public class FontTexture {
         return fontBuffer;
     }
 
-    public float getWidth(String text) {
+    public float[] getTextSize(String text) {
+        float[] result = {0, 0};
         if (text == null || text.equals(""))
-            return 0;
-
-        float length = 0;
+            return result;
+        float width = 0;
+        float height = 0;
 
         try (MemoryStack stack = stackPush()) {
             FloatBuffer xx = stack.floats(0.0f);
@@ -79,37 +80,28 @@ public class FontTexture {
                 }
                 stbtt_GetBakedQuad(fontBuffer, bitmapSize, bitmapSize, c - 32, xx, yy, q, true);
                 float x1 = q.x1() / bitmapSize;
-                length = x1;
+                width = x1;
+
+                float y0 = q.y0() / bitmapSize;
+                // Keep the max height
+                height = Math.max(height, Math.abs(y0));
             }
         }
-        length /= 16f / 9f;
-        return length;
+        // Aspect ratio
+        width /= 16f / 9f;
+
+        result[0] = width;
+        result[1] = height;
+
+        return result;
+    }
+
+    public float getWidth(String text) {
+        return getTextSize(text)[0];
     }
 
     public float getHeight(String text) {
-        if (text == null || text.equals(""))
-            return 0;
-
-        float length = 0;
-
-        try (MemoryStack stack = stackPush()) {
-            FloatBuffer xx = stack.floats(0.0f);
-            FloatBuffer yy = stack.floats(0.0f);
-            STBTTAlignedQuad q = STBTTAlignedQuad.mallocStack(stack);
-            for (int i = 0; i < text.length(); i++) {
-                char c = text.charAt(i);
-                if (c == '\n') {
-                    yy.put(0, yy.get(0) + size);
-                    xx.put(0, 0.0f);
-                    continue;
-                } //else if (c < 32 || 128 <= c)
-                //continue;
-                stbtt_GetBakedQuad(fontBuffer, bitmapSize, bitmapSize, c - 32, xx, yy, q, true);
-                float y0 = q.y0() / bitmapSize;
-                length = Math.max(length, Math.abs(y0));
-            }
-        }
-        return length;
+        return getTextSize(text)[1];
     }
 
     private STBTTBakedChar.Buffer load(int size) {

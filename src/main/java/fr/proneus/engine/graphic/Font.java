@@ -143,12 +143,17 @@ public class Font {
     }
 
     public void setText(String text) {
+        if (text == null)
+            return;
+        if (currentText != null && currentText.equals(text))
+            return;
+
         quads.clear();
         this.currentText = text;
 
-        this.textWidth = texture.getWidth(text);
-        // TODO height fix
-        this.textHeight = texture.getHeight(text);
+        float[] size = texture.getTextSize(text);
+        this.textWidth = size[0];//texture.getWidth(text);
+        this.textHeight = size[1];//texture.getHeight(text);
 
         int bitmapSize = texture.getBitmapSize();
         try (MemoryStack stack = stackPush()) {
