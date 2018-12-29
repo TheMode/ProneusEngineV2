@@ -60,7 +60,6 @@ public class DemoState extends State {
     @Override
     public void update() {
         this.fontObject.setText("Test à'éçàé' " + getGame().getFps());
-        System.out.println(fontObject.getTextWidth() + ": " + fontObject.getTextHeight());
     }
 
     @Override
