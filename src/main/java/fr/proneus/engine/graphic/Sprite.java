@@ -231,6 +231,10 @@ public class Sprite {
         this.shouldRefreshModel = true;
     }
 
+    public void move(float x, float y) {
+        setPosition(getX() + x, getY() + y);
+    }
+
     public float getX() {
         return position.x;
     }
