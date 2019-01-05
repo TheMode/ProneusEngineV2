@@ -330,7 +330,7 @@ public class Sprite {
         float rotateWidth = rotateOrigin.getWidthModifier() * width;
         float rotateHeight = rotateOrigin.getHeightModifier() * height;
         this.model.translate(rotateWidth, rotateHeight, 0);
-        this.model.rotate((float) Math.toRadians(angle), new Vector3f(0, 0, 1));
+        this.model.rotate((float) Math.toRadians(angle + 180), new Vector3f(0, 0, 1));
         this.model.translate(-rotateWidth, -rotateHeight, 0);
 
         this.mvp = projection.mul(model);
