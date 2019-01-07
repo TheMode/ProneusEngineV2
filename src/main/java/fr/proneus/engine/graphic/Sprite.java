@@ -64,10 +64,10 @@ public class Sprite {
         verticesBuffer.flip();
 
         float[] textures = {
-                1f, 1f,
                 0f, 1f,
-                0f, 0f,
-                1f, 0f
+                1f, 1f,
+                1f, 0f,
+                0f, 0f
         };
 
         FloatBuffer texturesBuffer = BufferUtils.createFloatBuffer(textures.length);
@@ -180,10 +180,10 @@ public class Sprite {
         glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
 
         float[] data = {
-                x, height,
                 width, height,
-                width, y,
-                x, y
+                x, height,
+                x, y,
+                width, y
         };
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, data);
@@ -459,9 +459,9 @@ public class Sprite {
         float height = image.getImageHeight() * frame.height;
         setSize(width, height);
 
-        float textX = frame.x;
+        float textX = frame.width * (currentAnimationFrame + 1);
         float textY = frame.y;
-        float textWidth = frame.width * (currentAnimationFrame + 1);
+        float textWidth = frame.x;
         float textHeight = frame.height * (currentAnimationFrame + 1);
 
         setTextureCoordinate(textX, textY, textWidth, textHeight);
