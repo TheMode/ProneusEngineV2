@@ -63,6 +63,7 @@ public class DemoState extends State {
 
         this.localPlayer = new Sprite(test);
         localPlayer.setPosition(0.5f, 0.5f);
+        localPlayer.horizontalFlip(true);
         this.localPlayer.setColor(Color.AQUA);
 
         Animation animationTest = new Animation();

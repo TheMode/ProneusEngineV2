@@ -27,6 +27,9 @@ public class Sprite {
 
     private Shader shader;
 
+    private boolean flippedHorizontally;
+    private boolean flippedVertically;
+
     private Matrix4f mvp;
     private Matrix4f projection;
     private Matrix4f model;
@@ -177,6 +180,20 @@ public class Sprite {
         width = MathUtils.minMax(width, 0, 1);
         height = MathUtils.minMax(height, 0, 1);
 
+        if (flippedHorizontally) {
+            float xx = x;
+            float w = width;
+            x = w;
+            width = xx;
+        }
+
+        if (flippedVertically) {
+            float yy = y;
+            float h = height;
+            y = h;
+            height = yy;
+        }
+
         glBindBuffer(GL_ARRAY_BUFFER, texturesVBO);
 
         float[] data = {
@@ -187,6 +204,14 @@ public class Sprite {
         };
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, data);
+    }
+
+    public void horizontalFlip(boolean value) {
+        this.flippedHorizontally = value;
+    }
+
+    public void verticalFlip(boolean value) {
+        this.flippedVertically = value;
     }
 
     public void draw() {
