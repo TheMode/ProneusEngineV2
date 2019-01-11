@@ -485,17 +485,16 @@ public class Sprite {
         float width = image.getImageWidth() * frame.width;
         float height = image.getImageHeight() * frame.height;
 
-        float textX = frame.width * (currentAnimationFrame + 1);
+        /*float textX = frame.width * (currentAnimationFrame + 1);
         float textY = frame.height == 1f ? frame.y : Math.min(1, frame.y + frame.height * currentAnimationFrame);
         float textWidth = frame.x;
-        float textHeight = frame.height * (currentAnimationFrame + 1);
+        float textHeight = frame.height * (currentAnimationFrame + 1);*/
 
         setSize(width, height);
-        //setSize(width/frame.rowsNumber, height/frame.columnsNumber);
 
-        setTextureCoordinate(textX, textY, textWidth, textHeight);
-        //System.out.println("ANIM: " + currentAnimationFrame + " = " + textX + " : " + textY + " : " + textWidth + " : " + textHeight + " : " + frame.height);
-        //setTextureCoordinate(frame.x, frame.y, frame.width, frame.height);
+        //setTextureCoordinate(textX, textY, textWidth, textHeight);
+        //System.out.println("ANIM: " + currentAnimationFrame + " = " + textX + " : " + textY + " : " + textWidth + " : " + textHeight);
+        setTextureCoordinate(frame.x + frame.width, frame.y, frame.x, frame.y + frame.height);
         //System.out.println("ANIM2: " + currentAnimationFrame + " = " + frame.x + " : " + frame.y + " : " + frame.width + " : " + frame.height);
         //onAnimationFrame(getAnimationName(), currentAnimationFrame);
         if (currentAnimation.frames.get(currentAnimationFrame + 1) == null) {

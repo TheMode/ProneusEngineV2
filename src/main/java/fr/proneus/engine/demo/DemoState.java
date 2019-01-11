@@ -63,16 +63,16 @@ public class DemoState extends State {
 
         this.localPlayer = new Sprite(test);
         localPlayer.setPosition(0.5f, 0.5f);
-        localPlayer.horizontalFlip(true);
+        //localPlayer.horizontalFlip(true);
         this.localPlayer.setColor(Color.AQUA);
 
         Animation animationTest = new Animation();
         animationTest.append(new AnimationFrame(test, 0, 0, 9, 3));
-        animationTest.append(new AnimationFrame(test, 1, 0, 9, 3));
-        animationTest.append(new AnimationFrame(test, 2, 0, 9, 3));
+        animationTest.append(new AnimationFrame(test, 0, 1, 9, 3));
+        animationTest.append(new AnimationFrame(test, 0, 2, 9, 3));
 
         this.localPlayer.addAnimation("idle", animationTest);
-        this.localPlayer.setAnimation("idle", 150);
+        this.localPlayer.setAnimation("idle", 250);
 
     }
 
