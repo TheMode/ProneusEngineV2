@@ -18,6 +18,8 @@ public class DemoState extends State {
     private FontTexture fontTexture;
     private Font fontObject;
 
+    private Sprite localPlayer;
+
     @Override
     public void create() {
 
@@ -55,6 +57,22 @@ public class DemoState extends State {
         this.fontObject.setPosition(0.5f, 0.5f, 1);
         this.fontObject.setColor(Color.WHITE);
 
+        // TODO TEST
+        //InputStream input = this.getClass().getResourceAsStream("/character.png");
+        Texture test = new Texture(FileUtils.getInternalFile("character.png"));
+
+        this.localPlayer = new Sprite(test);
+        localPlayer.setPosition(0.5f, 0.5f);
+        this.localPlayer.setColor(Color.AQUA);
+
+        Animation animationTest = new Animation();
+        animationTest.append(new AnimationFrame(test, 0, 0, 9, 3));
+        animationTest.append(new AnimationFrame(test, 1, 0, 9, 3));
+        animationTest.append(new AnimationFrame(test, 2, 0, 9, 3));
+
+        this.localPlayer.addAnimation("idle", animationTest);
+        this.localPlayer.setAnimation("idle", 150);
+
     }
 
     @Override
@@ -64,11 +82,13 @@ public class DemoState extends State {
 
     @Override
     public void render() {
-        board.draw();
+        //board.draw();
         object.draw();
-        cursor.draw();
+        //cursor.draw();
 
-        fontObject.draw();
+        localPlayer.draw();
+
+        //fontObject.draw();
     }
 
     @Override

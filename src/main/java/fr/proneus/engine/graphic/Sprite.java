@@ -448,6 +448,8 @@ public class Sprite {
 
     private void refreshAnimation() {
         this.lastAnimationUpdate = System.currentTimeMillis();
+
+        Animation animation = currentAnimation;
         AnimationFrame frame = currentAnimation.frames.get(currentAnimationFrame);
 
         Texture frameTexture = frame.texture;
@@ -457,16 +459,19 @@ public class Sprite {
         Image image = texture.getImage();
         float width = image.getImageWidth() * frame.width;
         float height = image.getImageHeight() * frame.height;
-        setSize(width, height);
 
         float textX = frame.width * (currentAnimationFrame + 1);
-        float textY = frame.y;
+        float textY = frame.height == 1f ? frame.y : Math.min(1, frame.y + frame.height * currentAnimationFrame);
         float textWidth = frame.x;
         float textHeight = frame.height * (currentAnimationFrame + 1);
 
+        setSize(width, height);
+        //setSize(width/frame.rowsNumber, height/frame.columnsNumber);
+
         setTextureCoordinate(textX, textY, textWidth, textHeight);
-        // setTextureCoordinate(frame.x, frame.y, frame.width, frame.height);
-        // System.out.println(frame.x + " : " + frame.y + " : " + frame.width + " : " + frame.height);
+        //System.out.println("ANIM: " + currentAnimationFrame + " = " + textX + " : " + textY + " : " + textWidth + " : " + textHeight + " : " + frame.height);
+        //setTextureCoordinate(frame.x, frame.y, frame.width, frame.height);
+        //System.out.println("ANIM2: " + currentAnimationFrame + " = " + frame.x + " : " + frame.y + " : " + frame.width + " : " + frame.height);
         //onAnimationFrame(getAnimationName(), currentAnimationFrame);
         if (currentAnimation.frames.get(currentAnimationFrame + 1) == null) {
             // System.out.println("END ANIM");

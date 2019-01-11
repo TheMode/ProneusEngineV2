@@ -8,6 +8,8 @@ public class AnimationFrame {
     public Texture texture;
     public float x, y, width, height;
 
+    public int columnsNumber, rowsNumber;
+
     public AnimationFrame(Texture texture, int columns, int rows, int columnsNumber, int rowsNumber) {
         this.texture = texture;
 
@@ -22,6 +24,9 @@ public class AnimationFrame {
         this.y = spriteY * rows / pixelHeight;
         this.width = spriteX / pixelWidth;
         this.height = spriteY / pixelHeight;
+
+        this.columnsNumber = columnsNumber;
+        this.rowsNumber = rowsNumber;
     }
 
 
