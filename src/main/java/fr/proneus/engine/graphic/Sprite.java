@@ -433,6 +433,7 @@ public class Sprite {
             return;
 
         if (System.currentTimeMillis() - lastAnimationUpdate > currentAnimationDelay) {
+            this.lastAnimationUpdate = System.currentTimeMillis();
             refreshAnimation();
         }
     }
@@ -441,15 +442,38 @@ public class Sprite {
         this.animations.put(name, animation);
     }
 
-    public void setAnimation(String name, int delay) {
+    public void setAnimation(String name, int delay, int offset) {
         this.currentAnimation = animations.get(name);
         if (this.currentAnimation == null)
             return;
         this.currentAnimationName = name;
-        this.currentAnimationFrame = 0;
         this.currentAnimationMaxFrame = currentAnimation.frames.size();
         this.currentAnimationDelay = delay;
+        this.currentAnimationFrame = 0;
+        this.lastAnimationUpdate = System.currentTimeMillis();
+
+        if (offset != 0) {
+            int animationTime = currentAnimationMaxFrame * currentAnimationDelay;
+            offset %= animationTime;
+            if (offset >= currentAnimationDelay) {
+                float frame = (float) offset / (float) currentAnimationDelay;
+                int frameNumber = (int) frame;
+                int timeOffset = (int) ((frame - frameNumber) * (float) currentAnimationDelay);
+                this.lastAnimationUpdate += timeOffset;
+                this.currentAnimationFrame = frameNumber;
+                //System.out.println("Offset: " + timeOffset);
+                //System.out.println("Frame: " + frameNumber);
+            } else {
+                int timeOffset = currentAnimationDelay - offset;
+                this.lastAnimationUpdate += timeOffset;
+            }
+        }
+
         refreshAnimation();
+    }
+
+    public void setAnimation(String name, int delay) {
+        setAnimation(name, delay, 0);
     }
 
     public void setAnimationFrame(int index) {
@@ -472,7 +496,6 @@ public class Sprite {
     }
 
     private void refreshAnimation() {
-        this.lastAnimationUpdate = System.currentTimeMillis();
 
         Animation animation = currentAnimation;
         AnimationFrame frame = currentAnimation.frames.get(currentAnimationFrame);

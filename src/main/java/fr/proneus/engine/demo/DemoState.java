@@ -4,6 +4,8 @@ import fr.proneus.engine.State;
 import fr.proneus.engine.graphic.*;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
+import fr.proneus.engine.input.Input;
+import fr.proneus.engine.input.Keys;
 import fr.themode.utils.file.FileUtils;
 
 public class DemoState extends State {
@@ -66,13 +68,16 @@ public class DemoState extends State {
         //localPlayer.horizontalFlip(true);
         this.localPlayer.setColor(Color.AQUA);
 
-        Animation animationTest = new Animation();
-        animationTest.append(new AnimationFrame(test, 0, 0, 9, 3));
-        animationTest.append(new AnimationFrame(test, 0, 1, 9, 3));
-        animationTest.append(new AnimationFrame(test, 0, 2, 9, 3));
+        Animation idleAnimation = new Animation(new AnimationFrame(test, 0, 1, 9, 3));
 
-        this.localPlayer.addAnimation("idle", animationTest);
-        this.localPlayer.setAnimation("idle", 250);
+        Animation walkAnimation = new Animation();
+        walkAnimation.append(new AnimationFrame(test, 0, 1, 9, 3));
+        walkAnimation.append(new AnimationFrame(test, 1, 1, 9, 3));
+        walkAnimation.append(new AnimationFrame(test, 0, 1, 9, 3));
+        walkAnimation.append(new AnimationFrame(test, 2, 1, 9, 3));
+
+        this.localPlayer.addAnimation("idle", idleAnimation);
+        this.localPlayer.addAnimation("walk", walkAnimation);
 
     }
 
@@ -83,8 +88,16 @@ public class DemoState extends State {
 
     @Override
     public void render() {
+
+        Input input = getGame().getInput();
+        if (input.isKeyJustDown(Keys.J)) {
+            localPlayer.setAnimation("idle", 150, 150);
+        } else if (input.isKeyJustDown(Keys.K)) {
+            localPlayer.setAnimation("walk", 150, 150);
+        }
+
         //board.draw();
-        object.draw();
+        //object.draw();
         //cursor.draw();
 
         localPlayer.draw();
