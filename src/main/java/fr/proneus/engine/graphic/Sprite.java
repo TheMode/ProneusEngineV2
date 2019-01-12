@@ -57,6 +57,7 @@ public class Sprite {
     private int currentAnimationFrame;
     private int currentAnimationMaxFrame;
     private int currentAnimationDelay;
+    private boolean isAnimationStatic;
 
     private long lastAnimationUpdate;
 
@@ -432,7 +433,7 @@ public class Sprite {
         if (currentAnimation == null)
             return;
 
-        if (System.currentTimeMillis() - lastAnimationUpdate > currentAnimationDelay) {
+        if (System.currentTimeMillis() - lastAnimationUpdate > currentAnimationDelay && !isAnimationStatic) {
             this.lastAnimationUpdate = System.currentTimeMillis();
             refreshAnimation();
         }
@@ -482,6 +483,10 @@ public class Sprite {
         this.lastAnimationUpdate = System.currentTimeMillis();
     }
 
+    public void setAnimationStatic(boolean animationStatic) {
+        this.isAnimationStatic = animationStatic;
+    }
+
     public String getCurrentAnimationName() {
         return currentAnimationName;
     }
@@ -493,6 +498,7 @@ public class Sprite {
         this.currentAnimationMaxFrame = 0;
         this.currentAnimationDelay = 0;
         this.lastAnimationUpdate = 0;
+        this.isAnimationStatic = false;
     }
 
     private void refreshAnimation() {
