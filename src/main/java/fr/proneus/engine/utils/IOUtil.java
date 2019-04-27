@@ -1,6 +1,6 @@
 package fr.proneus.engine.utils;
 
-import fr.proneus.engine.Game;
+import fr.themode.utils.file.FileUtils;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ public class IOUtil {
                     ;
             }
         } else {
-            try (InputStream source = Game.class.getResourceAsStream(resource);
+            try (InputStream source = FileUtils.getResourceClass().getResourceAsStream(resource);
                  ReadableByteChannel rbc = Channels.newChannel(source)) {
                 buffer = createByteBuffer(bufferSize);
 

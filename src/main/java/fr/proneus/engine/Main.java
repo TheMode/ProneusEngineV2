@@ -1,17 +1,17 @@
 package fr.proneus.engine;
 
-import fr.proneus.engine.demo.DemoState;
+import fr.proneus.engine.demo.fighter.MenuState;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        runState(new DemoState());
+        runState(new MenuState());
     }
 
     private static void runState(State state) {
-        int cameraWidth = 512;
-        int cameraHeight = 288;
+        int cameraWidth = 1920;
+        int cameraHeight = 1080;
 
         String name = "Motable Client";
 

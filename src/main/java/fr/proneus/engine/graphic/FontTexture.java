@@ -106,7 +106,7 @@ public class FontTexture {
 
     private STBTTBakedChar.Buffer load(int size) {
         textureId = glGenTextures();
-        STBTTBakedChar.Buffer cdata = STBTTBakedChar.malloc(212);
+        STBTTBakedChar.Buffer cdata = STBTTBakedChar.malloc(65535);
 
         try {
             ByteBuffer ttf = IOUtil.ioResourceToByteBuffer("/" + path, 160 * 1024);
