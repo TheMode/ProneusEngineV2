@@ -66,7 +66,7 @@ public class DemoState extends State {
         this.localPlayer = new Sprite(test);
         localPlayer.setPosition(0.5f, 0.5f);
         //localPlayer.horizontalFlip(true);
-        this.localPlayer.setColor(Color.AQUA);
+        //this.localPlayer.setColor(Color.AQUA);
 
         Animation idleAnimation = new Animation(new AnimationFrame(test, 0, 1, 9, 3));
 
@@ -87,7 +87,7 @@ public class DemoState extends State {
     }
 
     @Override
-    public void render() {
+    public void render(Graphics graphics) {
 
         Input input = getGame().getInput();
         if (input.isKeyJustDown(Keys.J)) {
@@ -100,7 +100,7 @@ public class DemoState extends State {
         //object.draw();
         //cursor.draw();
 
-        localPlayer.draw();
+        localPlayer.draw(graphics);
 
         //fontObject.draw();
     }

@@ -1,6 +1,7 @@
 package fr.proneus.engine;
 
 import fr.proneus.engine.discord.DiscordRPCJoinRequest;
+import fr.proneus.engine.graphic.Graphics;
 
 public abstract class State {
 
@@ -10,7 +11,7 @@ public abstract class State {
 
     public abstract void update();
 
-    public abstract void render();
+    public abstract void render(Graphics graphics);
 
     public abstract void exit();
 

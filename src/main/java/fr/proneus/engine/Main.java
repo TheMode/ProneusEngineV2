@@ -1,12 +1,12 @@
 package fr.proneus.engine;
 
-import fr.proneus.engine.demo.fighter.MenuState;
+import fr.proneus.engine.demo.SpritePerfTestState;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        runState(new MenuState());
+        runState(new SpritePerfTestState());
     }
 
     private static void runState(State state) {
@@ -24,7 +24,7 @@ public class Main {
             System.out.println("Game closed!");
         });
 
-        // app.setFpsLimit(1);
+        //app.setFpsLimit(60);
         app.setTPS(60);
         app.setIcon("test2.png");
         //app.enableDiscordRPC("appId");

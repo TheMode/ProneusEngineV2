@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.opengl.GL30C.*;
 
-public class Texture {
+public class Texture implements ITexture {
 
     private Image image;
     private int textureId;
@@ -31,12 +31,9 @@ public class Texture {
         return image;
     }
 
+    @Override
     public int getTextureId() {
         return textureId;
-    }
-
-    public void delete() {
-        glDeleteTextures(textureId);
     }
 
     private int loadTexture(BufferedImage image) {

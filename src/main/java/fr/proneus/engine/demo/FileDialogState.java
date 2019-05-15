@@ -2,6 +2,7 @@ package fr.proneus.engine.demo;
 
 import fr.proneus.engine.State;
 import fr.proneus.engine.filedialog.FileDialog;
+import fr.proneus.engine.graphic.Graphics;
 
 public class FileDialogState extends State {
     @Override
@@ -20,7 +21,7 @@ public class FileDialogState extends State {
     }
 
     @Override
-    public void render() {
+    public void render(Graphics graphics) {
 
     }
 

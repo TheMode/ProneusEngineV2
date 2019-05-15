@@ -45,6 +45,10 @@ dependencies {
     // Jitpack
     implementation 'com.github.TheMode911:ModeUtils:2656ff33e5'
 
+    // WIP
+    // https://mvnrepository.com/artifact/com.github.luben/zstd-jni
+    compile group: 'com.github.luben', name: 'zstd-jni', version: '1.4.0-1'
+
 }
 
 distZip.shouldRunAfter(build)

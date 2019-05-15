@@ -1,12 +1,10 @@
 package fr.proneus.engine.graphic;
 
-import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
 import fr.proneus.engine.graphic.shader.Shaders;
 import fr.themode.utils.MathUtils;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
@@ -17,33 +15,18 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL30C.*;
 
-public class Sprite {
-
-    private final float RATIO = Game.getAspectRatio();
+public class Sprite extends Renderable {
 
     private float[] vertices;
     private int vao, verticesVBO, texturesVBO, indicesVBO;
     private float width, height;
-
-    private Shader shader;
 
     private boolean flippedHorizontally;
     private boolean flippedVertically;
 
     private Matrix4f mvp;
     private Matrix4f projection;
-    private Matrix4f model;
     private float[] finalVertices;
-
-    private Vector3f position;
-    private float scaleX, scaleY;
-    private float angle;
-
-    private Origin positionOrigin, rotateOrigin, scaleOrigin;
-
-    private boolean shouldRefreshModel;
-
-    private Vector4f color;
 
     private Texture texture;
 
@@ -215,10 +198,9 @@ public class Sprite {
         this.flippedVertically = value;
     }
 
-    public void draw() {
-        // TODO change shader use
-        shader.use();
-
+    @Override
+    public void render() {
+        long time = System.nanoTime();
         if (shouldRefreshModel) {
             refreshModel();
         }
@@ -245,99 +227,7 @@ public class Sprite {
 
         if (texture != null)
             glBindTexture(GL_TEXTURE_2D, 0);
-    }
 
-    public void setPosition(float x, float y, float z) {
-        this.position = new Vector3f(x, y, z);
-        this.shouldRefreshModel = true;
-    }
-
-    public void setPosition(float x, float y) {
-        this.position = new Vector3f(x, y, position.z);
-        this.shouldRefreshModel = true;
-    }
-
-    public void move(float x, float y) {
-        setPosition(getX() + x, getY() + y);
-    }
-
-    public float getX() {
-        return position.x;
-    }
-
-    public void setX(float x) {
-        this.position.x = x;
-        this.shouldRefreshModel = true;
-    }
-
-    public float getY() {
-        return position.y;
-    }
-
-    public void setY(float y) {
-        this.position.y = y;
-        this.shouldRefreshModel = true;
-    }
-
-    public float getZ() {
-        return position.z;
-    }
-
-    public void setZ(float z) {
-        this.position.z = z;
-        this.shouldRefreshModel = true;
-    }
-
-    public void scale(float scaleX, float scaleY) {
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.shouldRefreshModel = true;
-    }
-
-    public float getScaleX() {
-        return scaleX;
-    }
-
-    public void setScaleX(float scaleX) {
-        this.scaleX = scaleX;
-        this.shouldRefreshModel = true;
-    }
-
-    public float getScaleY() {
-        return scaleY;
-    }
-
-    public void setScaleY(float scaleY) {
-        this.scaleY = scaleY;
-        this.shouldRefreshModel = true;
-    }
-
-    public float getAngle() {
-        return angle;
-    }
-
-    public void setAngle(float angle) {
-        this.angle = angle;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setPositionOrigin(Origin positionOrigin) {
-        this.positionOrigin = positionOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setRotateOrigin(Origin rotateOrigin) {
-        this.rotateOrigin = rotateOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setScaleOrigin(Origin scaleOrigin) {
-        this.scaleOrigin = scaleOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setColor(Color color) {
-        this.color = new Vector4f(color.r, color.g, color.b, color.a);
     }
 
     public void refreshModel() {
@@ -345,19 +235,7 @@ public class Sprite {
 
         this.projection = new Matrix4f().ortho(0, RATIO, 1, 0, -1, 1);
 
-        this.model = new Matrix4f();
-
-        float translateOffsetX = width * positionOrigin.getWidthModifier();
-        float translateOffsetY = height * positionOrigin.getHeightModifier();
-        this.model.translate((position.x + translateOffsetX) * RATIO, position.y + translateOffsetY, position.z);
-
-        this.model.scale(scaleX, scaleY, 0);
-
-        float rotateWidth = rotateOrigin.getWidthModifier() * width;
-        float rotateHeight = rotateOrigin.getHeightModifier() * height;
-        this.model.translate(rotateWidth, rotateHeight, 0);
-        this.model.rotate((float) Math.toRadians(angle), new Vector3f(0, 0, 1));
-        this.model.translate(-rotateWidth, -rotateHeight, 0);
+        refreshModelMatrix();
 
         this.mvp = projection.mul(model);
 

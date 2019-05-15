@@ -15,7 +15,7 @@ import static org.lwjgl.stb.STBTruetype.stbtt_BakeFontBitmap;
 import static org.lwjgl.stb.STBTruetype.stbtt_GetBakedQuad;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-public class FontTexture {
+public class FontTexture implements ITexture {
 
     private String path;
     private int size;
@@ -47,6 +47,7 @@ public class FontTexture {
         return bitmapSize;
     }
 
+    @Override
     public int getTextureId() {
         return textureId;
     }

@@ -4,31 +4,12 @@ import fr.proneus.engine.Game;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class Image {
 
     private BufferedImage image;
-    private String path;
     private int imageWidth, imageHeight;
-
-    public Image(File file, float x, float y, float width, float height) {
-        try {
-            this.image = ImageIO.read(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.path = path;
-
-        this.imageWidth = image.getWidth();
-        this.imageHeight = image.getHeight();
-    }
-
-    public Image(File file) {
-        this(file, 0, 0, 1, 1);
-    }
 
     public Image(InputStream inputStream, float x, float y, float width, float height) {
         try {
@@ -36,7 +17,6 @@ public class Image {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.path = "";
 
         this.imageWidth = image.getWidth();
         this.imageHeight = image.getHeight();
@@ -46,12 +26,16 @@ public class Image {
         this(inputStream, 0, 0, 1, 1);
     }
 
-    public BufferedImage getBufferedImage() {
-        return image;
+    public Image(File file, float x, float y, float width, float height) {
+        this(toInputStream(file), x, y, width, height);
     }
 
-    public String getPath() {
-        return path;
+    public Image(File file) {
+        this(file, 0, 0, 1, 1);
+    }
+
+    public BufferedImage getBufferedImage() {
+        return image;
     }
 
     public float getImageWidth() {
@@ -68,6 +52,15 @@ public class Image {
 
     public int getImagePixelHeight() {
         return imageHeight;
+    }
+
+    private static InputStream toInputStream(File file) {
+        try {
+            return new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            System.err.println("File " + file.getPath() + " do not exist.");
+            return null;
+        }
     }
 
 }

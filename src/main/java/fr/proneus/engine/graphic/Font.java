@@ -2,8 +2,6 @@ package fr.proneus.engine.graphic;
 
 import fr.proneus.engine.graphic.shader.Shaders;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBTTAlignedQuad;
 import org.lwjgl.system.MemoryStack;
@@ -17,9 +15,7 @@ import static org.lwjgl.opengl.GL30C.*;
 import static org.lwjgl.stb.STBTruetype.stbtt_GetBakedQuad;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-public class Font {
-
-    private final float RATIO = 16f / 9f;
+public class Font extends Renderable {
 
     private int vao, vbo, indicesVBO;
 
@@ -27,25 +23,10 @@ public class Font {
     private Map<Integer, float[]> quads;
     private String currentText;
 
-    private float textWidth, textHeight;
-
     private FontTexture texture;
-
-    private Shader shader;
 
     private Matrix4f mvp;
     private Matrix4f projection;
-    private Matrix4f model;
-
-    private Vector3f position;
-    private float scaleX, scaleY;
-    private float angle;
-
-    private Origin positionOrigin, rotateOrigin, scaleOrigin;
-
-    private boolean shouldRefreshModel;
-
-    private Vector4f color;
 
     public Font(FontTexture texture) {
         this.texture = texture;
@@ -86,18 +67,17 @@ public class Font {
         setPosition(0, 0, 0);
         scale(1, 1);
         setAngle(0);
-        positionOrigin = Origin.CENTER;
-        rotateOrigin = Origin.CENTER;
-        scaleOrigin = Origin.CENTER;
+        positionOrigin = Origin.CENTER_LEFT;
+        rotateOrigin = Origin.CENTER_LEFT;
+        scaleOrigin = Origin.CENTER_LEFT;
         refreshModel();
         setColor(Color.WHITE);
 
         this.currentText = "";
     }
 
-    public void draw() {
-        // TODO change shader use
-        shader.use();
+    @Override
+    public void render() {
         if (currentText == null)
             throw new NullPointerException("Text is null Font#setText");
 
@@ -152,8 +132,8 @@ public class Font {
         this.currentText = text;
 
         float[] size = texture.getTextSize(text);
-        this.textWidth = size[0];//texture.getWidth(text);
-        this.textHeight = size[1];//texture.getHeight(text);
+        this.width = size[0];//texture.getWidth(text);
+        this.height = size[1];//texture.getHeight(text);
 
         int bitmapSize = texture.getBitmapSize();
         try (MemoryStack stack = stackPush()) {
@@ -183,64 +163,12 @@ public class Font {
         this.shouldRefreshModel = true;
     }
 
-    public void setPosition(float x, float y, float z) {
-        this.position = new Vector3f(x, y, z);
-        this.shouldRefreshModel = true;
-    }
-
-    public void scale(float scaleX, float scaleY) {
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setAngle(float angle) {
-        this.angle = angle;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setPositionOrigin(Origin positionOrigin) {
-        this.positionOrigin = positionOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setRotateOrigin(Origin rotateOrigin) {
-        this.rotateOrigin = rotateOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setScaleOrigin(Origin scaleOrigin) {
-        this.scaleOrigin = scaleOrigin;
-        this.shouldRefreshModel = true;
-    }
-
-    public void setColor(Color color) {
-        this.color = new Vector4f(color.r, color.g, color.b, color.a);
-    }
-
-    public float getTextWidth() {
-        return textWidth;
-    }
-
-    public float getTextHeight() {
-        return textHeight;
-    }
-
     public void refreshModel() {
         this.shouldRefreshModel = false;
 
         this.projection = new Matrix4f().ortho(0, RATIO, 1, 0, -1, 1);
 
-        this.model = new Matrix4f();
-
-        float translateOffsetX = textWidth * positionOrigin.getWidthModifier();
-        float translateOffsetY = textHeight * positionOrigin.getHeightModifier();
-        float finalPosX = (position.x - (textWidth / 2) + translateOffsetX) * RATIO;
-        float finalPosY = position.y + (textHeight / 2) + translateOffsetY;
-        this.model.translate(finalPosX, finalPosY, position.z);
-
-        this.model.rotate((float) Math.toRadians(angle), new Vector3f(0, 0, 1));
-        this.model.scale(scaleX, scaleY, 0);
+        refreshModelMatrix();
 
         this.mvp = projection.mul(model);
     }

@@ -6,6 +6,7 @@ import fr.proneus.engine.data.DataManager;
 import fr.proneus.engine.discord.DiscordRPCInfo;
 import fr.proneus.engine.discord.DiscordRPCManager;
 import fr.proneus.engine.graphic.Camera;
+import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.input.*;
 import fr.proneus.engine.utils.ByteBufferUtils;
@@ -45,6 +46,7 @@ public class Game {
     private boolean shouldExitState;
 
     private Camera camera;
+    private Graphics graphics;
 
     private int fps;
     private int maxfps;
@@ -89,6 +91,7 @@ public class Game {
         this.camera = new Camera();
         Game.cameraWidth = cameraWidth;
         Game.cameraHeight = cameraHeight;
+        this.graphics = new Graphics(camera);
 
         // State
         this.state = state;
@@ -336,7 +339,8 @@ public class Game {
         glClearColor(0f, 0f, 0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        state.render();
+        state.render(graphics);
+        graphics.renderFrame();
 
         glfwSwapBuffers(window);
     }
