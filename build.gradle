@@ -1,9 +1,24 @@
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 
-project.ext.lwjglVersion = "3.2.0"
-project.ext.jomlVersion = "1.9.10"
-project.ext.lwjglNatives = "natives-windows"
+
+project.ext.lwjglVersion = "3.2.3"
+project.ext.jomlVersion = "1.9.20"
+
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        def osArch = System.getProperty("os.arch")
+        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
+                : "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+}
 
 repositories {
     jcenter()
@@ -43,13 +58,15 @@ dependencies {
     compile group: 'org.mapeditor', name: 'libtiled', version: '0.17'
 
     // Jitpack
-    implementation 'com.github.TheMode911:ModeUtils:2656ff33e5'
+    implementation 'com.github.TheMode911:ModeUtils:5e240a2291'
 
     // WIP
-    // https://mvnrepository.com/artifact/com.github.luben/zstd-jni
-    compile group: 'com.github.luben', name: 'zstd-jni', version: '1.4.0-1'
+// https://mvnrepository.com/artifact/com.github.luben/zstd-jni
+    compile group: 'com.github.luben', name: 'zstd-jni', version: '1.4.4-7'
+
 
 }
+
 
 distZip.shouldRunAfter(build)
 

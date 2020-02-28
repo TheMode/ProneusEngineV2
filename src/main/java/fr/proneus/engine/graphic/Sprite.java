@@ -200,7 +200,6 @@ public class Sprite extends Renderable {
 
     @Override
     public void render() {
-        long time = System.nanoTime();
         if (shouldRefreshModel) {
             refreshModel();
         }

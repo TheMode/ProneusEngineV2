@@ -96,13 +96,13 @@ public class DemoState extends State {
             localPlayer.setAnimation("walk", 150, 150);
         }
 
-        //board.draw();
-        //object.draw();
-        //cursor.draw();
+        board.draw(graphics);
+        object.draw(graphics);
+        cursor.draw(graphics);
 
-        localPlayer.draw(graphics);
+        //localPlayer.draw(graphics);
 
-        //fontObject.draw();
+        fontObject.draw(graphics);
     }
 
     @Override
