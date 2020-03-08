@@ -238,7 +238,7 @@ public class Game {
         glfwSetCharModsCallback(window, charCallback);
 
         // Resize Ratio
-        glfwSetWindowAspectRatio(window, 16, 9);
+        glfwSetWindowAspectRatio(window, cameraWidth, cameraHeight);
 
         // Center window
         glfwSetWindowPos(window, (vidmode.width() - width) / 2, (vidmode.height() - height) / 2);

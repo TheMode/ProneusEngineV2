@@ -1,12 +1,12 @@
 package fr.proneus.engine;
 
-import fr.proneus.engine.demo.DemoState;
+import fr.proneus.engine.demo.SpritePerfTestState;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        runState(new DemoState());
+        runState(new SpritePerfTestState());
     }
 
     private static void runState(State state) {
