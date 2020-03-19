@@ -3,6 +3,9 @@ import org.gradle.internal.os.OperatingSystem
 apply plugin: 'java'
 apply plugin: 'java-library-distribution'
 
+apply plugin: 'maven'
+
+group = 'com.github.TheMode'
 
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.9.20"
