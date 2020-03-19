@@ -63,7 +63,7 @@ dependencies {
     compile group: 'org.mapeditor', name: 'libtiled', version: '0.17'
 
     // Jitpack
-    implementation 'com.github.TheMode911:ModeUtils:5e240a2291'
+    compile 'com.github.TheMode911:ModeUtils:5e240a2291'
 
     // WIP
 // https://mvnrepository.com/artifact/com.github.luben/zstd-jni

@@ -73,8 +73,7 @@ public class FontTexture implements ITexture {
                     yy.put(0, yy.get(0) + size);
                     xx.put(0, 0.0f);
                     continue;
-                } //else if (c < 32 || 128 <= c)
-                //continue;
+                }
                 if (c == ' ') {
                     // Might be inexact, space is normally equal to 0
                     c = 'M';
