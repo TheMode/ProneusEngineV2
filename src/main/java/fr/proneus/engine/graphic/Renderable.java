@@ -1,6 +1,7 @@
 package fr.proneus.engine.graphic;
 
 import fr.proneus.engine.Game;
+import fr.themode.utils.MathUtils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -23,6 +24,7 @@ public abstract class Renderable {
     protected boolean shouldRefreshModel;
 
     protected Vector4f color;
+    protected float colorIntensity;
 
     // Matrix
     protected Matrix4f projection;
@@ -144,8 +146,17 @@ public abstract class Renderable {
         this.shouldRefreshModel = true;
     }
 
+    public void setColor(Color color, float colorIntensity) {
+        this.color = new Vector4f(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        setColorIntensity(colorIntensity);
+    }
+
     public void setColor(Color color) {
-        this.color = new Vector4f(color.r, color.g, color.b, color.a);
+        setColor(color, 1f);
+    }
+
+    public void setColorIntensity(float colorIntensity) {
+        this.colorIntensity = MathUtils.minMax(colorIntensity, 0f, 1f);
     }
 
     public float getWidth() {

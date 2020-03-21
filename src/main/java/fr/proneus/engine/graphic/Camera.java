@@ -10,11 +10,11 @@ public class Camera {
     private Matrix4f projection;
 
     public boolean isPartiallyVisible(Sprite sprite) {
-        return sprite.interacts(0, 0) || sprite.interacts(1, 0) || sprite.interacts(0, 1) || sprite.interacts(1, 1);
+        return sprite.interacts(0, 0, 1, 1);
     }
 
     public boolean isFullyVisible(Sprite sprite) {
-        return sprite.interacts(0, 0) && sprite.interacts(1, 0) && sprite.interacts(0, 1) && sprite.interacts(1, 1);
+        return sprite.fullyInteracts(0, 0, 1, 1);
     }
 
     protected Matrix4f getProjection() {

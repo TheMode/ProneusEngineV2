@@ -1,5 +1,6 @@
 package fr.proneus.engine.graphic;
 
+import fr.proneus.engine.Game;
 import fr.proneus.engine.graphic.animation.Animation;
 import fr.proneus.engine.graphic.animation.AnimationFrame;
 import fr.proneus.engine.graphic.shader.Shaders;
@@ -101,7 +102,7 @@ public class Sprite extends Renderable {
         positionOrigin = Origin.CENTER;
         rotateOrigin = Origin.CENTER;
         scaleOrigin = Origin.CENTER;
-        setColor(Color.WHITE);
+        setColor(Color.BLACK, 0f);
 
         // Animation
         this.animations = new HashMap<>();
@@ -151,9 +152,8 @@ public class Sprite extends Renderable {
         if (texture == null)
             return;
 
-        Image image = texture.getImage();
-        float width = image.getImageWidth();
-        float height = image.getImageHeight();
+        float width = texture.getImageWidth() / (float) Game.getCameraWidth();
+        float height = texture.getImageHeight() / (float) Game.getCameraHeight();
 
         setSize(width, height);
     }
@@ -207,6 +207,7 @@ public class Sprite extends Renderable {
 
         shader.setMat4("mvp", mvp);
         shader.setVec4("color", color);
+        shader.setFloat("color_intensity", colorIntensity);
 
         if (texture != null)
             glBindTexture(GL_TEXTURE_2D, texture.getTextureId());
@@ -267,8 +268,34 @@ public class Sprite extends Renderable {
         this.boundingBox.points = points;
     }
 
+    public boolean fullyInteracts(float x, float y, float width, float height) {
+        for (float[] point : boundingBox.points) {
+            float pointX = point[0];
+            float pointY = point[1];
+
+            if (pointX < x || pointX > width
+                    || pointY < y || pointY > height) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean interacts(float x, float y) {
         return boundingBox.interacts(x, y);
+    }
+
+    public boolean interacts(float x, float y, float width, float height) {
+        for (float[] point : boundingBox.points) {
+            float pointX = point[0];
+            float pointY = point[1];
+
+            if (pointX > x && pointX < width
+                    && pointY > y && pointY < height) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean interacts(Sprite sprite) {

@@ -8,6 +8,7 @@ import java.util.Map;
 public class Graphics {
 
     private static final Map<Shader, List<Renderable>> renderables = new HashMap<>();
+    private Color backgroundColor = Color.BLACK;
     // TODO camera projection matrix
     private Camera camera;
 
@@ -22,6 +23,15 @@ public class Graphics {
         Graphics.renderables.put(shader, renderables);
     }
 
+    public Color getBackgroundColor() {
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor) {
+        this.backgroundColor = backgroundColor;
+    }
+
+    // Unsafe, only used by the Game class
     public void renderFrame() {
         for (Map.Entry<Shader, List<Renderable>> entry : renderables.entrySet()) {
             Shader shader = entry.getKey();

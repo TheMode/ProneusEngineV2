@@ -17,6 +17,8 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 
 public class FontTexture implements ITexture {
 
+    private static final int DEFAULT_BITMAP_SIZE = 2048;
+
     private String path;
     private int size;
     private int bitmapSize;
@@ -26,7 +28,7 @@ public class FontTexture implements ITexture {
     public FontTexture(String path, int size) {
         this.path = path;
         this.size = size;
-        this.bitmapSize = 2048;
+        this.bitmapSize = DEFAULT_BITMAP_SIZE;
         this.fontBuffer = load(size);
     }
 

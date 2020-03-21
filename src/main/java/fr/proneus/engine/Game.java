@@ -6,6 +6,7 @@ import fr.proneus.engine.data.DataManager;
 import fr.proneus.engine.discord.DiscordRPCInfo;
 import fr.proneus.engine.discord.DiscordRPCManager;
 import fr.proneus.engine.graphic.Camera;
+import fr.proneus.engine.graphic.Color;
 import fr.proneus.engine.graphic.Graphics;
 import fr.proneus.engine.graphic.Image;
 import fr.proneus.engine.input.*;
@@ -49,6 +50,7 @@ public class Game {
     private Graphics graphics;
 
     private int fps;
+    private boolean vsync;
     private int maxfps;
     private int tps;
     private double nanoSecondsTicks;
@@ -181,6 +183,10 @@ public class Game {
         this.icon = icon;
     }
 
+    protected void setVSync(boolean vsync) {
+        this.vsync = vsync;
+    }
+
     protected void setMaxFPS(int fps) {
         this.maxfps = fps > 0 ? fps : this.maxfps;
     }
@@ -248,7 +254,7 @@ public class Game {
         GL.createCapabilities();
         debugProc = debug ? GLUtil.setupDebugMessageCallback() : null;
 
-        glfwSwapInterval(0);
+        glfwSwapInterval(vsync ? 1 : 0);
         glfwShowWindow(window);
     }
 
@@ -297,7 +303,7 @@ public class Game {
                 tick = true;
             }
 
-            if (elapsedFps > nanoSecondsFps) {
+            if (vsync || elapsedFps > nanoSecondsFps) {
                 beforeFps += nanoSecondsFps;
                 render = true;
                 frames++;
@@ -336,7 +342,11 @@ public class Game {
     }
 
     private void render() {
-        glClearColor(0f, 0f, 0f, 1.0f);
+        Color backgroundColor = graphics.getBackgroundColor();
+        glClearColor(backgroundColor.getRed(),
+                backgroundColor.getGreen(),
+                backgroundColor.getBlue(),
+                backgroundColor.getAlpha());
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         state.render(graphics);
