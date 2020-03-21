@@ -20,7 +20,7 @@ public class ShooterState extends State {
     public void create() {
         this.shipTexture = new Texture(FileUtils.getInternalFile("ship.png"));
         this.ship = new Sprite(shipTexture);
-        this.ship.setPosition(0.1f, 0.1f);
+        this.ship.setPosition(0.5f, 0.5f);
         this.ship.scale(3, 3);
     }
 
@@ -40,7 +40,7 @@ public class ShooterState extends State {
         this.ship.move(h * speed, v * speed);
 
         boolean visible = getGame().getCamera().isFullyVisible(ship);
-        System.out.println("visible: " + visible);
+        //System.out.println("visible: " + visible);
     }
 
     @Override

@@ -93,7 +93,7 @@ public class Game {
         this.camera = new Camera();
         Game.cameraWidth = cameraWidth;
         Game.cameraHeight = cameraHeight;
-        this.graphics = new Graphics(camera);
+        this.graphics = new Graphics(this);
 
         // State
         this.state = state;

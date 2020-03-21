@@ -1,5 +1,7 @@
 package fr.proneus.engine.graphic;
 
+import fr.proneus.engine.Game;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +11,11 @@ public class Graphics {
 
     private static final Map<Shader, List<Renderable>> renderables = new HashMap<>();
     private Color backgroundColor = Color.BLACK;
-    // TODO camera projection matrix
-    private Camera camera;
 
-    public Graphics(Camera camera) {
-        this.camera = camera;
+    private Game game;
+
+    public Graphics(Game game) {
+        this.game = game;
     }
 
     protected void addRenderable(Renderable renderable) {
@@ -38,6 +40,7 @@ public class Graphics {
             List<Renderable> renderables = entry.getValue();
 
             shader.use();
+            shader.setVec2("camera", game.getCamera().getPosition());
             for (Renderable renderable : renderables) {
                 renderable.render();
             }

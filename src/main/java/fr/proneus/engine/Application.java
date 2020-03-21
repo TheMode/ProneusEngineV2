@@ -34,6 +34,11 @@ public class Application {
         game.setResizable(resizable);
     }
 
+    public void setVSync(boolean vsync) {
+        game.setVSync(vsync);
+    }
+
+    // Only if VSync = false;
     public void setFpsLimit(int fps) {
         game.setMaxFPS(fps);
     }
